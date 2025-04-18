@@ -1,0 +1,31 @@
+@let userTypeMessage = (userType === 'Group') ? 'group' : 'user';
+<div>
+  <div #dialog class="dialog" data-type="simple">
+    <div class="content content-full-width">
+      <div class="top">
+        <div class="title">Active packages found !</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+      @if(userType === 'Group' || groupId) {
+        <div class="subtitle custom-subtitle">Users in this group can't be edited as its used in following active acceptance packages:</div>
+      }
+      @if(userType === 'User') {
+        <div class="subtitle custom-subtitle">Invalid attempt. User is a sole user in one or more acceptance packages</div>
+      }
+      <div class="body body-compact">
+        <table id="pkgListTable" class="table striped custom-table" #pkgListTable></table>
+      </div>
+      @if(isDownloadMorePackages()) {
+        <div><b>Note:</b> There can be more packages associated with this {{ userTypeMessage }}, 
+          <br/>Click 'Download full list' button to get complete list of packages.
+        </div>
+      }      
+      <div class="bottom">        
+        <button class="btn" (click)="onClose()">Close</button>
+        <button class="btn primary" (click)="downloadFullList()">{{isDownloadMorePackages() ? 'Download full list' : 'Download list'}}</button>
+      </div>
+    </div>
+  </div>
+</div>

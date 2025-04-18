@@ -1,0 +1,114 @@
+@import '@eds/vanilla/variables/global';
+@import '@eds/vanilla/variables/light';
+
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0);
+  height: 100%;
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+img {
+  cursor: move;
+  user-select: none;
+  transition: transform .1s;
+}
+
+:host-context(.light) {
+  .icon.action {
+    border: @space-small @white solid;
+    background-color: @white;
+  }
+  .empty-state {
+    border: 1px @gray-42 solid;
+    background-color: @gray-92;
+  }
+}
+
+
+
+:host-context(.dark) {
+  .icon.action {
+    border: @space-small @gray-31 solid;
+    background-color: @gray-31;
+  }
+  .empty-state {
+    border: 1px @gray-46 solid;
+    background-color: @gray-31;
+  }
+}
+
+:host > .icon {
+  position: absolute;
+  transition: opacity .4s;
+
+  &-maximize-fullscreen {
+    top: @space-small;
+    right: @space-small;
+  }
+
+  &-arrow-left {
+    right: calc(@space-small + (@space-small + @btn-font-size + @space-small) + @space-small);
+    bottom: @space-base;
+  }
+
+  &-arrow-right {
+    right: @space-small;
+    bottom: @space-base;
+  }
+
+  &-disabled {
+    /* styles taken from styles for <button class="btn disabled"> */
+    opacity: .4;
+    pointer-events: auto;
+    cursor: default;
+  }
+}
+
+.fullscreen-wrapper {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: @dialog-overlay;
+
+}
+.inner-toolbar {
+  position: fixed;
+  top: 48px;
+  right: 0px;
+  z-index: 1000;
+
+  .icon-wrapper{
+    height: fit-content;
+    .custom-icon{
+      display: flex;
+      padding: 10px;
+      cursor: pointer;
+    }
+  }
+}
+
+.empty-state {
+  button .icon {
+    font-size: unset;
+    margin-bottom: unset;
+  }
+}

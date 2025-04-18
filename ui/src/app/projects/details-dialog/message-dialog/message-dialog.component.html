@@ -1,0 +1,15 @@
+<div #dialog class="dialog" data-type="simple" id="generic-message">
+  <div class="content">
+    <div class="top">
+      <div class="generic-message"></div>      
+    </div>
+    <h2 class="left-margin">{{ inputData.title }}</h2>
+    <div class="body custom-padding">
+      <p>{{ inputData.message }}</p>
+    </div>
+    <div class="bottom">
+      <button id="refresh-button" class="btn primary" *ngIf="isReload" (click)="okMessageWithReload()">Ok</button>
+      <button id="refresh-button" class="btn primary" *ngIf="!isReload"  (click)="okMessage()">Ok</button>
+    </div>
+  </div>
+</div>

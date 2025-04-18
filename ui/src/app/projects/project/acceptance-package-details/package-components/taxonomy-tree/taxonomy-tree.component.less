@@ -1,0 +1,34 @@
+@import "@eds/vanilla/variables/global";
+
+.tree .item {
+  display: flex;
+  cursor: default;
+
+  .node-entry {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+
+    .node-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:hover {
+        text-overflow: clip;
+        white-space: normal;
+        word-break: break-all;
+      }
+    }
+
+    .icon {
+      margin-left: @space-base;
+      margin-right: @space-base;
+    }
+
+   
+    .node-entry-cue{
+      cursor: pointer;
+    }
+  }
+}

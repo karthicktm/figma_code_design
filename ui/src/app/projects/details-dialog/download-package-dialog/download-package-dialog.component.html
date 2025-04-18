@@ -1,0 +1,46 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title"> Download acceptance package </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <ng-container *ngIf="loading; else downloadOptions">
+      <div [class.loading]="loading"></div>
+    </ng-container>
+
+    <ng-template #downloadOptions>
+      <div class="row">Select download options</div>
+      <div class="row">
+        <div class="sm-12">Acceptance category</div>
+        <div class="checkbox-group">
+          <div *ngFor="let category of acceptanceCategories" class="input-container">
+            <input type="checkbox" id="category-{{ category }}" [value]="category" [checked]="selectedCategories.includes(category)" (change)="onCategoryCheckboxChange($event)">
+            <label for="category-{{ category }}" class="checkbox-label">{{ category }}</label>
+          </div>
+        </div>
+        <span class="color-gray text-sm" *ngIf="selectedCategories.length < 1">
+          At least one of the categories must be selected.
+        </span>
+      </div>
+
+      <div class="row">
+        <div class="sm-12">Select type</div>
+        <div class="checkbox-group">
+          <div *ngFor="let type of types" class="input-container">
+            <input type="checkbox" id="type-{{ type }}" [value]="type" [checked]="selectedTypes.includes(type)" (change)="onTypeCheckboxChange($event)">
+            <label for="type-{{ type }}" class="checkbox-label">{{ type }} ({{getSizeByType(type)}})</label>
+          </div>
+        </div>
+        <span class="color-gray text-sm" *ngIf="selectedTypes.length < 1">At least one of the types must be selected.</span>
+      </div>
+    </ng-template>
+
+    <div class="bottom">
+      <button class="btn" data-close="true">Cancel</button>
+      <button class="btn primary" [disabled]="loading || selectedCategories.length < 1 || selectedTypes.length < 1" (click)="downloadPackage()" data-close="true">Download</button>
+    </div>
+  </div>
+</div>

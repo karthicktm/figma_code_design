@@ -1,0 +1,29 @@
+.right {
+  text-align: right;
+}
+
+:host::ng-deep {
+  .column-date, .column-created-by {
+    white-space: nowrap;
+  }
+
+  .detail-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 10em;
+
+    &:hover {
+      text-overflow: clip;
+      white-space: normal;
+      word-break: break-all;
+    }
+  }
+}
+
+.left-tile,
+.right-tile {
+  min-height: calc(100vh - 106px);
+  max-height: calc(100vh - 106px);
+  overflow-y: auto;
+}

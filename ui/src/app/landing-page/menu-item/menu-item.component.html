@@ -1,0 +1,19 @@
+<div class="menu-item">
+  <div class="menu-item-lock text-lg"
+    *ngIf="!isUserAuthorized && !isDisabled"
+  >
+    <button class="btn primary"
+      (click)="requestAccessClick.emit($event)"
+    >Request access</button>
+  </div>
+  <div class="menu-item-lock text-lg" *ngIf="isDisabled">
+  </div>
+  <div [class.locked]="isDisabled || !isUserAuthorized">
+    <a class="subtle-link" routerLink="{{link}}" (click)="menuItemClicked()">
+      <ng-content></ng-content>
+      <span class="menu-item-name text-lg">
+        {{name}}
+      </span>
+    </a>
+  </div>
+</div>

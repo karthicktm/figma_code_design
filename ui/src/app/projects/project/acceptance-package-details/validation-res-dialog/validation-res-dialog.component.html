@@ -1,0 +1,68 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content" *ngIf="(show === 2)">
+    <div class="top">
+      <div class="title">{{ dialogTitle }}</div>
+    </div>    
+    <div class="body">
+      <div *ngIf="validationResult === 'Success'">
+        <i class="icon custom-icon center color-green" [ngClass]="iconStatus"></i>
+      </div>
+      <div *ngIf="validationResult !== 'Success'">
+        <i class="icon custom-icon center color-red" [ngClass]="iconStatus"></i>
+      </div>
+      <div class="column sm-12">
+        <p class="para-center" >{{ statusMessage }}</p>
+      </div>
+    </div>
+    <div *ngIf="validationResult === 'Success'">
+     <p>The following are the details available in ECA and Ericsson Global Blockchain Network:</p>
+    </div>
+    <div class="horizontal-container" *ngIf="validationResult === 'Success'">      
+      <table class="table mr-xxl">
+        <thead>
+          <tr>
+            <th colspan=2 class="text-center">ECA</th>
+          </tr> 
+        </thead>
+        <tbody>      
+          <tr>
+            <td>Who changed last</td>
+            <td>{{ bcDetailWho }}</td>
+          </tr>
+          <tr>
+            <td>When was last changed</td>
+            <td>{{ bcDetailWhen }}</td>
+          </tr>
+          <tr>
+            <td>What is the status</td>
+            <td>{{ bcDetailWhat }}</td>
+          </tr>          
+        </tbody>
+      </table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan=2 class="text-center">Ericsson Global Blockchain Network</th>
+          </tr> 
+        </thead>
+        <tbody>      
+          <tr>
+            <td>Who changed last</td>
+            <td>{{ bcDetailWho }}</td>
+          </tr>
+          <tr>
+            <td>When was last changed</td>
+            <td>{{ bcDetailWhen }}</td>
+          </tr>
+          <tr>
+            <td>What is the status</td>
+            <td>{{ bcDetailWhat }}</td>
+          </tr>          
+        </tbody>
+      </table>
+    </div>
+    <div class="bottom">
+      <button class="btn primary" [disabled]="show === 1" (click)="onOk()">Ok</button>
+    </div>
+  </div>
+</div>

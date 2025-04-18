@@ -1,0 +1,48 @@
+  <div class="tile full-height">
+    <div class="header">
+      <div class="left">
+        <div class="title">{{ siteDetails.siteNameByCustomer }}</div>
+      </div>
+    </div>
+    <div class="header">
+      <div class="left">
+        <div class="title">Site Details</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="row">
+        <div class="column sm-2">
+          <div>Site name</div>
+          <p class="section text-sm detail">{{ siteDetails.networkSiteName }}</p>
+        </div>
+        <div class="column sm-2">
+          <div>Site id by customer</div>
+          <p class="section text-sm detail">{{ siteDetails.siteIdByCustomer }}</p>
+        </div>
+        <div class="column sm-2">
+          <div>Site name by customer</div>
+          <p class="section text-sm detail">{{ siteDetails.siteNameByCustomer }}</p>
+        </div>
+        <div class="column sm-2">
+          <div>Site type</div>
+          <p class="section text-sm detail">{{ siteDetails.siteType }}</p>
+        </div>
+        <div class="column sm-2">
+          <div>Longitude</div>
+          <p class="section text-sm detail">{{ siteDetails.longitude }}</p>
+        </div>
+        <div class="column sm-2">
+          <div>Latitude</div>
+          <p class="section text-sm detail">{{ siteDetails.latitude }}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column sm-2" *ngFor="let attribute of siteDetails.extendedAttributes" >
+          <div>{{ attribute.attribute }}</div>
+          <p class="section text-sm detail">{{ attribute.attributeValue }}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>

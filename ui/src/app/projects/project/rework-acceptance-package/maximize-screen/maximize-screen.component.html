@@ -1,0 +1,58 @@
+<div #fullscreen class="tile full-height">
+  <div class="header">
+    <div class="left">
+      <div class="title">Evidence details</div>
+    </div>
+    <div class="right minimize-icon-wrapper">
+      <i class="icon icon-minimize custom-icon" (click)="onCloseMinimize()" data-close="true"></i>
+    </div>
+  </div>
+  <div class="tile">
+    <div class="content">
+
+      <ng-container *ngIf="showLoader">
+        <div class="background-shadow">
+          <div id="loading-spinner-align" class="loading large"></div>
+        </div>
+      </ng-container>
+
+      <div class="row column custom-detail">
+        <div class="sm-1">
+          <div class="lable">Status </div>
+          <kbd class="tag"
+            [ngClass]="getStatusColor(evidenceDetails?.status)"
+            >{{getStatus(evidenceDetails?.status)}}</kbd>
+          </div>
+        <div class="sm-2">
+          <div class="lable">ID</div> {{evidenceDetails.internalId || '--'}}
+        </div>
+        <div class="sm-2">
+          <div class="lable">Name</div> {{evidenceDetails?.name?evidenceDetails.name:'--'}}
+        </div>
+        <div class="sm-2">
+          <div class="lable">Size</div>{{(evidenceDetails.fileSizeInKB * 1024 | formatBytes) || '--'}}
+        </div>
+        <div class="sm-2">
+          <div class="lable">Latitude</div> {{evidenceDetails?.latitude?evidenceDetails.latitude:'--'}}
+        </div>
+        <div class="sm-2">
+          <div class="lable">Longitude</div> {{evidenceDetails?.longitude?evidenceDetails.longitude:'--'}}
+        </div>
+        <div class="sm-1">
+          <div class="lable">Type</div> {{evidenceDetails?.type?evidenceDetails.type:'--'}}
+        </div>
+      </div>
+      <div class="hr-line"></div>
+      <div class="row">
+        <div class="column sm-12">
+          <div class="column custom-file-viewer">
+            <app-file-preview-wrapper [zoom]="fileToolbar.zoomEvents" (download)="downLoadFile($event)">
+            </app-file-preview-wrapper>
+            <app-file-toolbar #fileToolbar (download)="downLoadFile($event)">
+            </app-file-toolbar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

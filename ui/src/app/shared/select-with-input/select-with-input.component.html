@@ -1,0 +1,31 @@
+<div #selectContent [attr.id]="selectId">
+  <div class="clickable current-options">
+    <input type="text"
+           #input
+           [placeholder]="placeholder ? placeholder : 'Select option'"
+           [disabled]="disabled">
+  </div>
+  <div class="options-list">
+    <ng-container *ngIf="!!optionsWithValue; else simpleOptions">
+      <div *ngFor="let option of optionsWithValue; last as isLast"
+         class="item"
+         [attr.data-value]="option.optionValue"
+         [class.active]="option.optionValue === selectedOption">
+         {{ option.option }}
+         <!-- workaround to make sure we init select after all elements are rendered -->
+          <ng-container *ngIf="isLast"> {{ initializeSelect() }}</ng-container>
+        </div>
+    </ng-container>
+
+    <ng-template #simpleOptions>
+      <div *ngFor="let option of options; last as isLast"
+        class="item"
+        [class.active]="option === selectedOption"
+      >
+        {{ option }}
+        <!-- workaround to make sure we init select after all elements are rendered -->
+        <ng-container *ngIf="isLast"> {{ initializeSelect() }}</ng-container>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div #downloadReport class="dropdown btn-expand" data-type="divided">
+  <div class="btns-wrap">
+    <button class="btn"><i class="icon icon-download-save"></i>Download</button>
+    <button class="btn extra"></button>
+  </div>
+  <div class="menu">
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.ViewDownloadPackageButton) | async"
+      (click)="onDownloadPackage()"
+    >
+      Acceptance package
+    </div>
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.PhotoReport)"
+    >
+      {{ getReportNameByType(packageReportType.PhotoReport).fullName }}
+    </div>
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.PhotoReportPDF)"
+    >
+      {{ getReportNameByType(packageReportType.PhotoReportPDF).fullName }}
+    </div>
+    <!-- Temporarily hide full observation report till it's fixed -->
+    <!-- <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.ObservationReport)"
+    >
+      {{ getReportNameByType(packageReportType.ObservationReport).fullName }}
+    </div> -->
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.PhotoRejectedReport)"
+    >
+      {{ getReportNameByType(packageReportType.PhotoRejectedReport).fullName }}
+    </div>
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.PhotoRejectedReportPDF)"
+    >
+      {{ getReportNameByType(packageReportType.PhotoRejectedReportPDF).fullName }}
+    </div>
+    @if (isUserAuthorized(componentActionPermission.DownloadReports) | async) {
+      <div
+        class="item"
+        (click)="onDownloadReport($event, packageReportType.PhotoApprovedReport)"
+      >
+        {{ getReportNameByType(packageReportType.PhotoApprovedReport).fullName }}
+      </div>
+    }
+    @if (isUserAuthorized(componentActionPermission.DownloadReports) | async) {
+      <div
+        class="item"
+        (click)="onDownloadReport($event, packageReportType.PhotoApprovedReportPDF)"
+      >
+        {{ getReportNameByType(packageReportType.PhotoApprovedReportPDF).fullName }}
+      </div>
+    }
+    <!-- TODO: enable once BE is ready -->
+    <!-- <div class="item" *ngIf="(isUserAuthorized(componentActionPermission.DownloadReports)| async)" (click)="onDownloadReport($event, packageReportType.ObservationRejectedReport)">
+      {{getReportNameByType(packageReportType.ObservationRejectedReport).fullName}}
+    </div>     -->
+    <div
+      class="item"
+      *ngIf="isUserAuthorized(componentActionPermission.DownloadReports) | async"
+      (click)="onDownloadReport($event, packageReportType.OnSiteChecklistReport)"
+    >
+      {{ getReportNameByType(packageReportType.OnSiteChecklistReport).fullName }}
+    </div>
+    @if ((isUserAuthorized(componentActionPermission.DownloadReports) | async) &&
+      [
+        AcceptanceStatus.CustomerApproved, AcceptanceStatus.DeemedApproved, AcceptanceStatus.AcceptanceDocumentInitiate,
+        AcceptanceStatus.AcceptanceDocumentReady, AcceptanceStatus.AcceptanceDocumentSent, AcceptanceStatus.AcceptanceDocumentSendFailed
+      ].includes(packageStatus())
+    ) {
+      <div
+        class="item"
+        (click)="onDownloadReport($event, packageReportType.SummaryReportPDF)"
+      >
+        {{ getReportNameByType(packageReportType.SummaryReportPDF).fullName }}
+      </div>
+    }
+
+    @if ((isUserAuthorized(componentActionPermission.TransferEvidences) | async) &&
+      [
+        AcceptanceStatus.AcceptanceDocumentReady, AcceptanceStatus.AcceptanceDocumentSent,
+        AcceptanceStatus.AcceptanceDocumentSendFailed
+      ].includes(packageStatus())
+    ) {
+      <div
+        class="item"
+        (click)="onDownloadReport($event, packageReportType.TransferEvidencesZip)"
+      >
+        {{ getReportNameByType(packageReportType.TransferEvidencesZip).fullName }}
+      </div>
+    }
+  </div>
+</div>

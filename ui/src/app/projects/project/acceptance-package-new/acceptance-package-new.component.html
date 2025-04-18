@@ -1,0 +1,151 @@
+<form class="h-100">
+  <!-- Wizard -->
+  <div #newPackageWizard class="wizard">
+    <!-- Steps -->
+    <div class="wizard-steps tile tile-horizontal">
+      <div class="arrow left">
+        <i class="icon icon-arrow-left"></i>
+      </div>
+
+      <div class="steps">
+        <div class="step current">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">1.Enter package details</div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">
+            {{ isMilestoneAcceptance ? "2. Select site's milestone" : '2. Select sites/workplans' }}
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">
+            {{ isMilestoneAcceptance ? "3. View milestone's components" : '3. Select components' }}
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">4. Upload package evidences</div>
+        </div>
+      </div>
+
+      <div class="arrow right visible">
+        <i class="icon icon-arrow-right"></i>
+      </div>
+    </div>
+
+    <!-- Wizard Contents -->
+
+    <div class="wizard-content">
+      <!-- Content step 1 -->
+      <div class="content">
+        <app-acceptance-package-form-step1
+          [packageForm]="packageForm"
+          [isEdit]="isEdit"
+        ></app-acceptance-package-form-step1>
+      </div>
+
+      <!-- Content step 2 -->
+      <div class="content hidden">
+        @if (isMilestoneAcceptance) {
+        <app-acceptance-package-form-milestones
+          [packageForm]="packageForm"
+          [isEdit]="isEdit"
+        ></app-acceptance-package-form-milestones>
+        } @else {
+        <app-acceptance-package-form-step5
+          [packageForm]="packageForm"
+          [doLITableReset]="doLITableReset"
+          [isEdit]="isEdit"
+        ></app-acceptance-package-form-step5>
+        }
+      </div>
+
+      <!-- Content step 3 -->
+      <div class="content hidden">
+        @if (isMilestoneAcceptance) {
+        <app-acceptance-package-form-milestone-components
+          [projectId]="projectId"
+          [packageForm]="packageForm"
+        ></app-acceptance-package-form-milestone-components>
+        } @else {
+        <app-acceptance-package-form-step2
+          [packageForm]="packageForm"
+          [doLITableReset]="doLITableReset"
+          [isEdit]="isEdit"
+        ></app-acceptance-package-form-step2>
+        }
+      </div>
+
+      <!-- Content step 4 -->
+      <div class="content hidden">
+        <app-acceptance-package-form-step3
+          [packageForm]="packageForm"
+          [evidences]="evidences"
+          [isEdit]="isEdit"
+          [isMilestoneAcceptance]="isMilestoneAcceptance"
+        ></app-acceptance-package-form-step3>
+      </div>
+    </div>
+
+    <!-- Wizard footer -->
+    <div class="wizard-footer tile tile-horizontal">
+      <div class="item">
+        <button class="btn" (click)="goBack()">Cancel</button>
+      </div>
+
+      <div class="item" [class]="{ hidden: !wizardIsLoaded }">
+        <button class="btn wizard-previous">
+          <i class="icon icon-arrow-left"></i>
+          <span class="term">Previous</span>
+        </button>
+        <button class="btn primary" *ngIf="!isLastStep()" (click)="onNextStep()" [disabled]="currentStepIsInvalid()">
+          <span class="term">Next</span>
+          <i class="icon icon-arrow-right"></i>
+        </button>
+        <!-- we need this button for initialization otherwise it fails -->
+        <button class="btn primary wizard-next" style="display: none">
+          <span class="term">Next</span>
+          <i class="icon icon-arrow-right"></i>
+        </button>
+
+        <!-- since there can be only one wizard-finish, controlling this 'Create and submit' visibility manually -->
+        @if (!isEdit) {
+          <!-- 'Create and submit' not allowed in edit mode -->
+          <button
+            class="{{ isLastStep() ? 'btn' : 'btn hidden' }}"
+            id="open-simple"
+            [disabled]="packageForm.invalid"
+            (click)="onCreateAndSubmit()"
+            [ngClass]="{ loading: processing }"
+          >
+            Create and submit
+          </button>
+        }
+
+        <button
+          class="btn primary wizard-finish"
+          (click)="isEdit ? onUpdate() : onSubmit()"
+          [disabled]="packageForm.invalid"
+          [ngClass]="{ loading: processing }"
+        >
+          {{ isEdit ? 'Save' : 'Create' }}
+        </button>
+
+        <button class="btn primary wizard-finished" disabled>Submitted</button>
+      </div>
+    </div>
+  </div>
+</form>

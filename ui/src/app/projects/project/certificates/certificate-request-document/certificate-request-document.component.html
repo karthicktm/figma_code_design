@@ -1,0 +1,12 @@
+<div>
+  <div>Reference documents</div>
+  @if (!certificateRequestId()) {
+    <button *ngIf=!certificateRequestId() class="btn float-right" type="button" (click)="onAddDocumentClick()">Add
+      document</button>
+  }
+  @else {
+    <button class="btn float-right" type="button" (click)="downloadAllCertificateReqDocuments($event)">Download
+      All</button>
+  }
+  <table class="table" #table></table>
+</div>

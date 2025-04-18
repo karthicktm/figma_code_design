@@ -1,0 +1,460 @@
+<div #fullscreen class="tile full-height custom-tile">
+  <ng-container *ngIf="fullScreenMode; then fullscreenModeTemplate else normalMode"></ng-container>
+</div>
+<ng-template #normalMode>
+  <div class="row">
+    <ng-container *ngIf="loadingLineItem">
+      <div class="background-shadow">
+        <div id="loading-spinner-align" class="loading large"></div>
+      </div>
+    </ng-container>
+    <div class="column" [ngClass]="compactMode? 'sm-8' : 'sm-12'">
+      <div class="tile">
+        <!-- Header -->
+        <div class="header custom-header">
+            <div class="left custom-left">
+              <div class="title">Line item name: {{ lineItemDetails.lineItemName || 'Line item details' }}</div>
+              <div [title]="lineItemDetails.description" class="title ml-bs color-gray description-max-ellipsis-hidden">Line item description: {{ lineItemDetails.description || '' }}</div>
+            </div>
+            <div>
+              <button class="btn" (click)="downloadAllEvidences($event)">Download all evidences</button>
+            </div>
+          <ng-container *ngIf="!compactMode">
+
+            <div class="right minimize-icon-wrapper">
+              <div *ngIf="
+                !isPackageCompleted
+                && (isUserAuthorized('accept-reject-all-button') | async)
+                && containsDecisionRequiredEvidence === true
+              ">
+                <ng-container [ngTemplateOutlet]="decideForAllEvidences"></ng-container>
+              </div>
+
+              <i class="icon icon-cross custom-icon" (click)="onClose()" data-close="true"></i>
+            </div>
+          </ng-container>
+        </div>
+        <div class="content" *ngIf="compactMode">
+          <div class="row">
+            <div class="column sm-12">
+              <div>Filter by status</div>
+
+              <app-status-filter [selectedFilter]="selectedFilter" (changeStatus)="selectedEvidenceFilterBy($event)">
+              </app-status-filter>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr-line"></div>
+
+      <div class="tile">
+        <div class="header custom-header">
+          <div class="left">
+            <div class="title">Evidence details</div>
+          </div>
+        </div>
+        <div class="content">
+          <div *ngIf="!compactMode">
+            <ng-container *ngIf="filterEvidenceDetails.length > 0; else noEvidenceDetails">
+              <app-evidence-thumbnails [allEvidenceDetails]="evidenceDetails"
+                class="thumbnails"
+                (switchToEvidence)="switchToEvidence($event)">
+              </app-evidence-thumbnails>
+            </ng-container>
+          </div>
+          <div *ngIf="compactMode">
+            <ng-container *ngIf="filterEvidenceDetails.length > 0; else noEvidenceDetails">
+              <div class="row custom-row">
+
+                @if (filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus 
+                  && filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus !== 'NotApplicable' 
+                  && filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus !== 'Not Applicable') {
+                    <div>
+                      <div>Status at my level</div>
+                      <p class="section text-sm">
+                        <kbd class="tag"
+                          [ngClass]="AcceptancePackageUtils.getMultiStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus)"
+                        >{{AcceptancePackageUtils.getMultiActionStatus(filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus)}}</kbd>
+                      </p>
+                    </div>
+                    <div>
+                      <div>Overall status</div>
+                      <p class="section text-sm">
+                        <kbd class="tag"
+                          [ngClass]="getStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.status)"
+                        >{{getStatus(filterEvidenceDetails?.[selectedPage - 1]?.status)}}</kbd>
+                      </p>
+                    </div>
+                } @else {
+                  <div>
+                  <div>Status</div>
+                  <p class="section text-sm">
+                    <kbd class="tag"
+                      [ngClass]="getStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.status)"
+                    >{{getStatus(filterEvidenceDetails?.[selectedPage - 1]?.status)}}</kbd>
+                  </p>
+                </div>
+                }
+                
+                <div>
+                  <div>ID</div>
+                  <p class="section text-sm">{{filterEvidenceDetails[selectedPage - 1].internalId || '--'}}</p>
+                </div>
+                <div>
+                  <div>Name</div>
+                  <p class="section text-sm detail">{{filterEvidenceDetails?.[selectedPage -
+                    1]?.name?filterEvidenceDetails[selectedPage -
+                    1].name:'--'}}</p>
+                </div>
+                <div>
+                  <div>Size</div>
+                  <p class="section text-sm detail">{{(filterEvidenceDetails[selectedPage - 1].fileSizeInKB * 1024 | formatBytes) || '--'}}</p>
+                </div>
+                <div>
+                  <div>Latitude</div>
+                  <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                    1]?.latitude?filterEvidenceDetails[selectedPage - 1].latitude:'--'}}</p>
+                </div>
+                <div>
+                  <div>Longitude</div>
+                  <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                    1]?.longitude?filterEvidenceDetails[selectedPage - 1].longitude:'--'}}</p>
+                </div>
+                <div>
+                  <div>Type</div>
+                  <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                    1]?.type?filterEvidenceDetails[selectedPage -
+                    1].type:'--'}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="column custom-file-viewer">
+                  <app-file-preview-wrapper [zoom]="fileToolbar.zoomEvents" (download)="downLoadFile($event)">
+
+                  </app-file-preview-wrapper>
+                  <app-file-toolbar #fileToolbar [allIcons]="['zoom', 'download', 'maximize', 'thumbnail']"
+                    (download)="downLoadFile($event)" (maximize)="maximizeScreen()" (thumbnail)="switchThumbnail()">
+                  </app-file-toolbar>
+                </div>
+              </div>
+              <div class="row">
+                <app-pagination [totalRecords]="filterEvidenceDetails?.length" [currentPage]="selectedPage"
+                  (changePage)="onPageChange($event.currentPage)"
+                  [numPerPage]="1"></app-pagination>
+              </div>
+              <div class="row custom-row"
+                *ngIf="filterEvidenceDetails?.[selectedPage - 1]?.status !== AcceptanceStatus.CustomerAcceptanceNotRequired"
+              >
+                <div>
+                  <ng-container [ngTemplateOutlet]="remarks"></ng-container>
+                </div>
+                <div class="right"
+                  *ngIf="
+                    !isPackageCompleted
+                    && (isUserAuthorized('accept-reject-all-button') | async)
+                    && containsDecisionRequiredEvidence === true
+                  ">
+                  <div>Submit evidence decision</div>
+                  <div>
+                    <div class="btn-group horizontal">
+                      <button class="btn" [disabled]="disabledSubmission"
+                        [ngClass]="{'active': selectedDecision === 'Reject' ,'disabled':selectedDecision === 'Reject'}"
+                        (click)="submitDecision('Reject')">Reject</button>
+                      <button class="btn " [disabled]="disabledSubmission"
+                        [ngClass]="{'active': selectedDecision === 'Approve', 'disabled':selectedDecision === 'Approve' }"
+                        (click)="submitDecision('Approve')">Approve</button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <ng-template #noEvidenceDetails>
+            <div class="row">
+              <div class="column sm-12">
+                <div class="empty-state">
+                  <div class="message">
+                    <p>No results found for active filter.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="compactMode" class="column sm-4">
+      <div class="tile ">
+        <!-- Header -->
+        <div class="header">
+          <div class="left">
+            <div *ngIf="
+              !isPackageCompleted
+              && (isUserAuthorized('accept-reject-all-button') | async)
+              && containsDecisionRequiredEvidence === true
+            ">
+              <ng-container [ngTemplateOutlet]="decideForAllEvidences"></ng-container>
+            </div>
+          </div>
+          <div class="right">
+            <i class="icon icon-cross custom-icon" (click)="onClose()" data-close="true"></i>
+          </div>
+        </div>
+        <div class="content">
+          <div class="row">
+            <div class="accordion normal-mode" appAccordion>
+              <ul>
+                <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                  <div class="title">Comments</div>
+                  <div class="content no-inset">
+                    <app-comment-history [packageId]="packageId"
+                      [evidenceId]="filterEvidenceDetails[selectedPage - 1]?.internalId" [evidenceLevel]="'lineitem'"
+                      [packageStatus]="packageStatus"></app-comment-history>
+                  </div>
+                </li>
+                <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                  <div class="title">
+                    Related evidences
+                    <i class="icon icon-info"
+                      title="Please review the additional related evidences when submitting a decision"
+                    ></i>
+                  </div>
+                  <div class="content no-inset">
+                    <app-related-evidences [relatedEvidenceList]="relatedEvidenceList"
+                      (selectedRelatedEvidence)="switchRelatedEvidence($event)"></app-related-evidences>
+                  </div>
+                </li>
+                <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                  <div class="title">Evidence history</div>
+                  <div class="content no-inset">
+                    <app-evidence-history [evidenceId]="filterEvidenceDetails[selectedPage - 1].internalId" [reloadStatus]="reloadHistoryStatus">
+                    </app-evidence-history>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #fullscreenModeTemplate>
+  <!-- Header -->
+  <div class="header custom-header-fullscreen">
+    <div class="left"></div>
+    <div class="right minimize-icon-wrapper">
+      <i class="icon icon-minimize custom-icon" (click)="onCloseMinimize()" data-close="true"></i>
+      <i class="icon icon-cross custom-icon" (click)="onClose()" data-close="true"></i>
+    </div>
+  </div>
+  <div class="hr-line"></div>
+  <div class="tile">
+    <div class="content">
+      <div class="row">
+        <div class="column sm-9">
+          <div class="column custom-file-viewer expanded">
+            <app-file-preview-wrapper [zoom]="fileToolbarExpanded.zoomEvents" (download)="downLoadFile($event)">
+            </app-file-preview-wrapper>
+            <app-file-toolbar #fileToolbarExpanded class="toolbar" [maximized]="true" [horizontal]="true"
+              (download)="downLoadFile($event)" (minimize)="onCloseMinimize()"></app-file-toolbar>
+            <button class="btn toggle-button-prev" [disabled]="filterEvidenceDetails.length <= 1"
+              (click)="goPrevious()">
+              <i class="icon icon-chevron-left"></i>
+            </button>
+            <button class="btn toggle-button-next" [disabled]="filterEvidenceDetails.length <= 1" (click)="goNext()">
+              <i class="icon icon-chevron-right"></i>
+            </button>
+            <div class="page-counter">{{selectedPage}}/{{filterEvidenceDetails.length}}</div>
+          </div>
+        </div>
+        <div class="column sm-3 details">
+          <div class="header custom-header">
+            <div class="left">
+              <div class="title">{{ lineItemDetails.lineItemName || 'Line item details' }}
+              </div>
+              <div [title]="lineItemDetails.description" class="title ml-bs color-gray description-max-ellipsis-hidden">Line item description: {{ lineItemDetails.description || '' }}</div>
+            </div>
+            <div class="right">
+              <button class="btn" (click)="downloadAllEvidences($event)">Download all evidences</button>
+            </div>
+          </div>
+          <div class="content">
+            <div class="row"
+              *ngIf="
+                !isPackageCompleted
+                && (isUserAuthorized('accept-reject-all-button') | async)
+                && containsDecisionRequiredEvidence === true
+              "
+            >
+              <div class="column sm-12">
+                <div>Submit decision</div>
+                <ng-container [ngTemplateOutlet]="decideForAllEvidences"></ng-container>
+
+              </div>
+            </div>
+            <div class="hr-line"></div>
+            <div class="row">
+              <div class="tile custom-tile">
+                <div class="header custom-header">
+                  <div class="left">
+                    <div class="title">Evidence details</div>
+                  </div>
+                </div>
+                <div class="content">
+                  <div class="row">
+                    <div class="column sm-6">
+                      <div class="detail">Name: <span>{{filterEvidenceDetails?.[selectedPage -
+                          1]?.name?filterEvidenceDetails[selectedPage -
+                          1].name:'--'}}</span>
+                      </div>
+                    </div>
+                    <div class="column sm-6">
+                      <div>Latitude: <span>{{filterEvidenceDetails?.[selectedPage -
+                          1]?.latitude?filterEvidenceDetails[selectedPage - 1].latitude:'--'}}</span>
+                      </div>
+                    </div>
+
+                    @if (filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus 
+                      && filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus !== 'NotApplicable' 
+                      && filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus !== 'Not Applicable') {
+                        <div class="column sm-6">
+                          <div>Status at my level:
+                            <kbd class="tag"
+                              [ngClass]="AcceptancePackageUtils.getMultiStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus)"
+                            >{{AcceptancePackageUtils.getMultiActionStatus(filterEvidenceDetails?.[selectedPage - 1]?.myLevelStatus)}}</kbd>
+                          </div>
+                        </div>
+                        <div class="column sm-6">
+                          <div>Overall status:
+                            <kbd class="tag"
+                              [ngClass]="getStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.status)"
+                            >{{getStatus(filterEvidenceDetails?.[selectedPage - 1]?.status)}}</kbd>
+                          </div>
+                        </div>
+                    } @else {
+                      <div class="column sm-6">
+                        <div>Evidence status:
+                          <kbd class="tag"
+                            [ngClass]="getStatusColor(filterEvidenceDetails?.[selectedPage - 1]?.status)"
+                          >{{getStatus(filterEvidenceDetails?.[selectedPage - 1]?.status)}}</kbd>
+                        </div>
+                      </div>
+                    }
+                    
+                    <div class="column sm-6">
+                      <div>Longitude: <span>{{filterEvidenceDetails?.[selectedPage -
+                          1]?.longitude?filterEvidenceDetails[selectedPage - 1].longitude:'--'}}</span>
+                      </div>
+                    </div>
+                    <div class="column sm-6">
+                      <div>Tag: <span>{{filterEvidenceDetails?.[selectedPage -
+                          1]?.tag?filterEvidenceDetails[selectedPage -
+                          1].tag:'--'}}</span>
+                      </div>
+                    </div>
+                    <div class="column sm-6">
+                      <div>Type: <span>{{filterEvidenceDetails?.[selectedPage -
+                          1]?.type?filterEvidenceDetails[selectedPage -
+                          1].type:'--'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="tile custom-tile"
+                *ngIf="filterEvidenceDetails?.[selectedPage - 1]?.status !== AcceptanceStatus.CustomerAcceptanceNotRequired"
+              >
+                <div class="header custom-header">
+                  <div class="left  custom-top" *ngIf="isUserAuthorized('accept-reject-all-button') | async">
+                    <div class="title">Submit evidence decision</div>
+                  </div>
+                </div>
+                <div class="content">
+                  <div class="row">
+                    <ng-container [ngTemplateOutlet]="remarks"></ng-container>
+                  </div>
+                  <div class="row">
+                    <div class="column sm-12 btn-group horizontal"
+                      *ngIf="
+                        !isPackageCompleted
+                        && (isUserAuthorized('accept-reject-all-button') | async)
+                        && containsDecisionRequiredEvidence === true
+                      ">
+                      <button class="btn" [disabled]="disabledSubmission"
+                        [ngClass]="{'active': selectedDecision === 'Reject' ,'disabled':selectedDecision === 'Reject'}"
+                        (click)="submitDecision('Reject')">Reject</button>
+                      <button class="btn " [disabled]="disabledSubmission"
+                        [ngClass]="{'active': selectedDecision === 'Approve', 'disabled':selectedDecision === 'Approve' }"
+                        (click)="submitDecision('Approve')">Approve</button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="accordion" appAccordion>
+                <ul>
+                  <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                    <div class="title">Comments</div>
+                    <div class="content no-inset">
+                      <app-comment-history [packageId]="packageId"
+                        [evidenceId]="filterEvidenceDetails[selectedPage - 1]?.internalId" [evidenceLevel]="'lineitem'"
+                        [packageStatus]="packageStatus"></app-comment-history>
+                    </div>
+                  </li>
+                  <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                    <div class="title">
+                      Related evidences
+                      <i class="icon icon-info"
+                        title="Please review the additional related evidences when submitting a decision"
+                      ></i>
+                    </div>
+                    <div class="content no-inset">
+                      <app-related-evidences [relatedEvidenceList]="relatedEvidenceList"
+                        (selectedRelatedEvidence)="switchRelatedEvidence($event)"></app-related-evidences>
+                    </div>
+                  </li>
+                  <li class="opened" tabindex="0" *ngIf="filterEvidenceDetails[selectedPage - 1]?.internalId">
+                    <div class="title">Evidence history</div>
+                    <div class="content no-inset">
+                      <app-evidence-history [evidenceId]="filterEvidenceDetails[selectedPage - 1].internalId" [reloadStatus]="reloadHistoryStatus">
+                      </app-evidence-history>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #remarks>
+  <app-evidence-remarks 
+    [isViewSelectedOnly]="[
+      AcceptanceStatus.CustomerApproved,
+      AcceptanceStatus.CustomerRejected
+    ].includes(packageStatus)"
+    [isDisabled]="isRemarkDisabled()"
+    [(selectedRemark)]="filterEvidenceDetails[selectedPage - 1].remarks"
+  />
+</ng-template>
+
+<ng-template #decideForAllEvidences>
+  <button class="btn" [disabled]="disabledSubmission"
+    [ngClass]="{'active': selectedAllDecision === decisionType.reject}"
+    (click)="openBulkDecisionDialog(decisionType.reject)">Bulk {{decisionType.reject | lowercase}} evidences</button>
+  <button class="btn primary" [disabled]="disabledSubmission"
+    [ngClass]="{'active': selectedAllDecision === decisionType.approve}"
+    (click)="openBulkDecisionDialog(decisionType.approve)">Bulk {{decisionType.approve | lowercase}} evidences</button>
+</ng-template>

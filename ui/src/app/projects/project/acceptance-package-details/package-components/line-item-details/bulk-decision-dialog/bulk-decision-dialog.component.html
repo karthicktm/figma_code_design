@@ -1,0 +1,55 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+
+    <form class="eds-form"
+      (ngSubmit)="onSubmit()"
+      [formGroup]="form"
+    >
+      <div class="form-header">
+        <div class="title">
+          Bulk {{ data.decision | lowercase }} for
+        </div>
+        <button class="btn-icon" data-close="true">
+          <i class="icon icon-cross"></i>
+        </button>
+      </div>
+
+      <div class="form-body">
+
+        <div class="form-group">
+          <div class="form-group-title"></div>
+
+          <ng-container [ngTemplateOutlet]="optionsMarkup"></ng-container>
+
+        </div>
+
+      </div>
+
+      <div class="form-footer custom-bottom">
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button class="btn primary"
+          type="submit"
+        >Submit</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<ng-template #optionsMarkup [formGroup]="form">
+  <div class="form-element custom-form-element"
+    *ngFor="let option of options; let i = index"
+  >
+
+    <input
+      [id]="'option'+i"
+      name="scope"
+      type="radio"
+      value="{{option}}"
+      formControlName="scope"
+    >
+    <label [for]="'option'+i">{{ option }}</label>
+
+  </div>
+</ng-template>

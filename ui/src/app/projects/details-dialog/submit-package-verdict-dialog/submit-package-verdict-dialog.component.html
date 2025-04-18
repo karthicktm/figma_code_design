@@ -1,0 +1,41 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title"> Submit decision </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="row">
+      <div class="coulmn sm-12">
+        <div class="title custom-title">Verdict</div>
+        <app-select #selectVerdict id="select-verdict" class="select" data-type="single"
+          [emptySelectionText]="'Select decision'" [selectId]="'verdictSelectGroup'" [options]="verdicts"
+          [custom]="true" (optionChanged)="onSelectVerdict($event)"></app-select>
+      </div>
+    </div>
+    <div [ngClass]="{'hidden': chosenVerdict === ''}">
+      <div class="row">
+        <div class="coulmn sm-12">
+          <label class="required" for="commentInput">Comment</label>
+          <textarea id="commentInput" name="commentInput" class="fullwidth" [formControl]="commentInput"
+            placeholder="Enter comment"></textarea>
+
+          <span class="character-counter">
+            <span [class.color-red]="commentInput?.errors?.maxlength">{{ commentInput.value.length }}</span>
+            <span>/{{ maxLength }}</span>
+          </span>
+          @if (commentInput?.errors?.maxlength) {
+          <span class="validation-msg invalid">Keep it shorter!</span>
+          }
+        </div>
+      </div>
+      <div class="bottom">
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button [disabled]="commentInput?.errors" class="btn primary" (click)="submitVerdict()" data-close="true">
+          Submit decision</button>
+      </div>
+    </div>
+
+  </div>
+</div>

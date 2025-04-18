@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div class="header">
+      <div class="left">
+        <div class="title">ECA Database</div>
+      </div>
+    </div>
+    <div>
+      <div class="avp-container">
+        <div class="avp-left">
+          <label>Uptime:</label>
+          <div class="detail">{{dbUptime}}</div>
+          <br />
+          <label>Size:</label>
+          <div class="detail">Configured = {{dbCfgSize}}</div>
+          <div class="detail">Currently used = {{dbUsedSize}}</div>
+          <br />
+          <label>Connections:</label>
+          <div class="detail">Maximum allowed = {{dbMaxConns}}</div>
+          <div class="detail">Current connections = {{dbCurrConns}}</div>
+          <div class="detail">Active connections = {{dbActvConns}}</div>
+          <br />
+          <label>Specification:</label>
+          <div class="detail">RAM configured = {{dbCfgRAM}}</div>
+          <div class="merged-div" *ngIf="dbUsedRAM === 'TBC' && ramUsedTBCLink !== ''">
+            <div>RAM used =&nbsp;</div><a [href]="ramUsedTBCLink"
+              target="_blank">Click here to check</a>
+          </div>
+          <div class="detail" *ngIf="dbUsedRAM !== 'TBC'">RAM used = {{dbUsedRAM}}</div>
+          <br />
+          <div class="detail" *ngIf="grafanaDashboardLink !== ''">
+            <a [href]="grafanaDashboardLink" target="_blank">Grafana dashboard</a>
+          </div>
+        </div>
+        <div class="avp-right">
+          <div id='hcTableTabs' class="tabs" #hcTableTabs>
+            <div class="titles">
+              <div class="title selected" tabindex="0">Slow running queries (>3 seconds)</div>
+              <div class="title" tabindex="0">Deadlocks</div>
+            </div>
+            <div class="contents">
+              <div class="content selected">
+                <div class="table-container">
+                  <table id="healthCheckTblSlowQuery" class="table" #healthCheckTblSlowQuery>
+                  </table>
+                </div>
+              </div>
+              <div class="content">
+                <div class="table-container">
+                  <table id="healthCheckTblDeadlocks" class="table" #healthCheckTblDeadlocks>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

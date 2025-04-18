@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="tile sm-12 custom-tile">
+    <div class="header">
+      <div class="left">
+        <div class="title">Total number of packages</div>
+      </div>
+    </div>
+    <div class="content">
+      <ng-container *ngIf="!loadingUsageData && totalNumberPackages; else noData">
+        <app-bar-chart
+          [chartData] = "totalNumberPackages"
+          [selector] = "'total-number-packages'"
+          [unit] = "'Number of packages'"
+          [colorScale]="totalNumberPackagesColorScale"
+          [height]="chartHeight"
+        ></app-bar-chart>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="tile sm-12 custom-tile">
+    <div class="header">
+      <div class="left">
+        <div class="title">Average lead time for approved acceptance packages</div>
+      </div>
+    </div>
+    <div class="content">
+      <ng-container *ngIf="!loadingUsageData && leadTimePackages; else noData">
+        <app-bar-chart class="wider-bar"
+          [chartData] = "leadTimePackages"
+          [selector] = "'average-lead-time-packages'"
+          [unit] = "'Days'"
+          [colorScale]="leadTimeColorScale"
+          [height]="chartHeight"
+        ></app-bar-chart>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="empty-state">
+    <div class="message">
+      <p *ngIf="loadingUsageData" class="loading large"></p>
+      <p *ngIf="errorMessage">{{errorMessage}}</p>
+    </div>
+  </div>
+</ng-template>

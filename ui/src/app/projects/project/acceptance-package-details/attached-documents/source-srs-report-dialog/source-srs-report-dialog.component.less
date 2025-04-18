@@ -1,0 +1,47 @@
+@import "@eds/vanilla/variables/global";
+
+.dialog {
+  .content {
+    max-width: 50vw;
+
+    .custom-body {
+      overflow-y: visible;
+    }
+
+    .table.compact label{
+      display: inline;
+    }
+
+    .center{
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .para-center{
+        text-align: center;
+        margin-top: @space-large;
+        white-space: pre-line;
+    }
+
+    .statusIcon {
+      font-size: 62px;
+        height: 64px;
+        width: 64px;
+        border: none;
+        display: block;
+    }
+
+    :host-context(.light) * {
+      @import (reference, multiple) "@eds/vanilla/variables/light";
+      .icon-success{
+        color: @green-40;
+      }
+    }
+    :host-context(.dark) * {
+      @import (reference, multiple) "@eds/vanilla/variables/dark";
+      .icon-success{
+        color: @green-35;
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top  custom-top">
+      <div class="title"> Submit acceptance package </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div>
+      <p>Please leave a comment with a additional information for the acceptance package approvers and observers.</p>
+      <div class="row">
+        <div class="coulmn sm-12">
+          <label for="commentInput">Comment</label>
+          <textarea id="commentInput"
+            name="commentInput" 
+            class="fullwidth"
+            [formControl]="commentInput" 
+            placeholder="Enter comment"
+          ></textarea>
+
+          <span class="character-counter">
+            <span [class.color-red]="commentInput?.errors?.maxlength">{{ commentInput.value.length }}</span>
+            <span>/{{ maxLength }}</span>
+          </span>
+          @if (commentInput?.errors?.maxlength) {
+            <span class="validation-msg invalid">Keep it shorter!</span>
+          }
+        </div>
+      </div>
+      <button class="btn primary custom-button" [disabled]="commentInput?.errors" (click)="submitPackage(commentInput.value)" data-close="true">Submit acceptance package</button>
+    </div>
+  </div>
+</div>

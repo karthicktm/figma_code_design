@@ -1,0 +1,9 @@
+@for (card of cards(); track $index) {
+  <ng-container *ngComponentOutlet="
+    card.component;
+    inputs: card.inputs;
+  " />
+}
+@empty {
+  No cards configured
+}

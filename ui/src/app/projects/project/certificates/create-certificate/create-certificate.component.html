@@ -1,0 +1,105 @@
+<div class="tile fullscreen">
+  <!-- Wizard -->
+  <div #newCertificateWizard class="wizard">
+    <!-- Steps -->
+    <div class="wizard-steps">
+      <div class="arrow left">
+        <i class="icon icon-arrow-left"></i>
+      </div>
+
+      <div class="steps">
+        <div class="step current">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">1. Select workplan</div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">2. Required information </div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">3. Signatory details</div>
+        </div>
+
+        <div class="step">
+          <div class="prevbar"></div>
+          <div class="nextbar"></div>
+          <div class="sphere"></div>
+          <div class="description">4. Preview certificate and submit</div>
+        </div>
+      </div>
+
+      <div class="arrow right visible">
+        <i class="icon icon-arrow-right"></i>
+      </div>
+    </div>
+
+    <!-- Wizard Contents -->
+
+    <div class="wizard-content">
+      <!-- Content step 1 -->
+      <div class="content">
+        <app-create-certificate-step1
+          [certificateForm]="certificateForm"
+          [projectId]="projectId"
+        ></app-create-certificate-step1>
+      </div>
+
+      <!-- Content step 2 -->
+      <div class="content hidden">
+        <app-create-certificate-step4 [certificateForm]="certificateForm" [projectId]="projectId" />
+      </div>
+
+      <!-- Content step 3 -->
+      <div class="content hidden">
+        <app-create-certificate-step2 [certificateForm]="certificateForm" [projectId]="projectId" />
+      </div>
+
+      <!-- Content step 4 -->
+      <div class="content hidden">
+        <app-create-certificate-step3 [certificateForm]="certificateForm" [projectId]="projectId" />
+      </div>
+    </div>
+
+    <!-- Wizard footer -->
+    <div class="wizard-footer">
+      <div class="item">
+        <button class="btn" (click)="goBack()">Cancel</button>
+      </div>
+
+      <div class="item" [class]="{ hidden: !wizardIsLoaded }">
+        <button class="btn wizard-previous" [disabled]="processing()">
+          <i class="icon icon-arrow-left"></i>
+          <span class="term">Previous</span>
+        </button>
+
+        <button class="btn primary" *ngIf="!isLastStep()" (click)="onNextStep()" [disabled]="currentStepIsInvalid()">
+          <span class="term">Next</span>
+          <i class="icon icon-arrow-right"></i>
+        </button>
+        <!-- we need this button for initialization otherwise it fails -->
+        <button class="btn primary wizard-next" style="display: none">
+          <span class="term">Next</span>
+          <i class="icon icon-arrow-right"></i>
+        </button>
+        <button
+          class="btn primary wizard-finish"
+          [disabled]="certificateForm.invalid || processing()"
+          [ngClass]="{ loading: processing() }"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+        <button class="btn primary wizard-finished" disabled>Finished</button>
+      </div>
+    </div>
+  </div>
+</div>

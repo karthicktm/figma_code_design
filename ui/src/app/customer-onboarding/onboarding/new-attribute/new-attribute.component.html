@@ -1,0 +1,68 @@
+
+<div class="new-attr-wrapper">
+  <form class="eds-form form-group" [formGroup]="attributeForm" (ngSubmit)="createAttribute()">
+    <div class="form-body">
+      <div class="form-element">
+        <label for="attribute-name"
+          class="required">Attribute name</label>
+        <input type="text"
+          id="attribute-name"
+          placeholder="Enter attribute name"
+          formControlName="attributeName"
+          name="attributeName"
+          class="fullwidth validation"
+          [class.invalid]="attributeForm?.controls?.attributeName?.errors"
+          required
+        />
+        <span *ngIf="attributeForm?.controls?.attributeName?.errors?.duplicate"
+          class="validation-msg">Extended attribute with same name already added.</span>
+        <span *ngIf="attributeForm?.controls?.attributeName?.errors?.maxlength"
+          class="validation-msg invalid">{{ 'Max length of name exceeded ' + attributeForm.controls.attributeName.value?.length + '/' +
+          attributeForm.controls.attributeName.errors?.maxlength?.requiredLength}}</span>
+      </div>
+
+      <div class="form-element">
+        <label for="attribute-type">Type of information the field will contain</label>
+        <app-select #dataTypeSelection
+          class="select fullwidth"
+          data-type="single"
+          [options]="dataTypes"
+          [selectId]="'attribute-type'"
+          [selected]="'string'"
+          [emptySelectionText]="'Select data type'"
+          formControlName="attributeType"
+        />
+      </div>
+      <div class="form-element" *ngIf="selectedDataType==='string' || selectedDataType==='number'">
+        <label for="attribute-value"
+          class="required">Attribute value</label>
+        <input type="text"
+          id="attribute-value"
+          #textField
+          placeholder="Enter attribute value"
+          formControlName="attributeValue"
+          name="attributeValue"
+          class="fullwidth"
+          required
+          [class.invalid]="attributeForm?.controls?.attributeValue?.errors"
+        />
+        <span *ngIf="attributeForm.controls.attributeValue.errors?.maxlength"
+          class="validation-msg invalid">{{ 'Max length of value exceeded ' + attributeForm.controls.attributeValue.value?.length + '/' +
+          attributeForm.controls.attributeValue.errors?.maxlength?.requiredLength}}</span>
+      </div>
+
+      <div class="form-element" *ngIf="selectedDataType==='boolean'">
+        <input type="checkbox" id="attribute-value" #booleanField
+                class="fullwidth"
+                formControlName="attributeValue">
+        <label for="attribute-value">{{ attributeName.value }}</label>
+      </div>
+    </div>
+
+    <div>
+      <div class="form-footer">
+        <button class="btn create-attr" [disabled]="!attributeForm.valid">Create attribute</button>
+      </div>
+    </div>
+  </form>
+</div>

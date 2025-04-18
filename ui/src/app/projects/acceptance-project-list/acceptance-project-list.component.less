@@ -1,0 +1,75 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) * {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .custom-table-wrapper {
+    .loading-table-data {
+      background-color: @gray-14;
+    }
+  }
+  svg .main-path {
+    fill: @gray-40;
+  }
+  .tabs .titles .title:only-child.selected{
+    border-bottom: 2px solid @blue-48;
+  }
+  .mixin()
+
+}
+
+:host-context(.light) * {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .custom-table-wrapper {
+    .loading-table-data {
+      background-color: @gray-98;
+    }
+  }
+  svg .main-path {
+    fill: @gray-220;
+  }
+  .tabs .titles .title:only-child.selected{
+    border-bottom: 2px solid @blue-48;
+  }
+  .mixin()
+}
+
+.mixin() {
+  .filter-input{
+    width: 100%;
+    margin-right: 0;
+    &.row{
+      margin-bottom: 16px;
+    }
+  }
+}
+
+::ng-deep.icon.pointer {
+    cursor: pointer;
+}
+
+.coming-soon-data{
+  text-align: center;
+  padding: 10em 5em;
+}
+::ng-deep.hiddenInView{
+  display: none !important;
+}
+::ng-deep.showInView{
+  display:revert !important;
+}
+
+.custom-table-wrapper {
+  position: relative;
+  .loading-table-data {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

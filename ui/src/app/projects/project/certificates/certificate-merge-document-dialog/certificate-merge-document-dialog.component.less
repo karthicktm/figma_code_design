@@ -1,0 +1,34 @@
+.dialog .content {
+  max-width: 50%;
+
+  .card .header .left {
+    min-width: 0;
+
+    .title-overflow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:hover {
+        text-overflow: clip;
+        white-space: normal;
+        word-break: break-all;
+      }
+    }
+  }
+}
+
+.drop-area-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.custom-bottom {
+  display: flex !important;
+  align-items: center;
+}
+
+.reset-button {
+  margin-right: auto;
+  cursor: pointer;
+}

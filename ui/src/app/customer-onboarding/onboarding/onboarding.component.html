@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="column sm-4">
+    <div class="tile">
+      <div class="header">
+        <div class="left">
+          <div class="title">{{ customerDetails ? 'Edit customer' : 'Add new customer'}}</div>
+        </div>
+        <div>
+          <label for="label">Customer Type</label>
+          <label class="switch">
+            <input type="checkbox" [checked]="isSelectableCustomerInput" (change)="switchCustomerType($event)">
+            <i class="ball"></i>
+            <span class="line-no-wrap" data-enabled="Site Tracker" data-disabled="Offline"></span>
+          </label>
+        </div>
+      </div>
+      <div class="content customer-form">
+        <app-customer-form [selectedData]="customerDetails" (ifUpdateCustomerList)="updateCustomerList($event)" [isSelectableCustomerInput]="getCustomerInputType()"/>
+      </div>
+    </div>
+  </div>
+  <div class="column sm-8">
+    <div class="tile">
+      <div class="header">
+        <div class="left">
+          <div class="title">Customers</div>
+        </div>
+      </div>
+      <div class="content customer-list">
+        <app-customer-list [updatedCustomerDetails]="updatedCustomerDetails" (selectedValue)="fetchCustomerBySelection($event)"></app-customer-list>
+      </div>
+    </div>
+  </div>
+</div>

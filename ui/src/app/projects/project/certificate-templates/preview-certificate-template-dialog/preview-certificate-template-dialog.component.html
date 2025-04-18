@@ -1,0 +1,32 @@
+<div #dialog class="dialog fullscreen" data-type="fullscreen">
+  <div class="content">
+
+    
+    <div class="top">
+      <div class="title">
+        Preview of certificate template
+      </div>
+      <div class="subtitle">
+        {{ inputData?.certificateTemplate?.templateName }}
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <div class="body">
+      <app-object-file-preview 
+        *ngIf="inputData?.certificatePreviewURL | async as previewURL; else loading" 
+        [evidenceUrl]="previewURL" 
+        [type]="'text/html'"
+        [offsetWidth]="'100vw'"
+        [offsetHeight]="'100vh'"
+      />
+      <ng-template #loading>
+        <div class="loading">
+        </div>
+      </ng-template>
+    </div>
+    
+  </div>
+</div>

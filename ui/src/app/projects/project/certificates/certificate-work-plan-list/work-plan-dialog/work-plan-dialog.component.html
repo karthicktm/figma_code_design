@@ -1,0 +1,54 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+
+    <div class="top">
+      <div class="title">
+        Workplan name:
+      </div>
+      <div class="subtitle">
+        {{ inputData?.workPlan?.name }}
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="tabs" #tabs>
+        <div class="titles">
+          @for (tab of tabConfigs; track tab.name) {
+            <div class="title"
+              [class.selected]="activeTab() === tab.id"
+              (click)="openTab(tab.id)"
+              [tabindex]="activeTab() === tab.id ? 0 : -1"
+            >
+              {{ tab.name }}
+            </div>
+          }
+        </div>
+
+        <div class="contents">
+          @for (tab of tabConfigs; track tab.name) {
+            <div class="content"
+              [class.selected]="activeTab() === tab.id"
+            >
+
+              @defer (on viewport) {
+                @if (tab.id === 'packages') {
+                  <app-work-plan-packages [workPlanId]="inputData?.workPlan?.workplanId" [filterBy]="inputData?.filterBy" />
+                }
+                @else if (tab.id === 'requests') {
+                  <app-work-plan-certificate-requests [projectId]="inputData.projectId" [workPlanId]="inputData?.workPlan?.workplanId" />
+                }
+              }
+              @placeholder {
+                <div>{{tab.name}} ...</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

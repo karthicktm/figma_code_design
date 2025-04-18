@@ -1,0 +1,123 @@
+@let workItemInfo = workItemDetails | async;
+@let placeholder = valuePlaceholder();
+<div class="tile full-height">
+  <div class="header">
+    <div class="left">
+      <div class="title">{{ workItemInfo?.name || 'Loading...' }}</div>
+    </div>
+  </div>
+  
+  <div class="content">
+
+    <div class="row">
+      <div class="column sm-3">
+        <div class="custom-label">Status</div>
+        <p class="section text-sm">
+          <app-node-status [status]="workItemInfo?.status" />
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Type</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.type || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-6">
+        <div class="custom-label">Type of work</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.typeOfWork || placeholder }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <div class="custom-label">Description</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.description || placeholder }}
+        </p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="column sm-3">
+        <div class="custom-label">Customer scope ID</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.customerScopeId || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Project type</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.projectType || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Project category</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.projectCategory || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">FAS ID</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.fasId || placeholder }}
+        </p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="column sm-3">
+        <div class="custom-label">Planned start date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.plannedStartDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Planned end date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.plannedEndDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Actual start date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.actualStartDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Actual end date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.actualEndDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column sm-3">
+        <div class="custom-label">Created by</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.createdByUsername || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Created date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.createdDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Last modified by</div>
+        <p class="section text-sm">
+          {{ workItemInfo?.lastModifiedByUsername || placeholder }}
+        </p>
+      </div>
+      <div class="column sm-3">
+        <div class="custom-label">Last modified date</div>
+        <p class="section text-sm">
+          {{ (workItemInfo?.lastModifiedDate | nullStringDate) || placeholder }}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

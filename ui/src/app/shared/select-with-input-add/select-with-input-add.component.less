@@ -1,0 +1,23 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) ::ng-deep * {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .mixin()
+}
+
+:host-context(.light) ::ng-deep * {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .mixin()
+}
+
+.mixin() {
+  .item.addable {
+    display: flex;
+    justify-content: space-between;
+    .blue {
+      color: @blue;
+    }
+  }
+}

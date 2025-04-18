@@ -1,0 +1,31 @@
+@import "@eds/vanilla/variables/global";
+
+.legends {
+  margin: 0 0 @space-base;
+  padding: 0 0 @space-base;
+  .legend-title {
+    font-size: 12px;
+  }
+}
+
+.row ::ng-deep {
+  flex-flow: nowrap;
+  //Lets direct children fill the remaining space
+  > :not(router-outlet):not(.site-navigation) {
+    flex: 1 100%;
+  }
+}
+
+.row .tile {
+  &.site-navigation {
+    border-right: 3px solid transparent;
+    flex-basis: auto;
+    min-width: 17em;
+    overflow: hidden;
+    resize: horizontal;
+  }
+
+  &.full-height {
+    height: calc(100vh - 114px);
+  }
+}

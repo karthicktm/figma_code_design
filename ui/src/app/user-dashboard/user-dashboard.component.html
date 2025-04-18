@@ -1,0 +1,113 @@
+@let certCount = certificatesCount | async;
+@let approverPackCount = approverPackagesCount | async;
+@let observerPackCount = observerPackagesCount | async;
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div class="content">
+      <div class="mb-lg content-header">
+        <div class="left">
+          <span class="mr-bs">Select project</span>
+          @if (projectObservable | async; as projects) {
+            <app-select #selectProject
+              id="select-project"
+              class="select"
+              data-type="single"
+              [emptySelectionText]="'Select project'"
+              [selectId]="'projectSelect'"
+              [selected]="selectedProject()"
+              [optionsWithValue]="projects"
+              (optionChanged)="onSelectProject($event)"
+            ></app-select>
+          } @else if (loadingProject()) {
+            <span class="loading small"></span>
+          } @else {
+            <input
+              type="text"
+              name="project"
+              id="project"
+              placeholder="No project available"
+              disabled
+            />
+          }
+        </div>
+        <div class="right">
+          <i class='icon icon-info'></i> {{hintText}}
+        </div>
+      </div>
+
+      <div class="tabs" #tabs>
+        <div class="titles">
+          @for (tab of tabConfigs; track $index) {
+            <div
+              class="title"
+              [class.selected]="targetTab === tab.tab"
+              (click)="openTab(tab.tab)"
+              tabindex="{{tab.tab === targetTab ? '0' : '-1'}}"
+            >
+              {{ tab.name }}
+            </div>
+          }
+        </div>
+
+        <div class="contents">
+          @for (tab of tabConfigs; track $index) {
+            <div class="content" [class.selected]="targetTab === tab.tab">
+              @defer (on viewport) {
+                @if (tab.name === TabIdentifier.packageApprover) {
+                  @if (myRoles().includes(RoleType.CustomerApprover)) {
+                    <app-metric-cards [cards]="tabContents[tab.tab] || []" />
+                    @if (targetTab === tab.tab) {
+                      <router-outlet />
+                    }
+                  }
+                  @else {
+                    <div class="empty-state">
+                      <div class="message">
+                        <p>Not applicable</p>
+                      </div>
+                    </div>
+                  }
+                }
+                @else if (tab.name === TabIdentifier.packageObserver) {
+                  @if (myRoles().includes(RoleType.CustomerObserver)) {
+                    <app-metric-cards [cards]="tabContents[tab.tab] || []" />
+                    @if (targetTab === tab.tab) {
+                      <router-outlet />
+                    }
+                  }
+                  @else {
+                    <div class="empty-state">
+                      <div class="message">
+                        <p>Not applicable</p>
+                      </div>
+                    </div>
+                  }
+                }
+                @else if (tab.name === TabIdentifier.certificateSignatory) {
+                  <app-metric-cards [cards]="tabContents[tab.tab] || []" />
+                  @if (targetTab === tab.tab) {
+                    <router-outlet />
+                  }
+                }
+                @else {
+                  <div class="empty-state">
+                    <div class="message">
+                      <p>No content available.</p>
+                    </div>
+                  </div>
+                }
+              }
+              @placeholder {
+                <div class="empty-state">
+                  <div class="message">
+                    <p>{{ tab.name }} content to load</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

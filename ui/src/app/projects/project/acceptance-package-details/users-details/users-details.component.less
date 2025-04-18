@@ -1,0 +1,37 @@
+@import "@eds/vanilla/variables/global";
+
+.full-height{
+  height: calc(100vh - 230px);
+  .custom-row:not(:last-of-type){
+      margin-bottom: @space-large;
+    }
+
+  .custom-tile {
+    padding: 0;
+
+    #details-panel {
+      flex: 0 1 auto;
+    }
+  }
+}
+
+.accordion{
+  padding-left: @space-base;
+}
+
+.attribute-detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+.legend-wrapper{
+  margin-right: @space-large;
+  .legend-text{
+    margin-left: @space-small;
+  }
+}

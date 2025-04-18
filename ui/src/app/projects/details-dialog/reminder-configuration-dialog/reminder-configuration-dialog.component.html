@@ -1,0 +1,43 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title">
+        Acceptance configuration
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+      <div class="tabs" #tabs>
+        <div class="custom-tab-header">
+          <div class="titles">
+            @for (tab of tabConfigs; track $index) {
+              <div
+                class="title"
+                [class.selected]="targetTab === tab.name"
+                (click)="openTab(tab.name)"
+                tabindex="0"
+              >
+                {{ tab.name }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="contents">
+          @for (tab of tabConfigs; track $index) {
+            <div class="content" [class.selected]="targetTab===tab.name">
+              @if (tab.name === 'Acceptance package') {
+                <app-package-configuration [name]="tab.name" [projectId]="projectId" [fetchingConfigurationError]="fetchingConfigurationError()" [configuration]="configuration()"/>
+              }
+              @else if (tab.name === 'Acceptance flow') {
+                <app-flow-configuration [name]="tab.name" [configuration]="configuration()"/>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

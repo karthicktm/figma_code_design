@@ -1,0 +1,188 @@
+<div class="carousel" #carousel>
+  <div class="carousel-container">
+    <div class="carousel-wrapper">
+      @for (slide of slidesData(); track slide.viewId; let idx = $index) {
+        <div class="carousel-slide">
+          @defer (when dataArray[idx]?.data()
+          && (
+          idx === currentSlideIndex()
+          || idx === currentSlideIndex() - 1
+          || idx === currentSlideIndex() + 1
+          )
+          ) {
+            @let data = dataArray[idx]?.data();
+            @if (data?.internalId && !data?.toBeLoaded) {
+              @let filePreview = dataArray[idx]?.fileUrlFetch() | async;
+              <div class="custom-file-viewer">
+                @if (filePreview) {
+                <app-file-preview-wrapper #filePreviewWrapper [zoom]="fileToolbar.zoomEvents"
+                  (download)="downLoadFile(data.internalId)" />
+                <app-file-toolbar #fileToolbar class="toolbar" (download)="downLoadFile(data.internalId)"
+                  [allIcons]="fileToolbarIcons()" [horizontal]="true" />
+                } @else {
+                <div class="empty-state">Loading preview...</div>
+                }
+              </div>
+
+              <div class="cs-content">
+                <div class="row">
+                  <div class="column custom-header">
+                    <div class="right">
+                    </div>
+                    <button class="btn-icon" (click)="close()">
+                      <i class="icon icon-cross"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="cs-title">{{data.name}}</div>
+                <div class="row">
+                  <div class="column sm-6">Evidence ID: <span class="section">{{data.evidenceId || '--'}}</span></div>
+                  <div class="column sm-6">Last modified date: <span class="section">{{(data?.lastModifiedDate | nullStringDate) || '--'}}</span></div>
+                </div>
+                @if (data.myLevelStatus && data.myLevelStatus !== 'NotApplicable' && data.myLevelStatus !== 'Not Applicable') {
+                  <div class="row">
+                    <div class="column sm-6">Status at my level: <kbd class="tag"
+                        [ngClass]="AcceptancePackageUtils.getMultiStatusColor(data.myLevelStatus)"
+                      >{{AcceptancePackageUtils.getMultiActionStatus(data.myLevelStatus)}}</kbd>
+                    </div>
+                    <div class="column sm-6">Type: <span class="section">{{data.type || '--'}}</span></div>
+                  </div>
+                  <div class="row">
+                    <div class="column sm-6">Overall status: <kbd class="tag"
+                        [ngClass]="AcceptancePackageUtils.getStatusColor(data.status)"
+                      >{{AcceptancePackageUtils.getStatus(data.status)}}</kbd>
+                    </div>
+                    <div class="column sm-6">Type: <span class="section">{{data.type || '--'}}</span></div>
+                  </div>
+                } @else {
+                  <div class="row">
+                    <div class="column sm-6">Status: <kbd class="tag"
+                        [ngClass]="AcceptancePackageUtils.getStatusColor(data.status)"
+                      >{{AcceptancePackageUtils.getStatus(data.status)}}</kbd>
+                    </div>
+                    <div class="column sm-6">Type: <span class="section">{{data.type || '--'}}</span></div>
+                  </div>
+                }
+
+                <div class="row">
+                  <div class="column sm-6">Uploaded date: <span class="section">{{(data?.createdDate | nullStringDate) || '--'}}</span></div>
+                  <div class="column sm-6">Tag: <span class="section">{{data.tag || '--'}}</span></div>
+                </div>
+
+                @let package = packageDetails();
+                <!-- Don't show if not in package context -->
+                @if (data?.internalId && package?.packageId) {
+                  <div class="row">
+                    <div class="column">
+                      <app-evidence-remarks
+                        [isViewSelectedOnly]="[
+                          CustomerAcceptanceStatus.CustomerApproved,
+                          CustomerAcceptanceStatus.CustomerRejected
+                        ].includes(package.status)"
+                        [isDisabled]="isRemarkDisabled()"
+                        [(selectedRemark)]="data.remarks"
+                      />
+                    </div>
+                    @if (isVerdictSubmissionAllowed() && (isUserAuthorized(ComponentActionPermission.AcceptRejectAllButton) | async)) {
+                      <div class="column inline">
+                        <label class="left mr-bs">Evidence decision</label>
+                        <div class="btn-group horizontal">
+                          @let decisionOptions = [ { value: 'Reject', status: CustomerAcceptanceStatus.CustomerRejected }, { value: 'Approve', status: CustomerAcceptanceStatus.CustomerApproved }];
+                          @for (decisionOption of decisionOptions; track $index;) {
+                            <button class="btn"
+                              [ngClass]="{ 'active': data.status === decisionOption.status, 'disabled': data.status === decisionOption.status || isRemarkDisabled() }"
+                              (click)="submitDecision({ decision: decisionOption.value, evidence: data })">{{ decisionOption.value }}</button>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Don't show if not in package context -->
+                @if (package?.packageId) {
+                  <div class="row">
+                    <div class="accordion" appAccordion>
+                      <ul>
+                        @if (data?.internalId) {
+                          <li class="opened" tabindex="0">
+                            <div class="title">Comments</div>
+                            <div class="content no-inset">
+                              <app-comment-history [packageId]="package?.packageId" [evidenceId]="data.internalId" [evidenceLevel]="'milestone'" [packageStatus]="package?.status" />
+                            </div>
+                          </li>
+
+                          <li class="opened" tabindex="0">
+                            <div class="title">Related evidences
+                              <i class="icon icon-info" title="Please review the additional related evidences when submitting a decision"></i>
+                            </div>
+                            <div class="content no-inset">
+                              <app-related-evidences [relatedEvidenceList]="getRelatedEvidenceList(data.internalId)" [noLink]="true"
+                                (selectedRelatedEvidence)="switchEvidence($event)"></app-related-evidences>
+                            </div>
+                          </li>
+
+                          <li class="opened" tabindex="0" >
+                            <div class="title">Evidence history</div>
+                            <div class="content no-inset">
+                              <app-evidence-history [evidenceId]="data.internalId" [reloadStatus]="reloadHistoryStatus" />
+                            </div>
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                }
+
+              </div>
+            } @else {
+            <ng-container [ngTemplateOutlet]="loadingPlaceholder" ] />
+            }
+          } @placeholder {
+          <ng-container [ngTemplateOutlet]="loadingPlaceholder" ] />
+          }
+        </div>
+      }
+    </div>
+    <ng-template #loadingPlaceholder>
+      <div class="custom-file-viewer"></div>
+      <div class="cs-content">
+        <div class="row">
+          <div class="column custom-header">
+            <div class="right">
+            </div>
+            <button class="btn-icon" (click)="close()">
+              <i class="icon icon-cross"></i>
+            </button>
+          </div>
+        </div>
+        <div class="cs-title">Loading...</div>
+        @let dottedPlaceholder = '...';
+        <div class="row">
+          <div class="column sm-6">Evidence ID: <span class="section">{{dottedPlaceholder}}</span></div>
+          <div class="column sm-6">Last modified date: <span class="section">{{dottedPlaceholder}}</span></div>
+        </div>
+        <div class="row">
+          <div class="column sm-6">Status: <span class="section">{{dottedPlaceholder}}</span></div>
+          <div class="column sm-6">Type: <span class="section">{{dottedPlaceholder}}</span></div>
+        </div>
+        <div class="row">
+          <div class="column sm-6">Uploaded date: <span class="section">{{dottedPlaceholder}}</span></div>
+          <div class="column sm-6">Tag: <span class="section">{{dottedPlaceholder}}</span></div>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="carousel-counter"></div>
+
+    <div class="btn carousel-button-prev">
+      <i class="icon icon-chevron-left"></i>
+    </div>
+
+    <div class="btn carousel-button-next">
+      <i class="icon icon-chevron-right"></i>
+    </div>
+
+    <div class="carousel-pagination"></div>
+  </div>
+</div>

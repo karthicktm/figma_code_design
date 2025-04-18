@@ -1,0 +1,9 @@
+<div class="search-holder">
+  <app-search-field (searchHandler)="searchHandler($event)"></app-search-field>
+  <app-search-results
+    [menuItems]="menuItems"
+    [sourceTreeViewPort]="sourceTreeViewPort"
+    (selectedNode)="selectedNode.emit($event)"
+  ></app-search-results>
+  <i class="icon icon-close" id="clear-search"></i>
+</div>

@@ -1,0 +1,31 @@
+<div class="container tile">
+  <div class="row">
+    <app-sub-menu-item
+      [title]="'Export usage report'"
+      [icon]="'icon-graph-line'"
+      [header]="'Usage report'"
+      [description]="'This report allows you to see ECA usage for all customers or for a specific customer'"
+      [isActive]="true"
+      [isClickable]="false"
+    >
+      <div class="custom-row">
+        <button class="btn" type="button"
+          appExportUsageReport
+        ><i class="icon icon-download-save"></i>Export report</button>
+      </div>
+    </app-sub-menu-item>
+
+    <app-sub-menu-item
+      [title]="'Dashboard'"
+      [icon]="'icon-graph-circle'"
+      [header]="'Dashboard'"
+      [description]="'View package details in a visualized dashboard.'"
+      [isActive]="true"
+      [isClickable]="false"
+    >
+      <div class="custom-row">
+        <button class="btn" type="button" [routerLink]="'/reports/dashboard/'"><i class="icon icon-graph-circle"></i>View dashboard</button>
+      </div>
+    </app-sub-menu-item>
+  </div>
+</div>

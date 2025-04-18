@@ -1,0 +1,42 @@
+@import "@eds/vanilla/variables/global";
+
+::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .history-log {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &.hidden {
+      display: none;
+    }
+
+    &-container {
+      overflow-y: auto;
+      height: 100%;
+      position: relative;
+    }
+
+    .title {
+      margin-bottom: @space-base;
+      display: flex;
+      align-items: center;
+    }
+
+    &-item {
+      position: relative;
+      margin-right: @space-base;
+      padding: @space-large @space-xxl @space-large @space-xxl;
+      border-bottom: 1px solid;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &-description {
+        color: @gray-53;
+      }
+    }
+
+  }
+}

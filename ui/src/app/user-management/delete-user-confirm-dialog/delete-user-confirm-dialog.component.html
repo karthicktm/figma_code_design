@@ -1,0 +1,21 @@
+<div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top">
+        <div class="title">{{action | titlecase}} user?</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+      <div class="body">
+        <div>{{ message }}</div>
+        <div class="mt-lg">
+          <label for="mySupportIdInput" class="required">My Support incident ID</label>
+          <input type="text" name="mySupportIdInput" id="mySupportIdInput" [(ngModel)]="mySupportRequestId"/>
+        </div>
+      </div>
+      <div class="bottom">
+        <button class="btn" data-close="true" (click)="onCancel()">Cancel</button>
+        <button class="btn" data-close="true" (click)="onSubmit()" [disabled]="!mySupportRequestId">{{action | titlecase}}</button>
+      </div>
+    </div>
+  </div>

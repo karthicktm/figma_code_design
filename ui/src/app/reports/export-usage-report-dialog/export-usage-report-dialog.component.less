@@ -1,0 +1,10 @@
+.dialog .content > .body {
+  ::ng-deep .select.open .options-list {
+    // To avoid scrolling of the outer body when options are shown that overflow the body content.
+    max-height: 92px;
+  }
+}
+
+.form-element:not(:first-child) {
+  margin-top: 16px;
+}

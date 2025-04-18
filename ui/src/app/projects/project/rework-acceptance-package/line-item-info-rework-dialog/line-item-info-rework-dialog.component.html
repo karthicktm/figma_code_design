@@ -1,0 +1,66 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title left">Line item:
+        {{ lineItemDetails.lineItemName || "--" }}
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" (click)="onClose()"></i>
+      </div>
+      <div class="hr-line"></div>
+    </div>
+    <div class="body custom-body">
+      <div class="row custom-row">
+        <div class="column sm-12">
+          <div>Description</div>
+          <p class="section text-sm">
+            {{ lineItemDetails.description || "--" }}
+          </p>
+        </div>
+      </div>
+      <div class="row custom-row">
+            <div class="sm-4">
+              <div>Created by</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.createdBy || "--" }}
+              </p>
+            </div>
+            <div class="sm-4">
+              <div>Created date</div>
+              <p class="section text-sm">
+                {{ (lineItemDetails?.createdDate | nullStringDate) || "--" }}
+              </p>
+            </div>
+            <div class="sm-4">
+              <div>Acceptance criteria</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.acceptanceCriteria || "--" }}
+              </p>
+            </div>
+            </div>
+          <div class="row custom-row">
+
+                <div class="sm-4">
+                  <div>Priority</div>
+                  <p class="section text-sm">
+                    {{ lineItemDetails.priority || "--" }}
+                  </p>
+                </div>
+                <div class="sm-4">
+                  <div>Modified by</div>
+                  <p class="section text-sm">
+                    {{ lineItemDetails.lastModifiedBy || "--" }}
+                  </p>
+                </div>
+                <div class="sm-4">
+                  <div>Modified date</div>
+                  <p class="section text-sm">
+                    {{ (lineItemDetails?.lastModifiedDate | nullStringDate) || "--" }}
+                  </p>
+                </div>
+              </div>
+
+
+        </div>
+      </div>
+    </div>

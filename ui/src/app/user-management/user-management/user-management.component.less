@@ -1,0 +1,45 @@
+@import "@eds/vanilla/variables/global";
+
+.left-tile,
+.right-tile {
+  min-height: calc(100vh - 106px);
+  max-height: calc(100vh - 106px);
+  overflow-y: auto;
+}
+
+.name-elements {
+  display: flex;
+  align-items: baseline;
+
+  >* {
+    width: 100%;
+  }
+
+  :first-child {
+    margin-right: 8px;
+  }
+}
+
+.halfwidth {
+  width: 50%;
+}
+
+.search-form {
+  padding-bottom: @space-base;
+}
+
+.right {
+  text-align: right;
+}
+
+:host::ng-deep .disableIcon {
+  display: none;
+}
+
+:host::ng-deep .column-roles {
+  min-width: 12em;
+}
+
+:host::ng-deep .column-date {
+  white-space: nowrap;
+}

@@ -1,0 +1,83 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title">Add new documents</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="custom-body">
+      <p>Upload with a new tag, an existing tag, or without any assigned tag.</p>
+
+      <form class="eds-form form-group" [formGroup]="fileForm">
+        <div class="form-element rbtn-group">
+          <input
+            id="rbtn_independent"
+            name="tagAssignment"
+            formControlName="tagAssignment"
+            type="radio"
+            value="independent"
+          >
+          <label for="rbtn_independent">Upload without a tag</label>
+
+          <ng-container *ngIf="tags && tags.length > 0">
+            <input
+              id="rbtn_existing"
+              name="tagAssignment"
+              formControlName="tagAssignment"
+              type="radio"
+              value="existing"
+            >
+            <label for="rbtn_existing">Upload with existing tag</label>
+          </ng-container>
+
+          <input
+            id="rbtn_new"
+            name="tagAssignment"
+            formControlName="tagAssignment"
+            type="radio"
+            value="new"
+          >
+          <label for="rbtn_new">Create new tag for the file(s) to upload</label>
+        </div>
+
+        <ng-container *ngIf="tagAssignment.value==='existing'">
+          <div class="form-element">
+            <label for="select-tag">Select tag</label>
+            <app-select
+              class="select"
+              data-type="single"
+              [emptySelectionText]="selectedTag? selectedTag : 'Select tag'"
+              [selectId]="'select-tag'"
+              [options]="tags"
+              (optionChanged)="onSelectTag($event)"
+            ></app-select>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="tagAssignment.value==='new'">
+          <div class="form-element">
+            <label for="input-new-tag">New tag</label>
+            <div>
+              <input #newTagInputElement
+                class="with-icon fullwidth"
+                type="text"
+                id="input-new-tag"
+                name="newTagInput"
+                formControlName="newTagInput"
+                placeholder="Enter tag name"
+                maxlength="255"
+              >
+              <span class="validation-msg">{{newTagInputElement.value.length + '/255'}}</span>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="bottom">
+      <button class="btn secondary" data-close="true">Cancel</button>
+      <button class="btn secondary" [ngClass]="{loading: uploadingFile}" [disabled]="uploadingFile || uploadFileDisabled()" (click)="uploadNewFile()">Upload</button>
+      <input #fileSelectInput type="file" style="display: none" [accept]="supportedMIME" multiple  (change)="onFileChange($event)"/>
+    </div>
+  </div>
+</div>

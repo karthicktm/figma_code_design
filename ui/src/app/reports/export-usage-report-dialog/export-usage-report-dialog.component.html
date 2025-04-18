@@ -1,0 +1,69 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Export usage report</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+
+      <div class="form-group">
+        <div class="form-element">
+          <label for="customer-input">Customer</label>
+
+          <ng-container *ngIf="(customers | async) as customerOptions; else noCustomerOptionsLoaded">
+            <app-select-with-input #customerInput
+              class="select fullwidth"
+              data-type="input-single"
+              [optionsWithValue]="customerOptions"
+              [selectId]="'customerSelection'"
+              (optionChanged)="onSelectCustomer($event)"
+              (change)="onSelectCustomerInput($event.target.value)"
+              [placeholder]="'All'">
+            </app-select-with-input>
+          </ng-container>
+
+          <ng-template #noCustomerOptionsLoaded>
+            <input #customerInput
+              type="text"
+              class="fullwidth"
+              id="customer-input"
+              [placeholder]="isCustomerFreeTextInputDisabled ? 'loading' : 'All'"
+              [disabled]="isCustomerFreeTextInputDisabled"
+              (keyup)="onKeyUpCustomerInput($event.target.value)"
+              (change)="onKeyUpCustomerInput($event.target.value)"
+            >
+            <div class="suffix icon-inside"><i class="icon" [class.icon-dial]="isCustomerFreeTextInputDisabled"></i></div>
+          </ng-template>
+
+        </div>
+
+        <div class="form-element">
+          <label>Select the type of report you want to generate.</label>
+          <div>
+            <ng-container *ngFor="let typeOption of typeOptions">
+              <input [attr.id]="'rbtn-' + typeOption.value"
+                name="report-type"
+                type="radio"
+                [value]="typeOption.value"
+                (change)="selectedType=$event.target.value"
+                [checked]="selectedType === typeOption.value"
+              >
+              <label [attr.for]="'rbtn-' + typeOption.value">{{typeOption.name}}</label>
+            </ng-container>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Cancel</button>
+      <button class="btn primary"
+        (click)="onActionDownloadReport()" data-close="true"
+        [disabled]="!selectedType"
+      >Download report</button>
+    </div>
+  </div>
+</div>

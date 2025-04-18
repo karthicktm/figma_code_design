@@ -1,0 +1,97 @@
+<div #dialog class="dialog" style="z-index: 1001" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title">{{ dialogTitle }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+  <ng-container *ngIf="hasStateInitialized || hasStateUploading">
+      <div class="content upload-diag-scroll">
+        <!-- omitted for now; will be tackled in new stories -->
+        <!-- <div class="column mb-lg">
+          <div class="header mt-lg">Related evidence</div>
+          <div class="section text-sm">{{ name }}</div>
+        </div> -->
+        <div class="custom-drop-area">
+          <input #fileSelectInput type="file" multiple [accept]="supportedMIME" (change)="onAddFiles($event)" [disabled]="hasStateUploading"/>
+          <div class="column custom-drop-area_item">
+            <i class="icon icon-upload pt-lg"></i>
+            <p class="section text-sm">Drag files to upload or <a href="javascript:void(0)" (click)="onFileSelectInput()" [class.disabled]="hasStateUploading">browse</a></p>
+          </div>
+        </div>
+        <span class="text-sm mt-bs">
+          <i class="icon icon-info"></i> <em>Maximum number of files to upload at once {{ maxNumberFilesAtOnce }}.</em>
+        </span>
+        <div class="mt-lg">
+          <div class="column mb-lg" *ngFor="let file of fileList; let index = index">
+            <div class="row align-center">
+              <i class="icon icon-file mr-bs"></i>
+              <div class="mr-lg">{{file.inputFile.name}}</div>
+              <div class="mr-auto text-sm">{{file.inputFile.size | formatBytes | lowercase }}</div>
+              <i class="icon icon-cross pointer" (click)="onDeleteFile(file.uuid)"></i>
+            </div>
+            <div class="progress-bar blue" *ngIf="hasStateUploading">
+              <progress [value]="file.progress" max="100"></progress>
+              <span>{{ file.progress }}<span class="unit">%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <button class="btn secondary" (click)="onClose()" data-close="true">Go back</button>
+        <button class="btn secondary" (click)="onUploadFiles()" [disabled]="!fileList?.length > 0 || hasStateUploading" [class.loading]="hasStateUploading">Upload</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="hasStateFailed">
+      <div class="section">
+        <p>{{ errorMessage }}</p>
+        <div class="mt-lg">
+          <div *ngFor="let file of failedFileList">{{ file.inputFile.name }}</div>
+        </div>
+        @if (errorDetail && errorDetail.length > 0) {
+        <div class="accordion" appAccordion>
+          <ul>
+            <li class="closed">
+              <div role="button" class="title" tabindex="0">View details</div>
+              <div class="content">
+                <p>{{ errorDetail }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        }
+      </div>
+      <div class="bottom">
+        <button class="btn primary" (click)="setStateInitialized()">Ok</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="hasStateCompleted">
+      <div class="section">
+        <p>Your files have been successfully uploaded.</p>
+        <i class="icon icon-success custom-icon-size color-green align-center"></i>
+      </div>
+      <div class="bottom">
+        <button class="btn primary" (click)="onClose()">Ok</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="hasStateUserInput">
+      <div class="section">
+        <p>
+          Overwrite will replace the existing file.
+          <br/>
+          Append will save the file with an extension.
+        </p>
+      </div>
+      <div class="row bottom custom-bottom">
+        <div class="item-checkbox">
+          <input type="checkbox" name="overwrite" id="overwriteFiles" [(ngModel)]="applyToAllFilesIsChecked"/>
+          <label for="overwriteFiles">Do this for all conflicts</label>
+        </div>
+        <button class="btn secondary" (click)="setStateInitialized()">Cancel</button>
+        <button class="btn secondary" (click)="onSetFileUploadModeAppend()">Append</button>
+        <button class="btn secondary" (click)="onSetFileUploadModeOverwrite()">Overwrite</button>
+      </div>
+    </ng-container>
+  </div>
+</div>

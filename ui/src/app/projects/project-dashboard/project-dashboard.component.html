@@ -1,0 +1,120 @@
+<div class="tile full-height">
+  <div class="row mb-lg">
+    <div class="charts">
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">Overall acceptance status based on package</div>
+        </div>
+        @let packageCountChartData = packageCountData | async;
+        @defer (when (packageCountChartData)) {
+          <app-donut-chart [props]="packageCountProps" [chartData]="packageCountChartData"></app-donut-chart>
+        }
+        @loading {
+          <ng-container [ngTemplateOutlet]="loading" />
+        }
+        @placeholder {
+          <ng-container [ngTemplateOutlet]="placeholder" />
+        }
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">Overall acceptance status based on evidence</div>
+        </div>
+        @let evidenceCountChartData = evidenceCountData | async;
+        @defer (when (evidenceCountChartData)) {
+          <app-donut-chart [props]="evidenceCountProps" [chartData]="evidenceCountChartData"></app-donut-chart>
+        }
+        @loading {
+          <ng-container [ngTemplateOutlet]="loading" />
+        }
+        @placeholder {
+          <ng-container [ngTemplateOutlet]="placeholder" />
+        }
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">Overall acceptance certificate status</div>
+        </div>
+        @let certificateCountChartData = certificateCountData | async;
+        @defer (when (certificateCountChartData)) {
+          <app-donut-chart [props]="certificateCountProps" [chartData]="certificateCountChartData"></app-donut-chart>
+        }
+        @loading {
+          <ng-container [ngTemplateOutlet]="loading" />
+        }
+        @placeholder {
+          <ng-container [ngTemplateOutlet]="placeholder" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="charts">
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">Acceptance trend</div>
+          <div class="chart-subtitle">Last 4 weeks</div>
+        </div>
+        @let acceptanceTrendChartData = acceptanceTrendData | async;
+        @defer (when (acceptanceTrendChartData)) {
+          @if (acceptanceTrendChartData.common && acceptanceTrendChartData.series) {
+            <app-vertical-bar-chart-grouped [props]="acceptanceTrendProps" [chartData]="acceptanceTrendChartData"></app-vertical-bar-chart-grouped>
+          } @else {
+            <ng-container *ngTemplateOutlet="noData; context: {$implicit: acceptanceTrendNoDataMessage}" />
+          }
+        }
+        @loading {
+          <ng-container [ngTemplateOutlet]="loading" />
+        }
+        @placeholder {
+          <ng-container [ngTemplateOutlet]="placeholder" />
+        }
+      </div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <div class="chart-title">Certification trend</div>
+          <div class="chart-subtitle">Last 4 weeks</div>
+        </div>
+        @let certificationTrendChartData = certificationTrendData | async;
+        @defer (when (certificationTrendChartData)) {
+          @if (certificationTrendChartData.common && certificationTrendChartData.series) {
+            <app-vertical-bar-chart-grouped [props]="certificationTrendProps" [chartData]="certificationTrendChartData"></app-vertical-bar-chart-grouped>
+          } @else {
+            <ng-container *ngTemplateOutlet="noData; context: {$implicit: certificationTrendNoDataMessage}" />
+          }
+        }
+        @loading {
+          <ng-container [ngTemplateOutlet]="loading" />
+        }
+        @placeholder {
+          <ng-container [ngTemplateOutlet]="placeholder" />
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #placeholder>
+  <div class="empty-state">
+    <div class="message">
+      <p>Placeholder before loading data.</p>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="empty-state">
+    <div class="message">
+      <div class="loading large"></div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noData let-message>
+  <div class="empty-state">
+    <div class="message">
+      <p class="section">{{message || 'No data available'}}</p>
+    </div>
+  </div>
+</ng-template>

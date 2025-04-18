@@ -1,0 +1,42 @@
+@import "@eds/vanilla/variables/global";
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .signatory-list {
+    border-bottom: 1px solid @gray-53;
+  }
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .signatory-list {
+    border-bottom: 1px solid @gray-46;
+  }
+}
+
+.tile.full-height {
+  height: 100%;
+}
+
+.section-title {
+  padding-bottom: @space-base;
+}
+
+.signatory-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding-top: @space-base;
+  padding-bottom: @space-base;
+  margin-bottom: @space-base;
+
+  .signatory-entry {
+    min-width: 200px;
+  }
+}
+
+.comment-header {
+  justify-content: space-between;
+  margin-bottom: @space-base;
+}

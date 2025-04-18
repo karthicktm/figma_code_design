@@ -1,0 +1,63 @@
+<div #dialog
+  class="dialog"
+  data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title">{{ inputData?.name || 'Package info' }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <div>
+      <div class="row">
+
+        <div class="column sm-12">
+          <div>Package ID</div>
+          <p class="section text-sm">
+            {{ inputData?.packageId || '--' }}
+          </p>
+        </div>
+
+      </div>
+      <div class="row" *ngIf="inputData?.externalId">
+
+        <div class="column sm-12">
+          <div>External ID</div>
+          <p class="section text-sm">
+            {{ inputData?.externalId }}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="column sm-3">
+          <div>Created by</div>
+          <p class="section text-sm">
+            {{ inputData?.createdBy || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Created date</div>
+          <p class="section text-sm">
+            {{ (inputData?.createdDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Last modified by</div>
+          <p class="section text-sm">
+            {{ inputData?.lastModifiedBy || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Last modified date</div>
+          <p class="section text-sm">
+            {{ (inputData?.lastModifiedDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+@import "@eds/vanilla/variables/global";
+
+.wizard-footer {
+  padding: @space-large;
+  margin-top: 3px;
+  border-color: transparent;
+}
+.h-100 {
+  height: 100%;
+}
+
+:host::ng-deep tr td {
+  .spacingIcon {
+    padding: 2px;
+  }
+
+  .hide-button {
+    display: none;
+  }
+
+  .btn-icon:disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+  }
+}

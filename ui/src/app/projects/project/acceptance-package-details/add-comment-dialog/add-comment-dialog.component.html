@@ -1,0 +1,34 @@
+<div #dialog class="dialog custom-dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Add new comment</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    
+    <div class="body">
+      <label class="required" for="commentInput">Comment</label>
+      <textarea id="commentInput"
+        name="commentInput" 
+        class="fullwidth"
+        [formControl]="commentInput" 
+        placeholder="Enter comment"
+      ></textarea>
+
+      <span class="character-counter">
+        <span [class.color-red]="commentInput?.errors?.maxlength">{{ commentInput.value.length }}</span>
+        <span>/{{ maxLength }}</span>
+      </span>
+      @if (commentInput?.errors?.maxlength) {
+        <span class="validation-msg invalid">Keep it shorter!</span>
+      }
+    </div>
+
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Cancel</button>
+      <button [disabled]="commentInput?.errors || isSubmitButtonClicked" class="btn primary" 
+      [class.loading]="isSubmitButtonClicked" (click)="submitComment()">Submit new comment</button>
+    </div>
+  </div>
+</div>

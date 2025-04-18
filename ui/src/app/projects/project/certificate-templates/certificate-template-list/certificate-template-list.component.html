@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="tile sm-12">
+    <div class="header">
+      <div class="left">
+        <div class="title">Certificate templates</div>
+      </div>
+      <div class="right">
+        <button class="btn primary" type="button" (click)="createCertificateTemplate()">
+          <i class="icon icon-plus"></i>Create new template
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <app-table-server-side-pagination
+        *ngIf="fetchPageHandler"
+        [limit]="limit"
+        [filterSortColumns]="filterSortColumns"
+        [tableHeightStyleProp]="tableHeightStyleProp"
+        [columnsProperties]="columnsProperties"
+        [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+        [fetchPageHandler]="fetchPageHandler"
+        [options]="tableOptions"
+      />
+    </div>
+  </div>
+</div>

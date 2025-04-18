@@ -1,0 +1,39 @@
+@import "@eds/vanilla/variables/global";
+
+.tile.full-height {
+  height: 100%;
+}
+
+.row.timeline-row {
+  height: calc(100vh - 340px);
+  padding-top: @space-large;
+}
+
+.row.input-row {
+  display: block;
+}
+
+.row.visibility-options {
+  margin-top: 10px;
+  .radio-buttons {
+    padding-top: 10px;
+  }
+}
+.comment-button{
+  margin: 5px 0;
+
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .internal-marker {
+    color: @orange-50;
+  }
+}
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .internal-marker {
+    color: @orange-50;
+  }
+}

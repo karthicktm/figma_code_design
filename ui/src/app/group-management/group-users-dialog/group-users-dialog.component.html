@@ -1,0 +1,47 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+
+    <div class="top">
+      @let name = groupName();
+      <div class="title">{{ name ? 'Group name:' : 'Group users'}}</div>
+      <div class="subtitle">{{ name }}</div>
+      <div class="right">
+        <button class="btn-icon ml-bs" data-close="true">
+          <i class="icon icon-cross"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="body">
+      @let users = groupUsersLoading() | async;
+      @if (loading) {
+        <div class="empty-state">
+          <div class="message">
+            <p>Loading...</p>
+          </div>
+        </div>
+      }
+      @else {
+        @let columns = [{ key: 'userId', name: 'Signum' }, { key: 'userEmail', name: 'Email' }];
+        <table class="table" #table>
+          <thead>
+            <tr>
+              @for (column of columns; track $index) {
+                <th>{{column.name}}</th>
+              } 
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track $index) {
+              <tr>
+                @for (column of columns; track $index) {
+                  <td>{{user[column.key]}}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

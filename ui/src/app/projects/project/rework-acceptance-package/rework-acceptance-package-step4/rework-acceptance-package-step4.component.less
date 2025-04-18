@@ -1,0 +1,38 @@
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .custom-title {
+    color: @gray-14;
+  }
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .custom-title {
+    color: @gray-95;
+  }
+}
+
+.custom-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+:host::ng-deep .evidence-table {
+  tr td {
+    border: none;
+
+    .spacingIcon {
+      padding: 2px;
+    }
+
+    .hide-button {
+      display: none;
+    }
+  }
+
+  thead {
+    font-weight: 500;
+  }
+}

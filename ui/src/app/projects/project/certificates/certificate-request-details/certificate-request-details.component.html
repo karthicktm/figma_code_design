@@ -1,0 +1,61 @@
+@if (requestDetails | async; as details) {
+<div class="tile sm-12">
+  <div class="header">
+    <div class="left">
+      <span class="title"
+        >Request name: <span class="color-gray">{{ details.requestName }}</span></span
+      >
+    </div>
+    <div class="right">
+      @if(details.status === CertificateRequestStatus.complete) {
+      <button
+        title="This button will help to merge certificate with other PDF documents"
+        class="btn"
+        (click)="onMergeDocuments()"
+      >
+        <i class="icon icon-download-save"></i>Merge documents
+      </button>
+      }
+      <button
+        aria-label="Preview certificate"
+        title="Preview certificate"
+        class="btn icon-btn"
+        (click)="onPreview(details)"
+      >
+        <i class="icon icon-eye"></i>
+      </button>
+      @if(details.isCurrUsrReady) {
+      <button class="btn" (click)="onReject(details)">Reject</button>
+      <button class="btn primary" (click)="onSign(details)">Sign</button>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="row full-height">
+  <div class="column sm-4">
+    <app-certificate-work-plan-list [workPlans]="details.workplans" [projectId]="projectId" />
+  </div>
+  <div class="column sm-3">
+    <div class="tile full-height">
+      <div class="content">
+        <app-certificate-request-document
+          [projectId]="projectId"
+          [certificateRequestId]="certificateRequestId"
+        ></app-certificate-request-document>
+      </div>
+    </div>
+  </div>
+  <div class="column sm-5">
+    <app-signatories-comment [requestDetails]="details"></app-signatories-comment>
+  </div>
+</div>
+} @else if (loadingData()) {
+<div class="tile sm-12 fullscreen">
+  <div class="loading-wrapper">
+    <div class="loading-data">
+      <div class="loading large"></div>
+    </div>
+  </div>
+</div>
+}

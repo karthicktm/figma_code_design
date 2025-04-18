@@ -1,0 +1,321 @@
+<div class="row">
+
+  <!-- Left tile -->
+  <div class="tile sm-4 left-tile">
+    <div class="header">
+      <div class="left">
+        <div class="title">Add new user</div>
+      </div>
+    </div>
+    <div class="content">
+      <form class="eds-form form-group" [formGroup]="userForm">
+        <div class="form-element">
+          <label for="select-usertype"
+            class="required"
+          >User type</label>
+          <app-select
+            #userTypeSelection
+            class="select"
+            name="usertypeSelect"
+            data-type="single"
+            [emptySelectionText]="selectedUserType ? selectedUserType:'Select user type'"
+            [selectId]="'select-usertype'"
+            [options]="userType"
+            [disabled]="isEdit ? 'disabled' : null"
+            (optionChanged)="onSelectUserTypeHandler($event)"
+          ></app-select>
+        </div>
+        <ng-container *ngIf="(!!selectedUserType && (selectedUserType.toLowerCase() === OPSUserType.customerUserType.toLowerCase()))">
+          <div class="form-element">
+            <label class="required"
+              for="customer">Customer ID
+            </label>
+            <div *ngIf="customers; else customerFreeTextInput">
+              <app-select class="select fullwidth"
+                #customerIdSelect
+                name="customerIdInput"
+                data-type="single"
+                [emptySelectionText]="'Select customer'"
+                [optionsWithValue]="customerOptions"
+                [selectId]="'customer-select'"
+                formControlName="customerIdInput" />
+            </div>   
+            <ng-template #customerFreeTextInput>
+              <input type="text"
+                name="customerSelectInput"
+                id="customer"
+                formControlName="customerIdInput"
+                placeholder="Enter customer ID"
+                class="fullwidth"
+                required />
+            </ng-template>         
+          </div>
+        </ng-container>
+        <ng-container *ngIf="(!!selectedUserType && (selectedUserType.toLowerCase() === OPSUserType.functionalUserType.toLowerCase()))">
+          <div class="form-element">
+            <label for="input-userID" class="required">User ID</label>
+              <input
+                type="text"
+                id="input-userID"
+                name="userIDInput"
+                required
+                formControlName="userIDInput"
+                placeholder="Enter user ID"
+                (keydown.enter)="onInputHandler($event)"
+              >
+            <div *ngIf="userIDInput.touched && userIDInput.invalid" class="validation-error color-gray text-sm">
+              <span class="validation-msg invalid" *ngIf="userIDInput.errors.required">userId required</span>
+              <span class="validation-msg invalid" *ngIf="userIDInput.errors.pattern">Only alphabets</span>
+              <span class="validation-msg invalid" *ngIf="userIDInput.errors.minlength">userId should be minimum {{userIDInput.errors.minlength.requiredLength}} characters</span>
+              <span class="validation-msg invalid" *ngIf="userIDInput.errors.maxlength">userId should be maximum {{userIDInput.errors.maxlength.requiredLength}} characters</span>
+            </div>
+            <div class="form-element">
+            <label for="applicationId" class="required">Application ID</label>
+            <input
+              type="text"
+              id="applicationId"
+              name="applicationId"
+              required
+              formControlName="applicationId"
+              placeholder="Enter application ID"
+              (keydown.enter)="onInputHandler($event)"
+            >
+            <div *ngIf="applicationId.touched && applicationId.invalid" class="validation-error color-gray text-sm">
+              <span class="validation-msg invalid" *ngIf="applicationId.errors.required">applicationId required</span>
+              <span class="validation-msg invalid" *ngIf="applicationId.errors.minlength">applicationId should be minimum {{applicationId.errors.minlength.requiredLength}} characters</span>
+              <span class="validation-msg invalid" *ngIf="applicationId.errors.maxlength">applicationId should be maximum {{applicationId.errors.maxlength.requiredLength}} characters</span>
+            </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="form-element" *ngIf="(!!selectedUserType && (selectedUserType.toLowerCase() === OPSUserType.ericssonUserType.toLowerCase() || selectedUserType.toLowerCase() === OPSUserType.customerUserType.toLowerCase())) || isEdit">
+        <div class="form-element">
+          <label for="input-email" class="required">Email</label>
+          <div>
+            <input #email
+              class="with-icon"
+              type="email"
+              id="input-email"
+              name="emailInput"
+              formControlName="emailInput"
+              placeholder="Enter email"
+              required
+              [attr.disabled]="isEdit ? 'disabled' : null"
+              (keydown.enter)="onInputHandler($event)"
+            >
+            <div *ngIf="emailInput.touched && emailInput.invalid" class="validation-error color-gray text-sm">
+                <span class="validation-msg invalid" *ngIf="emailInput.errors.required">email required</span>
+                <span class="validation-msg invalid" *ngIf="emailInput.errors.email">Please enter a valid email</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-element">
+          <label for="input-signum" class="required">User ID
+            <span class="tooltip">
+              <i class="icon icon-info"></i>
+              <span class="message top">Please provide signum of the user</span>
+            </span>
+          </label>
+          <input
+            type="text"
+            id="input-signum"
+            name="signumInput"
+            formControlName="signumInput"
+            placeholder="Enter user ID"
+            required
+            [attr.disabled]="isEdit ? 'disabled' : null"
+            (keydown.enter)="onInputHandler($event)"
+          >
+          <div *ngIf="signumInput.touched && signumInput.invalid" class="validation-error color-gray text-sm">
+            <span class="validation-msg invalid" *ngIf="signumInput.errors.required">Signum required</span>
+            <span class="validation-msg invalid" *ngIf="signumInput.errors.pattern">Only alphanumerics</span>
+            <span class="validation-msg invalid" *ngIf="signumInput.errors.minlength">Minimum {{signumInput.errors.minlength.requiredLength}} characters</span>
+            <span class="validation-msg invalid" *ngIf="signumInput.errors.maxlength">Max length of signum input exceeded {{signumInput.value.length}}/{{signumInput.errors?.maxlength?.requiredLength}}</span>
+          </div>
+        </div>
+          <div class="form-element">
+            <label for="input-first-name" class="required">First name</label>
+            <input
+              type="text"
+              id="input-first-name"
+              name="firstNameInput"
+              formControlName="firstNameInput"
+              placeholder="Enter first name"
+              required
+              (keydown.enter)="onInputHandler($event)"
+            >
+            <div *ngIf="firstNameInput.touched && firstNameInput.invalid" class="validation-error color-gray text-sm">
+              <span class="validation-msg invalid" *ngIf="firstNameInput.errors.required">First name required</span>
+              <span *ngIf="firstNameInput.errors.maxlength"
+                class="validation-msg invalid">Max length of name input exceeded {{firstNameInput.value.length}}/{{firstNameInput.errors?.maxlength?.requiredLength}}</span>
+            </div>
+          </div>
+          <div class="form-element">
+            <label for="input-last-name" class="required">Last name</label>
+            <input
+              type="text"
+              id="input-last-name"
+              name="lastNameInput"
+              formControlName="lastNameInput"
+              placeholder="Enter last name"
+              required
+              (keydown.enter)="onInputHandler($event)"
+            >
+            <div *ngIf="lastNameInput.touched && lastNameInput.invalid" class="validation-error color-gray text-sm">
+              <span class="validation-msg invalid" *ngIf="lastNameInput.errors.required">Last name required</span>
+              <span *ngIf="lastNameInput.errors.maxlength"
+                class="validation-msg invalid">Max length of name input exceeded {{lastNameInput.value.length}}/{{lastNameInput.errors?.maxlength?.requiredLength}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-element" *ngIf="!!selectedUserType">
+          <label for="select-role"
+            class="required"
+          >Role(s)
+            <span class="tooltip">
+              <i class="icon icon-info"></i>
+              <span class="message top">
+                If you select an exclusive role the other options will be disabled.<br>
+                Exclusive roles are only selectable if no other is selected.
+              </span>
+            </span>
+          </label>
+          <app-select *ngIf="!!selectedUserType && selectedUserType.toLowerCase() === OPSUserType.ericssonUserType.toLowerCase()"
+            #roleSelectionEricsson
+            class="select"
+            data-type="multi"
+            [emptySelectionText]="selectedRole.length>0 ? selectedRole:'Select role'"
+            [selectId]="'select-role'"
+            [options]="ericssonRole"
+            (selectOption)="onSelectRoleHandler($event)"
+          ></app-select>
+          <app-select *ngIf="!selectedUserType || selectedUserType.toLowerCase() === OPSUserType.customerUserType.toLowerCase()"
+            #roleSelectionNonEricsson
+            class="select"
+            data-type="multi"
+            [emptySelectionText]="selectedRole.length>0 ? selectedRole:'Select role'"
+            [selectId]="'select-role'"
+            [options]="customerRole"
+            (selectOption)="onSelectRoleHandler($event)"
+          ></app-select>
+          <app-select *ngIf="!selectedUserType || selectedUserType.toLowerCase() === OPSUserType.functionalUserType.toLowerCase()"
+            #roleSelectionFunctional
+            class="select"
+            data-type="single"
+            [selected]="'Functional Read and Write'"
+            [selectId]="'select-role'"
+            [options]="functionalRole"
+            (optionChanged)="onSelectRoleHandler($event)"
+          ></app-select>
+        </div>
+
+        <div class="form-element">
+          <div class="right">
+            <ng-container *ngIf="isEdit; then editblock; else addblock" ></ng-container>
+            <ng-template #addblock>
+              <button class="btn"  [disabled]="resetBtnDisabled()" (click)="resetAllSelects()">Reset</button>
+              <button class="btn primary" [disabled]="addUserDisabled()" (click)="onAddUser()">Add</button>
+            </ng-template>
+            <ng-template #editblock>
+              <button class="btn secondary" (click)="onCancel()">Cancel</button>
+              <button class="btn primary" (click)="onUpdateUser(userId)">Save edits</button>
+            </ng-template>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Right tile -->
+  <div class="tile sm-8 right-tile">
+    <div class="header">
+      <div class="left">
+        <div class="title">Users</div>
+      </div>
+    </div>
+    <div class="content">
+      <div #filterPills>
+        <div class="filter-criteria-pills" *ngIf="isFilter">
+          <span *ngIf="filterSortColumns.userEmail.searchText"
+            (click)="clearSelectedFilter('userEmail')"
+            class="pill removable"
+          >Email: {{ filterSortColumns.userEmail.searchText }}</span>
+          <span *ngIf="filterSortColumns.userId.searchText"
+            (click)="clearSelectedFilter('userId')"
+            class="pill removable"
+          >User ID: {{ filterSortColumns.userId.searchText }}</span>
+          <span *ngIf="filterSortColumns.userFirstName.searchText"
+            (click)="clearSelectedFilter('userFirstName')"
+            class="pill removable"
+          >First name: {{ filterSortColumns.userFirstName.searchText }}</span>
+          <span *ngIf="filterSortColumns.userLastName.searchText"
+            (click)="clearSelectedFilter('userLastName')"
+            class="pill removable"
+          >Last name: {{ filterSortColumns.userLastName.searchText }}</span>
+          <span *ngIf="filterSortColumns.customerId.searchText"
+            (click)="clearSelectedFilter('customerId')"
+            class="pill removable"
+          >Customer ID: {{ filterSortColumns.customerId.searchText }}</span>
+          <span *ngIf="filterSortColumns.isSoftDeleted.searchText"
+            (click)="clearSelectedFilter('isSoftDeleted')"
+            class="pill removable"
+          >Status: {{ filterSortColumns.isSoftDeleted.searchText === 'true' ? 'Inactive' : 'Active' }}</span>
+          <span *ngIf="filterSortColumns.roleType.searchText"
+            (click)="clearSelectedFilter('roleType')"
+            class="pill removable"
+          >Role Type: {{ filterSortColumns.roleType.searchText }}</span>
+          <span *ngIf="filterSortColumns.lastModifiedDate.searchText"
+            (click)="clearSelectedFilter('lastModifiedDate')"
+            class="pill removable"
+          >Last modified date: {{ filterSortColumns.lastModifiedDate.searchText }}</span>
+          <span *ngIf="filterSortColumns.lastModifiedBy.searchText"
+            (click)="clearSelectedFilter('lastModifiedBy')"
+            class="pill removable"
+          >Last modified by: {{ filterSortColumns.lastModifiedBy.searchText }}</span>
+          <a *ngIf="isFilter" (click)="clearAllFilters()"> Remove all</a>
+        </div>
+      </div>
+      <div class="loading-table-data" *ngIf="loadingTableData">
+        <div class="text-xl loading large">
+        </div>
+      </div>
+      <div>
+        <div class="table-top">
+          <div class="table-top-left">
+            <div class="table-info"></div>
+          </div>
+          <div class="table-top-right">
+            <div class="table-buttons">
+              <button class="btn table-filter">
+                <i class="icon icon-filter-off"></i>
+                Filter
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="table-middle">
+        </div>
+        <table id="users" class="table sortable" #users>
+        </table>
+        <div class="pagination-group">
+          <ul class="pagination"></ul>
+          <div class="actions">
+            <label class="left">Go to</label>
+            <input type="number" min="1">
+            <label class="left">Show</label>
+            <div class="select" data-type="single" >
+              <button class="btn current-options">10</button>
+              <div class="options-list">
+                <div class="item active">10</div>
+                <div class="item">25</div>
+                <div class="item">50</div>
+                <div class="item">75</div>
+                <div class="item">100</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

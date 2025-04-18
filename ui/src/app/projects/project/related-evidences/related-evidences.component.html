@@ -1,0 +1,15 @@
+<div *ngIf="relatedEvidenceList | async as evidenceList">
+  <ng-container *ngIf="evidenceList.length > 0; else noData">
+    <div class="evidence-item text-sm" *ngFor="let evidence of evidenceList">
+      @if (noLink()) {
+        <span>{{evidence.name}}</span>
+      }
+      @else {
+        <a (click)="onSelectEvidence(evidence.internalId)">{{evidence.name}}</a>
+      }
+    </div>
+  </ng-container>
+  <ng-template #noData>
+    <div class="text-sm">No related evidences</div>
+  </ng-template>
+</div>

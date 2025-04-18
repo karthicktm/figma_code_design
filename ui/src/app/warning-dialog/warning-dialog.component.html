@@ -1,0 +1,35 @@
+<div #dialog class="dialog" data-type="simple" id="warning-confirmation-dialog">
+    <div class="content">
+        <div class="top">
+            <div class="warning-icon-size"><i class="icon icon-triangle-warning"></i></div>
+        </div>
+        <h2 class="title-margin">{{ inputData.title }}</h2>
+        <div class="body custom-padding wrap-line">
+            <p *ngIf="!referenceDocType; else referenceBlock">{{ inputData.message }}</p>
+            <ng-template #referenceBlock>
+              <p *ngIf="referenceDocType">
+                {{ textBefore }}
+                <a [appHelpDocumentLoader]="referenceDocType" href="" target="_blank" rel="noopener noreferrer">
+                  {{referenceDocText}}
+                </a>
+                {{ textAfter }}
+              </p>
+            </ng-template>
+        </div>
+        <div class="bottom">
+          <button *ngIf="!inputData.disableRefresh; else backButton" id="refresh-button" class="btn primary"
+            (click)="refresh()">Refresh</button>
+          <ng-template #backButton>
+            <button appBackButton data-close="true"
+              *ngIf="(inputData.disableRefresh && !inputData.enableClose) else closeButton" id="back-button" class="btn">Go
+              back</button>
+          </ng-template>
+          <ng-template #closeButton>
+            <button closeButton data-close="true" id="close-button" class="btn" (click)="onClose()">Close</button>
+          </ng-template>
+        </div>
+    </div>
+</div>
+
+
+

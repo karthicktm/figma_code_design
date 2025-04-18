@@ -1,0 +1,46 @@
+@import "@eds/vanilla/variables/global";
+.dialog {
+  z-index: 1200;
+}
+.custom-content{
+  min-width: 65% !important;
+
+  .custom-top{
+    padding-bottom: @space-large;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .custom-body {
+    margin-top: 0;
+    .column.aside {
+      padding-left: @space-large;
+      padding-right: @space-large;
+    }
+  }
+}
+.custom-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  
+}
+.custom-subtitle{
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+.hr-line{
+  width: 100%;
+  border-bottom: 1px solid @gray-86;
+}
+}
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+.hr-line{
+  width: 100%;
+  border-bottom: 1px solid @gray-55;
+}
+}

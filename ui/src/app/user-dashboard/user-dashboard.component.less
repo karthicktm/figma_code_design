@@ -1,0 +1,28 @@
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .mixin();
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .mixin();
+}
+app-select.select {
+  width: 40em;
+  max-width: 40em;
+}
+.mixin() {
+  .content-header {
+    display: flex;
+
+    .left {
+      flex: 1;
+    }
+
+    .right {
+      max-width: 40%;
+      flex: 0 0 auto;
+      color: @gray-text;
+    }
+  }
+}

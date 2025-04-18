@@ -1,0 +1,41 @@
+<div class="tree navigation">
+  <ng-template #List let-items>
+    <ul>
+      <li *ngFor="let item of items">
+        <ng-container *ngIf="(item.canView) | async">
+          <hr *ngIf="item.uri === 'settings'"/>
+          <a
+            *ngIf="!item.children"
+            [routerLink]="item.uri"
+            [queryParamsHandling]="'preserve'"
+            [ngClass]="{
+                active: router.isActive(item.uri, item.uri === '') || router.isActive(item.isActiveUrlTree, !item.children),
+                title: item.children,
+                opened:  router.isActive(item.uri, !item.children) && item.children,
+                item: true,
+                disabled: (item.isAllowed | async) === false
+              }"
+            (click)="toggleMenu('navigation')"
+          >{{ item.title }}<i *ngIf="item.icon"
+            class="icon icon-{{ item.icon }} right-align"></i></a>
+          <span
+            tabindex="0"
+            *ngIf="item.children"
+            [ngClass]="{
+                active: router.isActive(item.uri, !item.children),
+                title: item.children,
+                opened:  router.isActive(item.uri, !item.children) && item.children,
+                item: true,
+                disabled: (item.isAllowed | async) === false
+              }"
+              (click)="toggleSubmenu($event)"
+              (keydown.space)="keyDownActions($event)"
+          >{{ item.title }}<i *ngIf="item.icon"
+            class="icon icon-{{ item.icon }} right-align"></i></span>
+          <ng-container *ngTemplateOutlet="List; context:{ $implicit: item.children }"></ng-container>
+        </ng-container>
+      </li>
+    </ul>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="List; context:{ $implicit: items }"></ng-container>
+</div>

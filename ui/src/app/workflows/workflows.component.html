@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div id='workflowTabs' class="tabs" #workflowTabs>
+      <div class="titles">
+        <div class="title selected" tabindex="0">Workflows</div>
+        <div class="title" tabindex="0">AcceptancePackage rules</div>
+      </div>
+      <div class="contents">
+        <div class="content selected">
+          <div>
+            <div class="avp-container">
+              <div class="avp-left">
+                <label>Workflow name:</label>
+                <div class="detail">
+                  <app-select #workflowSelection class="select select-box select-fullwidth"
+                    *ngIf="workflowsOpts && selectedWorkflowId" name="workflowSelect" id="select-workflow"
+                    data-type="single" [selectId]="'select-workflow'" [selected]="selectedWorkflowId"
+                    [optionsWithValue]="workflowsOpts" (optionChanged)="onSelectWorkflowHandler($event)">
+                  </app-select>
+                </div>
+                <label>Description:</label>
+                <div class="detail">{{worflowDescription}}</div>
+              </div>
+              <div class="avp-right">
+                <label>Last modified by:</label>
+                <div class="detail">{{lastModifiedBy}}</div>
+                <label>Last modified date:</label>
+                <div class="detail">{{lastModifiedDate | nullStringDate}}</div>
+                <label>Is soft deleted:</label>
+                <div class="detail">{{isSoftDeleted}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <label>Details:</label>
+            <table id="workflowDetails" class="table" #workflowDetails>
+            </table>
+          </div>
+        </div>
+        <div class="content">
+          <div>
+            <div class="avp-container">
+              <div class="avp-left">
+                <label>Rule name:</label>
+                <div class="detail">
+                  <app-select #accRulesSelection class="select select-box select-fullwidth"
+                    *ngIf="accRulesOpts && selectedAccRuleId" name="accRuleSelect" id="select-accRule"
+                    data-type="single" [selectId]="'select-accRule'" [selected]="selectedAccRuleId"
+                    [optionsWithValue]="accRulesOpts" (optionChanged)="onSelectAccRulesHandler($event)">
+                  </app-select>
+                </div>
+                <label>Description:</label>
+                <div class="detail">{{accRulesDescription}}</div>
+              </div>
+              <div class="avp-right">
+                <label>Last modified by:</label>
+                <div class="detail">{{accRulesLastModifiedBy}}</div>
+                <label>Last modified date:</label>
+                <div class="detail">{{accRulesLastModifiedDate | nullStringDate}}</div>
+                <label>Is soft deleted:</label>
+                <div class="detail">{{accRulesIsSoftDeleted}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <label>Details:</label>
+            <table id="accRulesDetails" class="table" #accRulesDetails>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

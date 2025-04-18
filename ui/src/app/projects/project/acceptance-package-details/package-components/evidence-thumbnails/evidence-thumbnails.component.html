@@ -1,0 +1,13 @@
+<div *ngFor="let evidenceDetails of allEvidenceDetails; index as i">
+    <app-evidence-thumbnail
+      [zoomLevel]="zoomLevel"
+      [evidenceDetails]="evidenceDetails"
+      [index]="i"
+      [withCheckbox]="evidenceWithCheckbox(evidenceDetails)"
+      [dataSourceTool]="dataSourceTool"
+      (selectedThumbnail)="onSelectedThumbnail($event)"
+      (selectedEvidence)="onSelectEvidence($event)"
+      (maximizeScreen)="onSelectEvidence($event)"
+    >
+    </app-evidence-thumbnail>
+</div>

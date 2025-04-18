@@ -1,0 +1,28 @@
+<span>
+  <label for="select-year" class="left">Year</label>
+  <app-select *ngIf="yearList?.length > 0"
+    class="select"
+    id="select-year"
+    name="yearSelect"
+    data-type="single"
+    [emptySelectionText]="'Select year'"
+    [selectId]="'select-year'"
+    [selected]="yearList[0]"
+    [options]="yearList"
+    (optionChanged)="onSelectYearHandler($event)"
+  ></app-select>
+
+  <label for="select-country" class="left">Country</label>
+  <span *ngIf="fetchingCountry" class="loading small"></span>
+  <app-select *ngIf="!fetchingCountry && countryList?.length > 0"
+    class="select"
+    id="select-country"
+    name="countrySelect"
+    data-type="single"
+    [emptySelectionText]="'Select country'"
+    [selectId]="'select-country'"
+    [selected]="countryList[0]"
+    [options]="countryList"
+    (optionChanged)="onSelectCountryHandler($event)"
+  ></app-select>
+</span>

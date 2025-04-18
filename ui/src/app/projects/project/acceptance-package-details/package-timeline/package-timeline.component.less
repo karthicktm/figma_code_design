@@ -1,0 +1,37 @@
+:host-context(.dark) * {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .content-wrapper {
+    .loading-data {
+      background-color: @gray-14;
+    }
+  }
+}
+
+:host-context(.light) * {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .content-wrapper {
+    .loading-data {
+      background-color: @gray-98;
+    }
+  }
+}
+
+.full-height{
+  height: calc(100vh - 260px);
+}
+
+.content-wrapper {
+  position: relative;
+  .loading-data {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

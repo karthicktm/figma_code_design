@@ -1,0 +1,118 @@
+
+<div class="row">
+  <div class="row">
+  <div class="column sm-6">
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">
+          Ericsson contributors
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="contributors ? userCards : emptyCard; context: {users: contributors, role: 'Contributors'}">
+    </ng-container>
+  </div>
+  <div class="column sm-6">
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">
+          Customer approvers
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="approvers ? userLevelCards : emptyCard; context: {users: approvers, role: 'Approvers'}">
+    </ng-container>
+
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">
+          Customer observers
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="observers ? userCards : emptyCard; context: {users: observers, role: 'Observers'}">
+    </ng-container>
+  </div>
+</div>
+<ng-template #userCards let-users="users" let-role="role">
+    <ng-container *ngIf="users.userList && users.userList.length > 0">
+      <div *ngFor="let user of users.userList">
+        <div class="card card-custom">
+          <div class="header">
+            <div class="left">
+              <div class="title">
+                {{user.name}}
+              </div>
+            </div>
+            @let status = (!user.isSoftDeleted) ? 'Active' : 'Inactive';
+            @if(status) {
+              <div>
+                <kbd class="tag">{{status}}</kbd>
+              </div>
+            }
+          </div>
+          <div class="header justify-content">
+            <input class="input-custom" #copyEmailId type="text" readonly value="{{user.email}}">
+            <div class="right">
+              <div class="action">
+                <i class="icon icon-copy" (click)="copyInputMessage(copyEmailId)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="users.groupList && users.groupList.length > 0">
+      <div *ngFor="let group of users.groupList">
+        <div class="card card-custom">
+          <div class="header">
+            <div class="left">
+              <div class="title">
+                {{group.name}}
+              </div>
+            </div>
+
+          </div>
+          <div class="content justify-content">
+            <span>
+              <i class="icon icon-group"></i>{{group.userList?.length}} People
+            </span>
+            <span *ngIf="group.userList && group.userList.length > 0">
+              <a (click)="viewUserGroup(group)">View group</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #userLevelCards let-users="users" let-role="role">
+  <ng-container *ngIf="users.levels && users.levels.length > 0">
+    <div *ngFor="let level of users.levels; let i = index">
+      <div class="container">
+        <label>
+          Level {{ i + 1 }} approvers
+        </label>
+        <div *ngIf="role === 'Approvers' && level.userList && level.userList.length > 0">
+          <i class="icon status-icon" [ngClass]="
+              approverIconMap.get(level.userList[0].userAction) || (showAwaitingLegend ? 'icon-eye' : '')
+        "></i>
+        </div>
+      </div>
+      <ng-container *ngTemplateOutlet="userCards; context: {users: level, role}">
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyCard let-users="users" let-role="role">
+  <div class="card card-custom">
+    <div class="header">
+      <div class="center">
+        <div class="title">No {{role.toLowerCase() === "contributors" ? "Ericsson" : "customer"}} {{role.toLowerCase()}}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

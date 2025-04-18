@@ -1,0 +1,42 @@
+<div class="tile">
+  <!-- Header-->
+  <div class="header">
+    <div class="left"></div>
+    <div class="right">
+      @if (!isMilestoneAcceptance) {
+        <button class="btn secondary" (click)="sourceReportAsEvidence()" type="button">
+          Source report
+        </button>
+      }
+      <button class="btn secondary" (click)="addNewEvidence()" type="button">
+        Add new
+      </button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="loading-table-data" *ngIf="showLoader">
+      <div class="text-xl loading large">
+      </div>
+    </div>
+    <table class="table sortable" id="evidences-table" #evidencesTable>
+    </table>
+
+    <div class="pagination-group">
+      <ul class="pagination"></ul>
+      <div class="actions">
+        <label class="left">Go to</label>
+        <input type="number" min="1">
+
+        <label class="left">Show</label>
+        <div class="select" data-type="single">
+          <button class="btn current-options">{{limit}}</button>
+
+          <div class="options-list">
+            <div *ngFor="let option of tableRowNumSelectOptions" class="item"
+              [ngClass]="{'active': limit === option}">{{option}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

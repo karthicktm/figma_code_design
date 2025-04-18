@@ -1,0 +1,60 @@
+@import "@eds/vanilla/variables/global";
+
+.settings .container .content .title:not(:first-of-type) {
+  margin-top: @space-xl;
+}
+
+
+:host-context(.light) .sysbar .dropdown.more {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .btn .icon {
+    color: @white;
+  }
+}
+
+:host-context(.dark) .sysbar .dropdown.more {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .btn .icon {
+    color: @white;
+  }
+}
+
+.sysbar .dropdown.more {
+  .item {
+    margin-right: unset;
+  }
+}
+
+.settings .footnote {
+  text-align: center;
+}
+
+.btn.update {
+  width: max-content;
+}
+
+.sysbar .dropdown .menu {
+  max-height: 180px;  
+}
+
+.history-log-trigger.item {
+  background-image: linear-gradient(to left, transparent 50%);
+  background-size: 210% 100%;
+  padding: 4px 0;
+  border-radius: 14px;
+  transition: background-position .3s .6s ease-in-out,
+    padding .1s .6s ease-in-out;
+  display: inline-block;
+
+  .icon-bookmark {
+    display: inline-block;
+    left: 0;
+    top: -1px;
+    margin-right: 0;
+    opacity: .8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

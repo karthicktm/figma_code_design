@@ -1,0 +1,69 @@
+<div class="custom-table-wrapper">
+  <div class="loading-table-data"
+    *ngIf="loadingTableData()">
+    <div class="text-xl loading large">
+    </div>
+  </div>
+  <div class="table-top">
+    <div class="table-top-left">
+      <div class="table-info"></div>
+    </div>
+    <div class="table-top-right">
+      <div class="table-buttons">
+        <button class="btn table-filter" type="button">
+          <i class="icon icon-filter-off"></i>
+          Show column filter
+        </button>
+        <ng-content select="custom-table-buttons"></ng-content>
+      </div>
+
+      @if (tableSettingsStorageKey()) {
+        <div class="table-actions">
+          <button class="btn-icon table-settings" [id]="tableSettingsStorageKey()" title="Manage columns">
+            <i class="icon icon-settings"></i>
+          </button>
+        </div>
+      }
+
+    </div>
+  </div>
+  <div class="table-middle">
+    <ng-container [ngTemplateOutlet]="filters"></ng-container>
+  </div>
+  <table class="table sortable"
+    [ngClass]="tableType()"
+    [id]="tableName() || ''"
+    #table>
+  </table>
+  <div class="pagination-group">
+    <ul class="pagination"></ul>
+    <div class="actions">
+      <label class="left">Go to</label>
+      <input type="number"
+        min="1">
+      <label class="left">Show</label>
+      <div class="select"
+        data-type="single">
+        <button class="btn current-options">{{limit}}</button>
+        <div class="options-list">
+          <div *ngFor="let option of tableRowNumSelectOptions"
+            class="item"
+            [ngClass]="{'active': limit === option}">{{option}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #filters>
+  <p class="filter-criteria-pills"
+    *ngIf="isFilter()">
+    <span *ngFor="let filter of appliedFilterSortColumns() | keyvalue">
+      <span *ngIf="filter.value.searchText"
+        (click)="clearSelectedFilter(filter.key)"
+        class="pill removable">{{filter.value.columnName}}: {{ filter.value.searchText }}</span>
+    </span>
+    <a *ngIf="isFilter()"
+      (click)="clearAllFilters()"> Remove all</a>
+  </p>
+</ng-template>

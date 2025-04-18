@@ -1,0 +1,11 @@
+
+    <div class="container">
+
+        <video #videoPlayer [style]="imgStyles" controls="controls">
+            <source [src]="evidenceUrl | safe:'resourceUrl'" [type]="type" />
+            <object [data]="evidenceUrl | safe:'resourceUrl'" [width]="offsetWidth" [height]="offsetHeight">
+                <embed [src]="evidenceUrl | safe:'resourceUrl'" [width]="[offsetWidth]" [height]="offsetHeight"/>
+                Your browser does not support video
+            </object>
+        </video> 
+    </div>    

@@ -1,0 +1,34 @@
+@import "@eds/vanilla/variables/global";
+
+.tree-view-port {
+  height: calc(100vh - 319px);
+  overflow-y: auto;
+}
+
+.tree .item {
+  display: flex;
+  cursor: default;
+
+  .node-entry {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+
+    .node-name {
+      margin-left: @space-small;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:hover {
+        text-overflow: clip;
+        white-space: normal;
+        word-break: break-all;
+      }
+    }
+
+    .node-entry-cue{
+      margin-left: @space-base;
+      cursor: pointer;
+    }
+  }
+}

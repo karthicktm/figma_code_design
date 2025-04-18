@@ -1,0 +1,17 @@
+<div #historyLog class="history-log">
+  <div class="syspanel-top">
+    <span class="syspanel-title">Acceptance packages history</span>
+    <i class="syspanel-close icon icon-cross"></i>
+  </div>
+  <div class="history-log-container">
+    <div *ngFor="let historyLogItem of historyLogItemArr" class="history-log-item" 
+      (click)="logItemClickHandler(historyLogItem)">
+      <div class="history-log-item-title">
+        {{historyLogItem.title}}
+      </div>
+      <div class="history-log-item-description">
+        {{historyLogItem.description}}
+      </div>
+    </div>
+  </div>
+</div>

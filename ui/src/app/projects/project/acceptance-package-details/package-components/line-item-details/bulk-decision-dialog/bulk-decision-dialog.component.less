@@ -1,0 +1,44 @@
+@import "@eds/vanilla/variables/global";
+
+.dialog {
+  z-index: 1000;
+}
+
+.dialog .eds-form {
+  padding: 0;
+}
+
+
+.form-header, .form-body {
+  margin-bottom: 0 !important;
+}
+
+.form-header {
+  padding-bottom: @space-large;
+}
+
+.form-footer {
+  margin-top: @space-large !important;
+  padding-top: @space-large;
+}
+
+.form-element.custom-form-element {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: unset;
+  justify-content: space-between;
+  .custom-label {
+    padding-right: @space-small;
+    max-width: unset;
+    width: unset;
+  }
+}
+
+.switch.custom-switch {
+  width: 4em;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+}

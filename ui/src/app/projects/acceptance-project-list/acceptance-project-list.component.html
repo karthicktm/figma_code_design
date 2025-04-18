@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div class="content">
+      <!-- Header-->
+      <div class="header">
+        <div class="left">
+          <span class="title">My projects</span>
+        </div>
+      </div>
+      <div class="content">
+        @if (fetchPageHandler) {
+        <app-table-server-side-pagination [limit]="limit" [filterSortColumns]="filterSortColumns"
+          [tableHeightStyleProp]="tableHeightStyleProp" [columnsProperties]="columnsProperties"
+          [tableRowNumSelectOptions]="tableRowNumSelectOptions" [fetchPageHandler]="fetchPageHandler"
+          [options]="tableOptions" [tableLimitStorageKey]="tableLimitStorageKey"/>
+        }
+      </div>
+    </div>
+  </div>
+</div>

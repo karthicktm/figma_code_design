@@ -1,0 +1,6 @@
+<app-acceptance-package-new
+  *ngIf="evidences && (currentPackage | async) as currentPackage"
+  [currentPackage]="currentPackage"
+  [evidences]="evidences"
+  [isEdit]="isEdit"
+/>

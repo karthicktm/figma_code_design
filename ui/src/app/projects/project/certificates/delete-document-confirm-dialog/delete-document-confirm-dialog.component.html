@@ -1,0 +1,17 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Delete certificate request document?</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+      <div>Are you sure you want to delete the certificate request document {{documentName}}?</div>
+    </div>
+    <div class="bottom">
+      <button class="btn" data-close="true" (click)="onCancel()">Cancel</button>
+      <button class="btn primary" data-close="true" (click)="onSubmit()">Delete</button>
+    </div>
+  </div>
+</div>

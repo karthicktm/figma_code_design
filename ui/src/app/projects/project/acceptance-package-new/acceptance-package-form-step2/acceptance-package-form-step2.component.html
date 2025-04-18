@@ -1,0 +1,14 @@
+<div class="row h-100">
+    <div class="column sm-4 p-lg tile">
+        <app-navigation-tree
+          [isEdit]="isEdit"
+          [packageForm]="packageForm"
+          [checkList]="checkList"
+          [doLITableReset]="doLITableReset" 
+          (selectedCheckList)="selectedCheckList($event)"
+        ></app-navigation-tree>
+    </div>
+    <div class="column sm-8 p-lg tile">
+        <app-line-item-data [isEdit]="isEdit" [checkList]="checkList" [packageForm]="packageForm"  [doLITableReset]="doLITableReset"></app-line-item-data>
+    </div>
+</div>

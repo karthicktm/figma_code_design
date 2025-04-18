@@ -1,0 +1,44 @@
+<div class="loading" *ngIf="loadingMultiSites"></div>
+<div class="column">
+  <div class="table-top">
+    <div class="table-top-left">
+      <div class="table-info"></div>
+    </div>
+    <div class="table-top-right">
+      <div class="table-buttons">
+        <button class="btn table-filter" type="button">
+          <i class="icon icon-filter-off"></i>
+          Show column filter
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-middle">
+    <p class="filter-criteria-pills" *ngIf="isFilter">
+      <span *ngFor="let filter of confirmedFilters| keyvalue">
+        <span *ngIf="filter.value.searchText" (click)="clearSelectedFilter(filter.key)"
+        class="pill removable">{{filter.value.columnName}}:{{ filter.value.searchText }}</span>
+      </span>
+      <a *ngIf="isFilter" (click)="clearAllFilters()"> Remove all</a>
+    </p>
+  </div>
+  <table id="info-example" #multiSiteTable class="table"></table>
+  <div class="pagination-group">
+    <ul class="pagination"></ul>
+    <div class="actions">
+      <label class="left">Go to</label>
+      <input type="number" min="1">
+      <label class="left">Show</label>
+      <div class="select" data-type="single">
+        <button class="btn current-options">50</button>
+        <div class="options-list">
+          <div class="item">10</div>
+          <div class="item">25</div>
+          <div class="item active">50</div>
+          <div class="item">75</div>
+          <div class="item">100</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="tile sm-12 full-height">
+    <div class="header">
+      <div class="left">
+        <div class="title">Package history (in reverse chronological order)</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="content-wrapper">
+        @if(loadingHistory()) {
+        <div class="loading-data">
+          <div class="text-xl loading large"></div>
+        </div>
+        }
+        <div class="timeline horizontal" #historyTimeline></div>
+      </div>
+    </div>
+  </div>
+</div>

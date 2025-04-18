@@ -1,0 +1,26 @@
+@import "@eds/vanilla/variables/global";
+@import (reference, multiple) "@eds/vanilla/variables/light";
+.content.custom-content{
+  min-width: 80% !important;
+
+  .custom-top{
+    padding-bottom: @space-large;
+  }
+
+  .custom-body {
+    margin-top: 0;
+    .column.aside {
+      padding-left: @space-large;
+      padding-right: @space-large;
+    }
+  }
+}
+.custom-row{
+  border-bottom: 2px solid @gray-86;
+  margin-bottom: 1em;
+}
+.custom-subtitle{
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+

@@ -1,0 +1,15 @@
+<ng-container *ngFor="let evidence of evidences">
+  <ng-container *ngIf="evidence.internalId === selectedEvidence.internalId">
+    <app-package-evidence-details
+      [packageId]="packageId"
+      [projectId]="projectId"
+      [evidence]="evidence"
+      [isPackageCompleted]="isPackageCompleted"
+      [packageStatus]="packageStatus"
+      [totalRecords]="totalRecords"
+      [pageNumber]="pageNumber"
+      (next)="onNext()"
+      (previous)="onPrevious()"
+    />
+  </ng-container>
+</ng-container>

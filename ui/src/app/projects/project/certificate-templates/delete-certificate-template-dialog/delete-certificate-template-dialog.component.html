@@ -1,0 +1,17 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">{{ title }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+      <div>{{ message }}</div>
+    </div>
+    <div class="bottom">
+      <button class="btn" data-close="true">Cancel</button>
+      <button class="btn warning" data-close="true" (click)="onConfirmDeletion()">Delete</button>
+    </div>
+  </div>
+</div>

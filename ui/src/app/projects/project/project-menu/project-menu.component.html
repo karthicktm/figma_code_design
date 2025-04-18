@@ -1,0 +1,229 @@
+<div class="container tile">
+  <div class="row">
+    @if ((isUserAuthorized(ToolPermission.ViewProjectMenuProjectStructure) | async)
+      || (isUserAuthorized(ToolPermission.ViewProjectMenuUserOnboarding) | async)
+      || (isUserAuthorized(ToolPermission.ViewProjectMenuProjectUsers) | async)
+      || (isUserAuthorized(ToolPermission.ViewProjectMenuProjectView) | async)
+    ) {
+      <app-sub-menu-item [title]="'Project details and activities'" [icon]="'icon-projects'" [isActive]="true" [isClickable]="false">
+        @if (isUserAuthorized(ToolPermission.ViewProjectMenuProjectStructure) | async) {
+          <div class="section">
+            <a
+              class="btn"
+              [routerLink]="['/projects', projectLinearId, 'project-structure']"
+              [routerLinkActive]="'active'"
+            >
+              <i class="icon icon-hierarchy-chart"></i>
+              View project structure
+            </a>
+          </div>
+        }
+        @if (isUserAuthorized(ToolPermission.ViewProjectMenuProjectView) | async) {
+          <div class="section">
+            <a
+              class="btn"
+              [routerLink]="['/projects', projectLinearId, 'project-view']"
+              [routerLinkActive]="'active'"
+            >
+              <i class="icon icon-hierarchy-chart"></i>
+              View project
+            </a>
+          </div>
+        }
+        @if (isUserAuthorized(ToolPermission.ViewProjectMenuUserOnboarding) | async) {
+          <div class="section">
+            <a
+              class="btn"
+              [routerLink]="['/projects', projectLinearId, 'user-onboarding']"
+              [routerLinkActive]="'active'"
+            >
+              <i class="icon icon-change-user"></i>
+              Manage project users
+            </a>
+          </div>
+        }
+        @else if (isUserAuthorized(ToolPermission.ViewProjectMenuProjectUsers) | async) {
+          <div class="section">
+            <a
+              class="btn"
+              [routerLink]="['/projects', projectLinearId, 'users']"
+            >
+              <i class="icon icon-group"></i>
+              View project users
+            </a>
+          </div>
+        }
+      </app-sub-menu-item>
+    }
+
+    @let isHavingCreatePackagePermission = isUserAuthorized(ToolPermission.CreateAcceptancePackage) | async;
+    @if (isUserAuthorized(ToolPermission.ViewProjectMenuAcceptancePackage) | async) {
+      <app-sub-menu-item
+        [title]="'Acceptance packages'"
+        [icon]="'icon-list'"
+        [description]="
+          (isPackageCreationSupported((project | async)?.sourceTool && isHavingCreatePackagePermission) ? 'Create and v' : 'V') +
+          'iew acceptance packages associated with the project.'
+        "
+        [isActive]="true"
+        [isClickable]="false"
+      >
+        @if (isPackageCreationSupported((project | async)?.sourceTool) && isHavingCreatePackagePermission) {
+        <div class="custom-row">
+          <a
+            class="{{ isPackageCreationAllowed(project | async) ? 'btn' : 'btn disabled' }}"
+            [routerLink]="'/projects/' + projectLinearId + '/acceptance-packages/new'"
+            [queryParams]="{ type: 'milestones' }"
+            ><i class="icon icon-plus"></i>Milestones package</a
+          >
+        </div>
+        <div class="custom-row">
+          <a
+            class="{{ isPackageCreationAllowed(project | async) ? 'btn' : 'btn disabled' }}"
+            [routerLink]="'/projects/' + projectLinearId + '/acceptance-packages/new'"
+            ><i class="icon icon-plus"></i>Non-milestone package</a
+          >
+        </div>
+        }
+        <div class="custom-row">
+          <a class="btn" [routerLink]="'/projects/' + projectLinearId + '/acceptance-packages'"
+            ><i class="icon icon-view-list"></i>View package list</a
+          >
+        </div>
+      </app-sub-menu-item>
+    }
+
+    @if (isUserAuthorized(ToolPermission.ViewCertificateProjectMenu) | async) {
+      <app-sub-menu-item
+        [title]="'Certificates'"
+        [icon]="'icon-document'"
+        [isActive]="true"
+        [isClickable]="false"
+      >
+        <div>
+          @let isRequestCertificateAllowed = isUserAuthorized(ToolPermission.RequestCertificate) | async;
+          <span>{{ isRequestCertificateAllowed ? 'Create and v' : 'V' }}iew certificate requests and their status.</span>
+          @if (isRequestCertificateAllowed) {
+            <div class="custom-row">
+              <a class="btn" [routerLink]="'/projects/' + projectLinearId + '/certificates/new'">
+                <i class="icon icon-plus"></i>New certificate request
+              </a>
+            </div>
+          }
+
+          <div class="custom-row">
+            <a class="btn" [routerLink]="'/projects/' + projectLinearId + '/certificates'">
+              <i class="icon icon-view-list"></i>View certificate list
+            </a>
+          </div>
+        </div>
+      </app-sub-menu-item>
+    }
+
+    <app-sub-menu-item [title]="'Project reports'" [icon]="'icon-graph-line'" [isActive]="true" [isClickable]="false">
+      <div class="section">
+        <p>
+          <span
+            >Acceptance package report
+            <i class="icon icon-info" title="This report will be based on all acceptance packages submitted for a network site."></i>
+          </span>
+        </p>
+        <div>
+          <app-project-report-download
+            [type]="ProjectReportType.AP"
+            [projectLinearId]="projectLinearId"
+          ></app-project-report-download>
+        </div>
+      </div>
+
+      @if (isUserAuthorized(ToolPermission.ProjectSnagReport) | async) {
+        <div class="section">
+          <p>
+            <span
+              >Snag report
+              <i class="icon icon-info"
+                title="This report will be based on all the snag description of all the rejected packages in the project."
+              ></i>
+            </span>
+          </p>
+          <div>
+            <app-project-report-download
+              [type]="ProjectReportType.SNAG"
+              [projectLinearId]="projectLinearId"
+            ></app-project-report-download>
+          </div>
+        </div>
+      }
+
+      <div class="section">
+        <p>
+          <span
+            >Certificate report
+            <i class="icon icon-info" title="This report will reflect the acceptance status and certificate status of milestones within project."></i>
+          </span>
+        </p>
+        <div>
+          <app-project-report-download
+            [type]="ProjectReportType.CERTIFICATE"
+            [projectLinearId]="projectLinearId"
+          ></app-project-report-download>
+        </div>
+      </div>
+
+      <div class="section">
+        <p>
+          <span
+            >Dashboard
+            <i class="icon icon-info" title="Project dashboard based on acceptance package and certificate request status within the project."></i>
+          </span>
+        </p>
+        <div>
+          <a class="btn" [routerLink]="'/projects/' + projectLinearId + '/dashboard'">
+            <i class="icon icon-graph-line"></i>Dashboard
+          </a>
+        </div>
+      </div>
+    </app-sub-menu-item>
+
+    @if ((isUserAuthorized(ToolPermission.ViewPackageConfiguration) | async)
+      || (isUserAuthorized(ToolPermission.ViewCertificateTemplatesProjectMenu) | async)
+      || (isUserAuthorized(ToolPermission.EmailNotificationConfiguration) | async)
+    ) {
+      <app-sub-menu-item
+        [title]="'Manage configurations'"
+        [icon]="'icon-settings'"
+        [isActive]="true"
+        [isClickable]="false"
+      >
+        @if (isUserAuthorized(ToolPermission.ViewPackageConfiguration) | async) {
+          <div class="section">
+            <p>Default configuration is enabled; you can customize as per project requirement.</p>
+            <button class="btn" type="button" (click)="onPackageConfigure(projectLinearId)">
+              <i class="icon icon-settings"></i>
+              Acceptance configuration
+            </button>
+          </div>
+        }
+
+        @if (isUserAuthorized(ToolPermission.ViewCertificateTemplatesProjectMenu) | async) {
+          <div class="section">
+            <p>View certificate templates and email configuration</p>
+            <button class="btn" type="button" [routerLink]="'/projects/' + projectLinearId + '/certificate-templates'">
+              <i class="icon icon-view-list"></i>
+              View certificate templates
+            </button>
+          </div>
+        }
+
+        @if (isUserAuthorized(ToolPermission.EmailNotificationConfiguration) | async) {
+          <div class="section">
+            <button class="btn" type="button" (click)="openEmailNotificationConfiguration(projectLinearId)">
+              <i class="icon icon-email"></i>
+              Email notifications
+            </button>
+          </div>
+        }
+      </app-sub-menu-item>
+    }
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="row">
+
+  <!-- Left tile -->
+  <div class="tile sm-4 left-tile">
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">Add new configuration</div>
+      </div>
+    </div>
+    <div class="content">
+      <form class="eds-form form-group" [formGroup]="configurationForm">
+        <div class="form-element">
+          <label for="input-key" class="required">Key</label>
+          <input
+            type="text"
+            id="input-key"
+            name="keyInput"
+            formControlName="keyInput"
+            placeholder="Enter Key"
+            required
+            [attr.disabled]="isEdit ? 'disabled' : null"
+            (change)="onInputHandler($event)"
+            [class.invalid]="valueInput.errors"
+          >
+          <div *ngIf="keyInput.touched && keyInput.invalid" class="validation-error">
+            <span *ngIf="keyInput.errors.required"
+              class="validation-msg invalid">Key required</span>
+            <span *ngIf="keyInput.errors.keyExists && !keyInput.errors.required"
+              class="validation-msg invalid">Key already exists</span>
+            <span *ngIf="keyInput.errors.maxlength"
+              class="validation-msg invalid">{{ 'Max length of key exceeded ' + keyInput.value.length+ '/' + keyInput.errors?.maxlength?.requiredLength}}</span>
+          </div>
+        </div>
+        <div class="form-element">
+          <label for="input-value" class="required">Value</label>
+          <input
+            type="text"
+            id="input-value"
+            name="valueInput"
+            formControlName="valueInput"
+            placeholder="Enter value"
+            [class.invalid]="valueInput.errors"
+          >
+          <div *ngIf="valueInput.touched && valueInput.invalid" class="validation-error">
+            <span *ngIf="valueInput.errors?.required"
+              class="validation-msg invalid">Value required</span>
+            <span *ngIf="valueInput.errors?.maxlength"
+              class="validation-msg invalid">{{ 'Max length of key exceeded ' + valueInput.value.length + '/' + valueInput.errors?.maxlength?.requiredLength}}</span>
+          </div>
+        </div>
+        <div class="form-element">
+          <div class="right">
+            <ng-container *ngIf="isEdit; then editblock; else addblock" ></ng-container>
+            <ng-template #addblock>
+              <button class="btn" (click)="resetConfiguration()">Reset</button>
+              <button class="btn primary" (click)="onAddConfiguration()" [disabled]="addConfigurationDisabled()">Add</button>
+            </ng-template>
+            <ng-template #editblock>
+              <button class="btn secondary" (click)="resetConfiguration()">Cancel</button>
+              <button class="btn primary" (click)="onUpdateConfiguration()">Save edits</button>
+            </ng-template>
+        </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right tile -->
+  <div class="tile sm-8 right-tile">
+    <div class="header">
+      <div class="left">
+        <div class="title">Configurations</div>
+      </div>
+    </div>
+    <div class="content">
+      <app-table-server-side-pagination *ngIf="fetchPageHandler" [limit]="limit" [filterSortColumns]="filterSortColumns"
+        [tableHeightStyleProp]="tableHeightStyleProp" [columnsProperties]="columnsProperties"
+        [tableRowNumSelectOptions]="tableRowNumSelectOptions" [fetchPageHandler]="fetchPageHandler"
+        [options]="tableOptions" />
+    </div>
+  </div>
+
+</div>

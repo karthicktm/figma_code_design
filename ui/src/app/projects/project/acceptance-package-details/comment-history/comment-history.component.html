@@ -1,0 +1,50 @@
+<p *ngIf="isNewCommentAllowed">
+  <ng-container *ngIf="!internalCommentInput; else internalInput">
+    <a (click)="addNew()">
+      Add new comment
+    </a>
+  </ng-container>
+
+  <ng-template #internalInput>
+    <div>
+      <label for="commentInput">Enter comment</label>
+      <textarea id="commentInput"
+        name="commentInput" 
+        class="fullwidth"
+        [formControl]="commentInput" 
+        placeholder="Enter comment"
+      ></textarea>
+
+      <span class="character-counter">
+        <span [class.color-red]="commentInput?.errors?.maxlength">{{ commentInput.value.length }}</span>
+        <span>/{{ maxLength }}</span>
+      </span>
+
+      <div class="comment-input-bottom">
+        @if (commentInput?.errors?.maxlength) {
+          <span class="validation-msg invalid">Keep it shorter!</span>
+        }
+        <span class="submit">
+          <button class="btn primary" [class.loading]="isSubmitButtonClicked" [disabled]="commentInput?.errors || isSubmitButtonClicked" (click)="submitComment(commentInput.value)" tabindex="0"><i class="icon icon-send"></i>Add new comment</button>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</p>
+<div class="comment-block">
+  <ng-container *ngIf="comments | async as aComments">
+    <div *ngIf="(aComments.length === 0)">
+      --
+    </div>
+    <div *ngFor="let comment of aComments" class="comment-entry">
+      <div class="row text-sm color-gray comment-header">
+        <span>{{comment.createdBy}}</span>
+        <span>{{comment.createdDate | nullStringDate}}</span>
+      </div>
+      <div class="row">
+        <div class="column sm-8">{{comment.comment}}</div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+

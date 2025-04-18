@@ -1,0 +1,32 @@
+<div #dialog class="dialog fullscreen" data-type="fullscreen">
+  <div class="content">
+
+    <div class="top">
+      <div class="title">
+        Preview of certificate
+      </div>
+      <div class="subtitle">
+        {{ inputData?.certificate?.name }}
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="preview">
+        <iframe *ngIf="inputData?.previewURL | async as previewURL; else loading" 
+          [src]="previewURL"
+          sandbox
+        ></iframe>
+        <ng-template #loading>
+          <div>
+            <div class="loading">
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    
+  </div>
+</div>

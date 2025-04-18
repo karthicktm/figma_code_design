@@ -1,0 +1,43 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Source report</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <ng-container *ngTemplateOutlet="currentStep === 1 ? selectTool : selectedTool === 'SRS' ? selectSRSReports : selectSDEReports"></ng-container>
+  </div>
+</div>
+
+<ng-template #selectTool>
+  <div class="body custom-body">
+    <label class="text-sm required">Select a tool that you would like to source report from</label>
+
+    <div>
+      <app-select
+        class="select fullwidth"
+        data-type="single"
+        [options]="toolList"
+        [selectId]="'toolSelection'"
+        (optionChanged)="onSelectExternalTool($event)"
+        [selected]="selectedTool"
+        [emptySelectionText]="'Select tool'">
+      </app-select>
+    </div>
+  </div>
+  <div class="bottom">
+    <button class="btn secondary" (click)="currentStep = currentStep + 1">Proceed</button>
+  </div>
+</ng-template>
+
+<ng-template #selectSDEReports>
+  <div class="body">
+    <app-source-sde-report-wizard [inputData]="inputData"(submissionResult)="onSubmitAddSDEProjectReport($event)"></app-source-sde-report-wizard>
+  </div>
+</ng-template>
+
+<ng-template #selectSRSReports>
+  <app-source-srs-report [inputData]="inputData" (submissionResult)="onSubmitAddSRSProjectReports($event)"></app-source-srs-report>
+</ng-template>

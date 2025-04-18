@@ -1,0 +1,26 @@
+<div class="datepicker" #datePicker>
+
+  <input type="text" placeholder="YYYY-MM-DD" name="datepicker" maxlength="10" class="with-icon" (change)="onInputChange($event)">
+  <div class="suffix icon-inside"><i class="icon icon-calendar"></i></div>
+
+  <div class="calendar closed">
+    <div class="head">
+      <i class="icon icon-chevron-left"></i>
+      <span class="month"></span>
+      <i class="icon icon-chevron-right"></i>
+
+      <i class="icon icon-chevron-left"></i>
+      <span class="year"></span>
+      <i class="icon icon-chevron-right"></i>
+    </div>
+    <table class="body">
+      <!-- the body of the calendar is dynamically generated -->
+    </table>
+
+    <div class="calendar-footer">
+      <div class="btn set-current-day">Today</div>
+    </div>
+  </div>
+
+  <input type="hidden" name="selectedDay">
+</div>

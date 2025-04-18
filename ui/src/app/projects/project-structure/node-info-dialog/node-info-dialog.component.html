@@ -1,0 +1,411 @@
+<div #dialog class="dialog" data-type="simple">
+  @let placeholder = valuePlaceholder();
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title"><span>{{ type?.charAt(0)?.toUpperCase() + type?.slice(1) || 'Missing' }}: </span>
+        @defer (when isLoadingData() === false) {
+          @if (nodeType === NodeType.Checklist) {
+            <span>{{ checklistDetail?.name || placeholder }}</span>
+          }
+          @else if (nodeType === NodeType.LineItemInfo) {
+            <span>{{ lineItemDetails?.name || lineItemDetails?.lineItemName || placeholder }}</span>
+          }
+          @else {
+            <span>{{ workItemInfo?.name || placeholder }}</span>
+          }
+        }
+        @placeholder {
+          <span class="color-gray">loading...</span>
+        }
+      </div>
+
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    @if (nodeType === NodeType.Checklist) {
+      <div>
+        <div class="row">
+          <div class="column sm-3">
+            <div class="custom-label">Id</div>
+            <p class="section text-sm">
+              {{ checklistDetail?.checkListId || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div class="custom-label">Category name</div>
+            <p class="section text-sm">
+              {{ checklistDetail?.categoryName || placeholder }}
+            </p>
+          </div>
+
+          <div class="column sm-6">
+            <div class="custom-label">Acceptance status</div>
+            <p class="section text-sm">
+              <kbd class="tag" [ngClass]="getStatusColor(checklistDetail?.status)">{{
+                getStatus(checklistDetail?.status) || placeholder
+              }}</kbd>
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-12">
+            <div class="custom-label">Description</div>
+            <p class="section text-sm">
+              {{ checklistDetail?.description || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-3">
+            <div class="custom-label">Planned start date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.plannedStartDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div class="custom-label">Planned end date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.plannedEndDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div class="custom-label">Actual start date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.actualStartDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div class="custom-label">Actual end date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.actualEndDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-3">
+            <div class="custom-label">Created by</div>
+            <p class="section text-sm">
+              {{ checklistDetail?.createdBy || placeholder }}
+            </p>
+          </div>
+
+          <div class="column sm-3">
+            <div class="custom-label">Created date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.createdDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+
+          <div class="column sm-3">
+            <div class="custom-label">Last modified by</div>
+            <p class="section text-sm">
+              {{ checklistDetail?.lastModifiedBy || placeholder }}
+            </p>
+          </div>
+
+          <div class="column sm-3">
+            <div class="custom-label">Last modified date</div>
+            <p class="section text-sm">
+              {{ (checklistDetail?.lastModifiedDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+        </div>
+        @if (checklistDetail?.extendedAttributes?.length > 0) {
+          <div class="row extended-attributes">
+            <div class="custom-label">Extended details</div>
+            <div class="row">
+              @for (extendedProperty of checklistDetail.extendedAttributes; track $index) {
+                <div class="column sm-3">
+                  <div class="custom-label">
+                    {{ extendedProperty.attributeName || placeholder }}
+                  </div>
+                  <p class="section text-sm">
+                    {{ extendedProperty.attributeValue || placeholder }}
+                  </p>
+                </div>
+              }
+              @empty {
+                No data available
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @else if (nodeType === NodeType.LineItemInfo) {
+      <div>
+        <div class="row">
+          <div class="column sm-3">
+            <div>Line item ID</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.lineItemId || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Status</div>
+            @if (lineItemDetails?.status) {
+              <p class="section text-sm">
+                <kbd class="tag" [ngClass]="getStatusColor(lineItemDetails?.status)">{{
+                  getStatus(lineItemDetails?.status)
+                }}</kbd>
+              </p>
+            }
+          </div>
+          <div class="column sm-3">
+            <div>Priority</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.priority || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Acceptance criteria</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.acceptanceCriteria || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-3">
+            <div>Parent Type</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.parentType || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Parent Name</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.parentName || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-6">
+            <div>Description</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.description || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-3">
+            <div>Created by</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.createdBy || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Created date</div>
+            <p class="section text-sm">
+              {{ (lineItemDetails?.createdDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Last modified by</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.lastModifiedBy || placeholder }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Last modified date</div>
+            <p class="section text-sm">
+              {{ (lineItemDetails?.lastModifiedDate | nullStringDate) || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column sm-3">
+            <div>Acceptance required</div>
+            <p class="section text-sm">
+              {{ lineItemDetails?.isAcceptanceRequired || placeholder }}
+            </p>
+          </div>
+        </div>
+
+        @if (lineItemDetails?.extendedAttributes?.length > 0) {
+          <div class="row extended-attributes">
+            <div class="subtitle custom-subtitle">Extended details</div>
+            <div class="row">
+              @for (extendedProperty of lineItemDetails.extendedAttributes; track $index) {
+                <div class="column sm-3">
+                  <div>
+                    {{ extendedProperty.attributeName || placeholder }}
+                  </div>
+                  <p class="section text-sm">
+                    {{ extendedProperty.attributeValue || placeholder }}
+                  </p>
+                </div>
+              }
+              @empty {
+                No data available
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @else {
+      <div class="row">
+        <div class="column sm-3">
+          <div class="custom-label">
+            @if (workItemInfo?.type === 'Milestone') {
+            <span class="tooltip pointer" role="tooltip" aria-describedby="tooltip-milestone">
+              <i class="icon icon-info" tabindex="0"></i>
+              <span class="message right" id="tooltip-milestone">
+                Milestone status updated <br />to Draft or Ready using <br />project management tools, <br />while
+                other statuses adhere <br />to acceptance criteria.
+              </span>
+            </span>
+            } Status
+          </div>
+          <p class="section text-sm">
+            <kbd class="tag" [ngClass]="getStatusColor(workItemInfo?.status)">{{
+              getStatus(workItemInfo?.status) || placeholder
+            }}</kbd>
+          </p>
+        </div>
+        @if (workItemInfo?.type === 'Milestone') {
+        <div class="column sm-3">
+          <div class="custom-label">Last update on</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.lastModifiedDate | nullStringDate) || 'NA' }}
+          </p>
+        </div>
+        } @else {
+        <div class="column sm-3">
+          <div class="custom-label">Type</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.type ? workItemInfo.type : placeholder }}
+          </p>
+        </div>
+        }
+
+        <div class="column sm-6">
+          <div class="custom-label">Type of work</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.typeOfWork || placeholder }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-12">
+          <div class="custom-label">Description</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.description || placeholder }}
+          </p>
+        </div>
+      </div>
+      @if (workItemInfo?.type === 'Workplan') {
+      <div class="row">
+        <div class="column sm-3">
+          <div class="custom-label">Customer scope ID</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.customerScopeId || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Project type</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.projectType || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Project category</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.projectCategory || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">FAS ID</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.fasId || placeholder }}
+          </p>
+        </div>
+      </div>
+      }
+      <div class="row">
+        <div class="column sm-3">
+          <div class="custom-label">Planned start date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.plannedStartDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Planned end date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.plannedEndDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Actual start date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.actualStartDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Actual end date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.actualEndDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-3">
+          <div class="custom-label">Created by</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.createdByUsername || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Created date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.createdDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+        @if (workItemInfo?.type !== 'Milestone') {
+        <div class="column sm-3">
+          <div class="custom-label">Last modified by</div>
+          <p class="section text-sm">
+            {{ workItemInfo?.lastModifiedByUsername || placeholder }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div class="custom-label">Last modified date</div>
+          <p class="section text-sm">
+            {{ (workItemInfo?.lastModifiedDate | nullStringDate) || placeholder }}
+          </p>
+        </div>
+        }
+      </div>
+      @if (workItemInfo?.extendedAttributes?.length > 0) {
+        <div class="row extended-attributes">
+          <div class="subtitle custom-subtitle">Extended details</div>
+          <div class="row">
+            @for (extendedProperty of workItemInfo.extendedAttributes; track $index) {
+              <div class="column sm-3">
+                <div class="custom-label">
+                  {{ extendedProperty.attributeName || placeholder }}
+                </div>
+                <p class="section text-sm">
+                  {{ extendedProperty.attributeValue || placeholder }}
+                </p>
+              </div>
+            }
+            @empty {
+              No data available
+            }
+          </div>
+        </div>
+      }
+    }
+
+    <ng-template #noData>
+      <div class="row">No data available</div>
+    </ng-template>
+  </div>
+</div>

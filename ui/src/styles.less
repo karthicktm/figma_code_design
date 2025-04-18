@@ -1,0 +1,17 @@
+/////////////////////////////////////////////////////////////////////////////
+// App root Style sheet
+/////////////////////////////////////////////////////////////////////////////
+@import (reference, multiple) "@eds/vanilla/font/icon-names";
+@import "@eds/vanilla/eds";
+@import '@angular/cdk/overlay-prebuilt.css';
+
+.dark {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .all_components_mixin();
+}
+
+.light {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .all_components_mixin();
+}
+.all_components_mixin() {}

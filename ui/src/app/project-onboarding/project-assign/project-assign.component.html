@@ -1,0 +1,70 @@
+<div [class.hide]="!isAssignmentDisplay()">
+  <p>
+    Select admin users for assignment to project {{ selectedProjectId }}.
+  </p>
+
+  <form class="eds-form">
+    <!-- No form header -->
+
+    <div class="row form-body">
+
+      <div class="column sm-12 md-12 lg-12">
+        <div class="form-group">
+          <div class="form-element">
+            <label class="required"
+              for="users">User
+            </label>
+            <div *ngIf="(userOptions | async) as options; else usersFreeTextInput">
+              <app-select-with-input class="select fullwidth"
+                name="user"
+                data-type="input-single"
+                [placeholder]="'Select user'"
+                [optionsWithValue]="options"
+                [selectId]="'user'"
+                [formControl]="user" />
+            </div>
+            <ng-template #usersFreeTextInput>
+              <input type="text"
+                id="users"
+                placeholder="No users available"
+                class="fullwidth"
+                disabled
+              />
+            </ng-template>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button type="button"
+        class="btn"
+        (click)="onBackFromAssignment()"
+      >Back</button>
+      <button type="button"
+        class="btn primary"
+        (click)="onSubmitAssignment()"
+        [disabled]="user.invalid">Assign</button>
+    </div>
+
+  </form>
+</div>
+
+<div [class.hide]="isAssignmentDisplay()">  
+  <button id="assign-project-admin-selected" class="hide" (invoke)="onAssignProjectAdminGivenProjectId($event)">
+  </button>
+  <div class="content">
+    <app-table-server-side-pagination
+      *ngIf="fetchPageHandler"
+      [limit]="limit"
+      [filterSortColumns]="filterSortColumns"
+      [tableHeightStyleProp]="tableHeightStyleProp"
+      [columnsProperties]="columnsProperties"
+      [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+      [fetchPageHandler]="fetchPageHandler"
+      [options]="tableOptions"
+    />
+  </div>
+</div>

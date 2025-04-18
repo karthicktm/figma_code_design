@@ -1,0 +1,23 @@
+<div class="row h-100">
+  <div class="tile sm-12">
+    <div class="header">
+      <div class="left">
+        <div><i class="icon icon-info"></i> Only one site's milestone can be selected</div>
+      </div>
+    </div>
+
+    <div class="content">
+      @if (fetchPageHandler) {
+      <app-table-server-side-pagination
+        [limit]="limit"
+        [filterSortColumns]="filterSortColumns"
+        [tableHeightStyleProp]="tableHeightStyleProp"
+        [columnsProperties]="columnsProperties"
+        [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+        [fetchPageHandler]="fetchPageHandler"
+        [options]="tableOptions"
+      />
+      }
+    </div>
+  </div>
+</div>

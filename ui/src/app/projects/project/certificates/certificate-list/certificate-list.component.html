@@ -1,0 +1,41 @@
+<div class="tile sm-12">
+  <div class="header">
+    <div class="left">
+      <span class="title">Certificate requests</span>
+    </div>
+    <div class="right">
+      @if (isUserAuthorized(ToolPermission.RequestCertificate) | async) {
+        <button class="btn primary" type="button" (click)="onRequest()">
+          <i class="icon icon-plus"></i>Request certificate
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tabs" #tabs>
+      <div class="titles">
+        <div
+          *ngFor="let tab of tabConfigs"
+          class="title"
+          [class.selected]="targetTab === tab.id"
+          (click)="openTab(tab.id)"
+          tabindex="0"
+        >
+          {{ tab.name }}
+        </div>
+      </div>
+
+      <div class="contents">
+        <div *ngFor="let tab of tabConfigs" class="content">
+          <app-certificate-table
+            *ngIf="targetTab === tab.id"
+            [projectId]="projectId | async"
+            [columnsToHide]="tab.id === TabIdentifier.requested ? ['requestedBy'] : []"
+            [queryType]="getQueryTypeFor(tab.id)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

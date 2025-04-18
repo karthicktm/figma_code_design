@@ -1,0 +1,22 @@
+<app-table-server-side-pagination
+  [limit]="limit"
+  [filterSortColumns]="filterSortColumns"
+  [tableHeightStyleProp]="tableHeightStyleProp"
+  [columnsProperties]="columnsProperties"
+  [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+  [fetchPageHandler]="fetchPageHandler()"
+  [options]="tableOptions"
+  (isDataLoaded)="updatePageInputs($event)"
+>
+ <!-- Wrap the named element to workaround type error with slot name of tag -->
+  @if (true) {
+    <custom-table-buttons class="ml-bs">
+      @let metrics = evidencesMetrics() | async;
+      <span>
+        <span class="mr-bs"><i class='icon icon-severity-cleared color-green mr-sm'></i>Approved:<span class="color-gray"> {{ metrics?.approved || '--' }}</span></span>
+        <span class="mr-bs"><i class='icon icon-severity-cleared color-red mr-sm'></i>Rejected:<span class="color-gray"> {{ metrics?.rejected || '--' }}</span></span>
+        <span class="mr-bs"><i class='icon icon-severity-cleared color-purple mr-sm'></i>Pending:<span class="color-gray"> {{ metrics?.pending || '--' }}</span></span>
+      </span>
+    </custom-table-buttons>
+  }
+</app-table-server-side-pagination>

@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div class="header">
+      <div class="left">
+        <div class="title">Project structure</div>
+      </div>
+    </div>
+  <div class="content">
+    <div class="tabs" #tabs>
+      <div class="titles">
+        @for (tab of tabConfigs; track $index; let tabIdx = $index;) {
+          <div
+            class="title"
+            [class.selected]="targetTab === tab.name"
+            (click)="openTab(tab.name)"
+            tabindex="{{tab.name === targetTab ? '0' : '-1'}}"
+          >
+            {{ tab.name }}
+          </div>
+        }
+      </div>
+
+      <div class="contents">
+        @for (tab of tabConfigs; track $index) {
+          <div class="content" [class.selected]="targetTab === tab.name">
+            @defer (on viewport) {
+              @if (tab.name === TabIdentifier.siteStructure) {
+                <app-site-structure />
+              }
+              @else if (tab.name === TabIdentifier.workplanStructure) {
+                <app-workplan-structure />
+              }
+              @else if (tab.name === TabIdentifier.milestoneStructure) {
+                <app-milestone-structure />
+              }
+              @else {
+                <div class="empty-state">
+                  <div class="message">
+                    <p>No content available.</p>
+                  </div>
+                </div>
+              }
+            }
+            @placeholder {
+              <div class="empty-state">
+                <div class="message">
+                  <p>{{ tab.name }} content to load</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

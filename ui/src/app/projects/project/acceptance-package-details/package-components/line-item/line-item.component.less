@@ -1,0 +1,48 @@
+::ng-deep {
+  .icon.pointer {
+    cursor: pointer;
+  }
+  .detail-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 10em;
+    &:hover {
+      text-overflow: clip;
+      white-space: normal;
+      word-break: break-all;
+    }
+  }
+  &.error-msg {
+    display: none;
+  }
+
+  .column-date {
+    white-space: nowrap;
+  }
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  ::ng-deep.custom-icon{
+    color: @red-46;
+  }
+  ::ng-deep.error-border{
+    border: 1px solid @red-46;
+  }
+}
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  ::ng-deep.custom-icon{
+    color: @red-52;
+  }
+  ::ng-deep.error-border{
+    border: 1px solid @red-52;
+  }
+}
+
+.cell-nowrap {
+  white-space: nowrap;
+}

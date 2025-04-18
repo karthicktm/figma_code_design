@@ -1,0 +1,11 @@
+<div class="row h-100 eds-form">
+  <div class="column sm-6 p-lg custom-background tile">
+    <app-package-details-form [packageForm]="packageForm" [isEdit]="isEdit"></app-package-details-form>
+  </div>
+
+  <div class="column sm-6 p-lg custom-background tile">
+    <app-user-section-form [packageForm]="packageForm" [isEdit]="isEdit"/>
+    <span class="title note-margin">Note: Only users and groups who are part of the project are displayed above. Please
+      contact 'Project Admin' of this project to onboard specific users or groups.</span>
+  </div>  
+</div>

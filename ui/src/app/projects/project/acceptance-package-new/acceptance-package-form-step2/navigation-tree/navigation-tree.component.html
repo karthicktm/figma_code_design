@@ -1,0 +1,66 @@
+<form class="eds-filter">
+  <div class="filter-header">
+    <app-search class="navigation-search"
+      [menuItems]="navigationTreeNodes"
+      (selectedNode)="selectedCheckList.emit($event)"
+      [sourceTreeViewPort]="treeViewPort"
+    />
+  </div>
+  <div #treeViewPort class="filter-body scroll">
+    <div class="navigation-menu">
+      <app-tree
+        *ngFor="let node of navigationTree | async; let rootNodeIndex = index"
+        [node]="node"
+        [rootNodeIndex]="rootNodeIndex"
+        [projectId]="projectId"
+        [checklists]="checklists"
+        [isEdit]="isEdit"
+        [selected]="checkList"
+        [doLITableReset]="doLITableReset"
+        (selectedCheckList)="selectedCheckList.emit($event)"
+        [isActivated]="true"
+      >
+      </app-tree>
+    </div>
+  </div>
+
+  <div class="filter-footer"></div>
+</form>
+
+<div class="legends">
+  <div class="header">
+    <div class="left">
+      <div class="title">Legend</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column sm-4">
+      <i class="icon icon-radio-base-antenna"></i>
+      <span class="legend-title"> Site </span>
+    </div>
+    <div class="column sm-4">
+      <i class="icon icon-tasks"></i>
+      <span class="legend-title"> Workplan </span>
+    </div>
+    <div class="column sm-4">
+      <i class="icon icon-medal"></i>
+      <span class="legend-title"> Milestone </span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column sm-4">
+      <i class="icon icon-trowel"></i>
+      <span class="legend-title"> Activity </span>
+    </div>
+    <div class="column sm-4">
+      <i class="icon icon-list"></i>
+      <span class="legend-title"> Checklist </span>
+    </div>
+    <div class="column sm-4">
+      <i class="icon icon-drag-handle"></i>
+      <span class="legend-title"> Line Item </span>
+    </div>
+  </div>
+</div>

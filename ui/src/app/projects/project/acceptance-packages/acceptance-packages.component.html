@@ -1,0 +1,131 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <!-- Header-->
+    <div class="header">
+      <div class="left">
+        <span class="title">Acceptance packages</span>
+        <!-- <span class="subtitle">Subtitle</span> -->
+      </div>
+      @if (isPackageCreationSupported(project?.sourceTool) && (roleCanCreatePackage | async)) {
+      <div class="right">
+        <a
+          class="{{ isPackageCreationAllowed(project) ? 'btn' : 'btn disabled' }}"
+          [routerLink]="'/projects/' + projectLinearId + '/acceptance-packages/new'"
+          [queryParams]="{ type: 'milestones' }"
+          ><i class="icon icon-plus"></i>Milestones package</a
+        >
+
+        <a
+          class="{{ isPackageCreationAllowed(project) ? 'btn' : 'btn disabled' }}"
+          [routerLink]="'/projects/' + projectLinearId + '/acceptance-packages/new'"
+          ><i class="icon icon-plus"></i>Non-milestone package</a
+        >
+      </div>
+      }
+    </div>
+    <div class="tabs" #tabs>
+      <div class="titles">
+        <div
+          *ngFor="let tab of tabConfigs"
+          class="title"
+          [class.selected]="targetTab === tab.status"
+          (click)="openTab(tab.status)"
+          tabindex="0"
+        >
+          {{ tab.name }}
+          <span class="tooltip pointer" *ngIf="tab.status === 'Completed'">
+            <i class="icon icon-info ml-sm mr-0"></i>
+            <span class="message top">Packages with status approved and abandoned.</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="contents">
+        <div *ngFor="let tab of tabConfigs" class="content"></div>
+        <ng-container [ngTemplateOutlet]="listTab"> </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #listTab>
+  <div class="custom-table-wrapper">
+    <div #filterPills>
+      <div class="filter-criteria-pills" *ngIf="isFilter">
+        @for (filter of filterSortColumns | keyvalue; track $index) {
+          <span *ngIf="filter.value.searchText"
+            (click)="clearSelectedFilter(filter.key)"
+            class="pill removable"
+          >{{filter.value.columnName}}: {{ filter.value.searchText }}</span>
+        }
+        <a (click)="clearAllFilters()"> Remove all</a>
+      </div>
+    </div>
+    <div class="loading-table-data" *ngIf="loadingTableData">
+      <div class="text-xl loading large"></div>
+    </div>
+    <div class="table-top">
+      <div class="table-top-left">
+        <div class="table-info"></div>
+      </div>
+      <div class="table-top-right">
+        <div class="table-buttons" #tableTopButton>
+          @if (targetTab === 'Init' && isSubmitPackageSupported(project?.sourceTool)) {
+          <button
+            class="btn primary"
+            [disabled]="!selectedPackageIds || selectedPackageIds.length <= 0"
+            (click)="onSubmitPackages()"
+          >
+            Submit packages
+          </button>
+          }
+          @if (targetTab === 'Completed') {
+            @if (!packageDocumentDownloadStatus()) { <button class="btn" type="button" disabled>Package documents status unknown </button> }
+            @if ([PackageDocumentDownloadStatus.NOT_STARTED, PackageDocumentDownloadStatus.COMPLETE, PackageDocumentDownloadStatus.FAILED].includes(packageDocumentDownloadStatus())) {
+              <button class="btn" type="button"
+                [disabled]="!selectedPackageIds || selectedPackageIds.length <= 0"
+                (click)="generatePackageDocument($event)"
+              >
+                Download package documents ({{selectedPackageIds?.length}})
+              </button>
+            }
+            @if (packageDocumentDownloadStatus() === PackageDocumentDownloadStatus.IN_PROGRESS) {
+              <button class="btn" type="button" disabled>
+                Preparing package documents
+              </button>
+            }
+            @if (packageDocumentDownloadStatus() === PackageDocumentDownloadStatus.READY) {
+              <button class="btn" type="button" (click)="downloadPackageDocument($event)">
+                Ready to download package documents
+              </button>
+            }
+          }
+          <button class="btn table-filter">
+            <i class="icon icon-filter-off"></i>
+            Show column filter
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-container #acceptancePackageList>
+      <table class="table sortable"></table>
+    </ng-container>
+
+    <div class="pagination-group">
+      <ul class="pagination"></ul>
+      <div class="actions">
+        <label class="left">Go to</label>
+        <input type="number" min="1" />
+        <label class="left">Show</label>
+        <div class="select" data-type="single">
+          <button class="btn current-options">{{ limit }}</button>
+          <div class="options-list">
+            <div *ngFor="let option of tableRowNumSelectOptions" class="item" [ngClass]="{ active: limit === option }">
+              {{ option }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

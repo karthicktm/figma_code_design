@@ -1,0 +1,22 @@
+<div class="tile full-height">
+  <div class="content">
+    <div class="section-title">Signatory details</div>
+
+    <table class="table" #table></table>
+
+    <div class="section-title">Comment</div>
+    @for (comment of requestDetails().comments; track comment) {
+    <div class="comment-entry">
+      <div class="row text-sm color-gray comment-header">
+        <span>{{ comment.createdBy }}</span>
+        <span>{{ comment.createdDate | nullStringDate }}</span>
+      </div>
+      <div class="row">
+        <div class="column sm-8">{{ comment.comment }}</div>
+      </div>
+    </div>
+    } @empty {
+    <div>No comment</div>
+    }
+  </div>
+</div>

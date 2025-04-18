@@ -1,0 +1,71 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Merge PDF documents</div>
+    </div>
+    <div class="body">
+      <p>Rearrange documents and merge with certificate</p>
+      <div class="drop-area-header py-bs px-lg">
+        <span>Merge</span>
+      </div>
+
+      @if (loadingData()) {
+      <div class="loading-data">
+        <div class="loading large"></div>
+      </div>
+      } @else if (documentList && documentList.length > 0) {
+      <div class="drop-area">
+        <div dragula="DOCUMENTS" [(dragulaModel)]="documentList">
+          @for (document of documentList; track document.documentId) {
+          <div class="card draggable">
+            <div class="header">
+              <div class="left">
+                <div class="title title-overflow">{{ document.name }}</div>
+              </div>
+              <div class="right">
+                <span class="show-checkbox">
+                  <input
+                    type="checkbox"
+                    id="check-{{
+                      document.type === CertificateReferenceMergeDocumentType.CERTIFICATE
+                        ? 'certificate'
+                        : document.documentId
+                    }}"
+                    [checked]="document.selected"
+                    [disabled]="document.type === CertificateReferenceMergeDocumentType.CERTIFICATE"
+                    (change)="onDocumentSelectChange($event, document)"
+                  />
+                  <label
+                    for="check-{{
+                      document.type === CertificateReferenceMergeDocumentType.CERTIFICATE
+                        ? 'certificate'
+                        : document.documentId
+                    }}"
+                  ></label>
+                </span>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="empty-state">
+        <div>No document available</div>
+      </div>
+      }
+    </div>
+    <div class="bottom custom-bottom">
+      <div class="reset-button" (click)="onReset()">Reset</div>
+      <button class="btn" data-close="true">Cancel</button>
+      <button
+        class="btn primary"
+        [disabled]="mergingDocument()"
+        [class.loading]="mergingDocument()"
+        (click)="onMerge()"
+      >
+        Merge & download
+      </button>
+    </div>
+  </div>
+</div>

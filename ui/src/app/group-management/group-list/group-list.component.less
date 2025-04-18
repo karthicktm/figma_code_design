@@ -1,0 +1,33 @@
+@import "@eds/vanilla/variables/global";
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .custom-table-wrapper {
+    .loading-table-data {
+      background-color: @gray-98;
+    }
+  }
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .custom-table-wrapper {
+    .loading-table-data {
+      background-color: @gray-14;
+    }
+  }
+}
+.custom-table-wrapper {
+    position: relative;
+    .loading-table-data {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      height: 100%;
+      width: 100%;
+  
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }

@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="tile sm-12 md-12 lg-6">
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">Acceptance packages</div>
+      </div>
+    </div>
+    <div class="content">
+      @let pkgMetrics = packageMetrics();
+      <div class="metrics">
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-orange icon-warning-circle"></i>
+          <div>
+            <div>Pending</div><div class="color-gray">{{ pkgMetrics.pending }}</div>
+          </div>
+        </div>
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-red icon-failed"></i>
+          <div>
+            <div>Rejected</div><div class="color-gray">{{ pkgMetrics.rejected }}</div>
+          </div>
+        </div>
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-green icon-success"></i>
+          <div>
+            <div>Approved</div><div class="color-gray">{{ pkgMetrics.approved }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tile sm-12 md-12 lg-6">
+    <div class="header custom-header">
+      <div class="left">
+        <div class="title">Certificate requests</div>
+      </div>
+    </div>
+    <div class="content">
+      @let certMetrics = certificateMetrics();
+      <div class="metrics">
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-orange icon-warning-circle"></i>
+          <div>
+            <div>Pending</div><div class="color-gray">{{ certMetrics.pending }}</div>
+          </div>
+        </div>
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-red icon-failed"></i>
+          <div>
+            <div>Rejected</div><div class="color-gray">{{ certMetrics.rejected }}</div>
+          </div>
+        </div>
+        <div class="metric pr-sm">
+          <i class="icon pr-sm text-lg color-green icon-success"></i>
+          <div>
+            <div>Approved</div><div class="color-gray">{{ certMetrics.signed }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="tile sm-12">
+    <div class="content">
+      <app-site-evidences />
+    </div>
+  </div>
+</div>

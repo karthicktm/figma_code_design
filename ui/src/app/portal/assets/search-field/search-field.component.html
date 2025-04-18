@@ -1,0 +1,10 @@
+<input
+  type="text"
+  id="searchField"
+  class="with-icon search-field fullwidth"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+  [value]="searchCommand.phrase"
+  placeholder="Search for..."
+>
+<div class="suffix icon-inside"><i class="icon icon-search"></i></div>

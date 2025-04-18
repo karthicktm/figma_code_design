@@ -1,0 +1,71 @@
+<div class="tile sm-12 min-height-100">
+  <div class="content">
+    <div class="row custom-row">
+      <div class="column">
+        <div class="title header custom-header">
+          <div class="left">
+            Manage group user(s)
+          </div>
+          @if (isEditable && !isSaveVisible) {
+            <div class="right">
+              <button class="btn" (click)="onEditGroupUsers()"><i class='icon icon-edit'></i>Edit</button>
+            </div>
+          } @else if (isSaveVisible) {
+            <div class="right">
+              <button class="btn" (click)="onUpdateGroupUsers()"><i class='icon icon-save'></i>Save</button>
+            </div>
+            <div class="right">
+              <button class="btn" (click)="onCancel()"><i class='icon icon-cross-small'></i>Cancel</button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="table-top">
+      <div class="table-top-left">
+        <div *ngIf="isEditable && isSaveVisible" class="mr-xl">
+          <label for="">Add user(s) to group</label>
+
+          <app-select-multi-input #userSelect class="select" name="selectUsers" data-type="input-multi"
+            [placeholder]="'Select users'" [optionsWithValue]="userListOption" [selectId]="'select-user'"
+            (selectOption)="onSelectUser($event)" />
+
+          <button class="btn custom-add-button" (click)="addUserToGroup()"
+            [disabled]="!(userListOption && userListOption.length > 0)">Add selected</button>
+        </div>
+      </div>
+      <div class="table-top-right">
+        <div class="table-search">
+          <input type="text" class="with-icon" placeholder="Search user">
+          <div class="suffix icon-inside"><i class="icon icon-search"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="loading small" *ngIf="loader"></div>
+
+    <table id="groupUser" class="table custom-table" #groupUser></table>
+    <div class="table-bottom">
+      <div class="pagination-group">
+        <ul class="pagination"></ul>
+
+        <div class="actions">
+          <label class="left">Go to</label>
+          <input type="number" min="1">
+
+          <label class="left">Show</label>
+          <div class="select" data-type="single">
+            <button class="btn current-options">10</button>
+
+            <div class="options-list">
+              <div class="item active">10</div>
+              <div class="item">25</div>
+              <div class="item">50</div>
+              <div class="item">75</div>
+              <div class="item">100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

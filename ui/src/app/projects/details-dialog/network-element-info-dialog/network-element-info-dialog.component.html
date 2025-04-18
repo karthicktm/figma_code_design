@@ -1,0 +1,128 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title">{{ details?.type | titlecase }} - {{ details?.networkElementId }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div>
+      <div class="row">
+        <div class="column sm-3">
+          <div>Name</div>
+          <p class="section text-sm">
+            {{ details?.name ? details?.name : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Network Element Id</div>
+          <p class="section text-sm">
+            {{
+              details?.networkElementId ? details?.networkElementId : "--"
+            }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Customer region</div>
+          <p class="section text-sm">
+            {{
+              details?.location.region ? details?.location.region : "--"
+            }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Status</div>
+          <p class="section text-sm">
+            {{ details?.status ? details?.status : "--" }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-6">
+          <div>Description</div>
+          <p class="section text-sm">
+            {{ details?.description ? details?.description : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Type</div>
+          <p class="section text-sm">
+            {{ details?.type ? details?.type : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Provider</div>
+          <p class="section text-sm">
+            {{ details?.provider ? details?.provider : "--" }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-3">
+          <div>Latitude</div>
+          <p class="section text-sm">
+            {{ details?.latitude ? details?.latitude : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Longitude</div>
+          <p class="section text-sm">
+            {{ details?.longitude ? details?.longitude : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Created By</div>
+          <p class="section text-sm">
+            {{ details?.createdByUsername ? details?.createdByUsername : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Created Date</div>
+          <p class="section text-sm">
+            {{ (details?.createdDate | nullStringDate) || "--" }}
+          </p>
+        </div>
+      </div>
+      <div class="row custom-row">
+        <div class="column sm-3">
+          <div>Last Modified by</div>
+          <p class="section text-sm">
+            {{ details?.lastModifiedByUsername ? details?.lastModifiedByUsername : "--" }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Last Modified date</div>
+          <p class="section text-sm">
+            {{ (details?.lastModifiedDate | nullStringDate) || "--" }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="subtitle custom-subtitle">Extended details</div>
+        <div
+          class="row"
+          *ngIf="details.extendedAttributes?.length > 0; else noData"
+        >
+          <div
+            class="column sm-3"
+            *ngFor="let extendedProperty of details.extendedAttributes"
+          >
+            <div>
+              {{
+                extendedProperty?.attributeName || "--"
+              }}
+            </div>
+            <p class="section text-sm">
+              {{
+                extendedProperty?.attributeValue || "--"
+              }}
+            </p>
+          </div>
+        </div>
+        <ng-template #noData>
+          <div class="row">No data available</div>
+        </ng-template>
+      </div>      
+    </div>
+  </div>
+</div>

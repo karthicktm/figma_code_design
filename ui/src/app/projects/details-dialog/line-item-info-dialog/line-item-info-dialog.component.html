@@ -1,0 +1,103 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title">Line item details</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body custom-body">
+        <div class="row">
+        <div class="column sm-8">
+          <div class="row">
+            <div class="column sm-5">
+              <div>Line item status</div>
+              <p class="section text-sm" *ngIf="lineItemDetails.status">
+                <kbd class="tag"
+                  [ngClass]="getStatusColor(lineItemDetails.status)"
+                >{{getStatus(lineItemDetails.status)}}</kbd>
+              </p>
+            </div>
+            <div class="column sm-3">
+              <div>Line item name</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.lineItemName || "--" }}
+              </p>
+            </div>
+            <div class="column sm-2">
+              <div>Created by</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.createdBy || "--" }}
+              </p>
+            </div>
+            <div class="column sm-2">
+              <div>Created date</div>
+              <p class="section text-sm">
+                {{ (lineItemDetails?.createdDate | nullStringDate)|| "--" }}
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="column sm-5">
+              <div>Acceptance criteria</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.acceptanceCriteria || "--" }}
+              </p>
+            </div>
+            <div class="column sm-3">
+              <div>Priority</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.priority || "--" }}
+              </p>
+            </div>
+            <div class="column sm-2">
+              <div>Modified by</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.lastModifiedBy || "--" }}
+              </p>
+            </div>
+            <div class="column sm-2">
+              <div>Modified date</div>
+              <p class="section text-sm">
+                {{ (lineItemDetails?.lastModifiedDate | nullStringDate) || "--" }}
+              </p>
+            </div>
+          </div>
+
+          <div class="row custom-row">
+            <div class="column sm-12">
+              <div>Description</div>
+              <p class="section text-sm">
+                {{ lineItemDetails.description || "--" }}
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="subtitle custom-subtitle">Extended details</div>
+            <div class="row" *ngIf="lineItemDetails.extendedAttributes.length > 0; else noData">
+              <div class="column sm-3" *ngFor="let extendedProperty of lineItemDetails.extendedAttributes">
+                <div>
+                  {{ extendedProperty?.attributeName || "--" }}
+                </div>
+                <p class="section text-sm">
+                  {{ extendedProperty?.attributeValue || "--" }}
+                </p>
+              </div>
+            </div>
+            <ng-template #noData>
+              <div class="row">No data available</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="column sm-4 aside">
+          <div class="title">Comments</div>
+          <app-comment-history [packageId]="packageId" [lineItemUniqueId]="lineItemDetails.internalId"
+            [commentLevel]="'lineitem'" [internalCommentInput]="true" [packageStatus]="packageStatus"></app-comment-history>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

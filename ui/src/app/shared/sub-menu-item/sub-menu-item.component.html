@@ -1,0 +1,19 @@
+<div class="card" [class.disabled]="!isActive"
+  [class.clickable]="isClickable"
+>
+  <div class="header">
+    <div class="left">
+      <div class="title color-white">{{ title }}</div>
+    </div>
+    <div class="right">
+      <div *ngIf="icon">
+        <i class="icon color-white" [ngClass]="icon"></i>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="custom-header" *ngIf="header">{{ header }}</div>
+    {{ description }}
+    <ng-content></ng-content>
+  </div>
+</div>

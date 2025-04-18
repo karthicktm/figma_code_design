@@ -1,0 +1,99 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top  custom-top">
+      <div class="title"> Customer details </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div>
+      <div class="row custom-row">
+        <div class="column sm-6">
+          <div>Customer ID</div>
+          <p class="section text-sm">
+            {{ customerDetails?.customerId ? customerDetails.customerId : '--' }}
+          </p>
+        </div>
+
+        <div class="column sm-6">
+          <div>Customer name</div>
+          <p class="section text-sm">
+            {{ customerDetails?.customerName ? customerDetails.customerName : '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="subtitle custom-subtitle"> Details </div>
+        <div class="column sm-12">
+          <div>Customer description</div>
+          <p class="section text-sm">
+            {{ customerDetails?.customerDescription ? customerDetails.customerDescription : '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-3">
+          <div>Customer region</div>
+          <p class="section text-sm">
+            {{ customerDetails?.region ? customerDetails.region : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Customer sub region</div>
+          <p class="section text-sm">
+            {{ customerDetails?.subRegion ? customerDetails.subRegion : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Customer country</div>
+          <p class="section text-sm">
+            {{ customerDetails?.country ? customerDetails.country : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Customer state</div>
+          <p class="section text-sm">
+            {{ customerDetails?.state ? customerDetails.state : '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row custom-row">
+        <div class="column sm-3">
+          <div>Customer city</div>
+          <p class="section text-sm">
+            {{ customerDetails?.city ? customerDetails.city : '--' }}
+          </p>
+        </div>
+
+        <div class="column sm-3">
+          <div>Customer email domain</div>
+          <p class="section text-sm">
+            {{ customerDetails?.customerEmailDomains.join(", ") || '--' }}
+          </p>
+        </div>
+
+        <div class="column sm-3">
+          <div>Created by</div>
+          <p class="section text-sm">
+            {{ customerDetails?.createdByUsername ? customerDetails.createdByUsername : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3"></div>
+      </div>
+      <div class="row">
+        <div class="subtitle custom-subtitle"> Extended details </div>
+        <div class="row" *ngIf="customerDetails?.extendedAttributes?.length > 0; else noData">
+          <div class="column sm-4" *ngFor="let attribute of customerDetails.extendedAttributes" >
+            <div>{{ attribute.attributeName }}</div>
+            <p class="section text-sm">{{ attribute.attributeValue }}</p>
+          </div>
+        </div>
+        <ng-template #noData>
+          <div class="row">
+            <p class="section">No data available</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

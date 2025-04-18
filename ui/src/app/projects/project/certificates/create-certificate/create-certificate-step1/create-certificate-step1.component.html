@@ -1,0 +1,25 @@
+<div class="table-header">
+  <div class="right">
+    <span class="mr-bs">Show only selected</span>
+    <label class="switch">
+      <input type="checkbox" [checked]="selectedOnly" (click)="toggleSelected($event)"
+        [disabled]="workplanIds.value.length === 0">
+      <i class="ball"></i>
+      <span data-enabled="Yes" data-disabled="No"></span>
+    </label>
+  </div>
+</div>
+<div class="content">
+  <div class="loading" *ngIf="loadingHeaderData"></div>
+  <div class="notification banner stripe-red no-hover" *ngIf="loadingHeaderDataError">
+    <div class="top-row">
+      <div class="title"><i class="icon icon-fault"></i> {{ loadingHeaderDataError }}</div>
+    </div>
+  </div>
+  <ng-container *ngIf="dataInitialized">
+    <app-table-server-side-pagination *ngIf="fetchPageHandler" [limit]="limit" [filterSortColumns]="filterSortColumns"
+      [tableHeightStyleProp]="tableHeightStyleProp" [columnsProperties]="columnsProperties"
+      [tableRowNumSelectOptions]="tableRowNumSelectOptions" [fetchPageHandler]="fetchPageHandler"
+      [options]="tableOptions" #workplansTable />
+  </ng-container>
+</div>

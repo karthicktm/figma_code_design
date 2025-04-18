@@ -1,0 +1,62 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title left">Link RA evidence
+      </div>
+      <div class="right">
+        <i class="icon icon-cross" (click)="onClose()"></i>
+      </div>
+      <div class="hr-line"></div>
+    </div>
+    <div class="body custom-body">
+      <div class="custom-row">
+          <div class="left custom-column">
+            <div class="subject">
+              <app-evidence-thumbnail
+                [evidenceDetails]="evidence"
+                [zoomLevel]="3"
+                [dataSourceTool]="DataSourceTool.ledger"
+                (selectedEvidence)="maximizeScreen(evidence?.internalId, DataSourceTool.ledger)"
+                (maximizeScreen)="maximizeScreen(evidence?.internalId, DataSourceTool.ledger)"
+              />
+            </div>
+            <div class="hr-line"></div>
+            <div class="selected-area">
+              <app-evidence-thumbnail
+                *ngFor="let selectedEvidence of selectedEvidencesControl.value"
+                [evidenceDetails]="selectedEvidence"
+                [zoomLevel]="3"
+                [dataSourceTool]="DataSourceTool.nro"
+                [maximized]="true"
+              />
+              <div class="empty-state" *ngIf="selectedEvidencesControl.value?.length === 0">
+                <div class="message">
+                  <p>Selected evidence preview will be shown here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right custom-column select-area">
+            <div class="vertical-line"></div>
+            <div class="new-evidences">
+              <app-evidence-thumbnails class="thumbnails"
+                [allEvidenceDetails]="newEvidences"
+                [zoomLevel]="4"
+                [dataSourceTool]="DataSourceTool.nro"
+                [withCheckbox]="true"
+                (selectedThumbnail)="onCheckMarkChange($event)"
+                (switchToEvidence)="maximizeScreen($event, DataSourceTool.nro)"
+              />
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Cancel</button>
+      <button class="btn primary"
+        (click)="onLinkEvidences()"
+        [disabled]="!selectedEvidencesControl.valid"
+      >Link evidences</button>
+    </div>
+  </div>
+</div>

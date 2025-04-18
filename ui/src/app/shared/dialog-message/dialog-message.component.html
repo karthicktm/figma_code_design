@@ -1,0 +1,84 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title">{{ dialogueTitle }}</div>
+    </div>
+    <div class="body">
+      <p class="section color-text">{{additionalMessage}}</p>
+      <div class="column sm-12">
+        <ng-container *ngIf="!show;else loading">
+          <br>
+          <p class="para-center"> {{ statusMessage }}</p>
+        </ng-container>
+        <ng-template #loading>
+          <ng-container *ngIf="show === 1;else success">
+            <ng-container *ngIf="!progressValues;else progress">
+              <div class="loading large center"></div>
+              <br>
+              <p class="center">Processing....</p>
+            </ng-container>
+            <ng-template #progress>
+              <div class="progress-bar">
+                <progress value="{{progressValues.value}}" max="{{progressValues.maxValue}}"></progress>
+                <span>{{progressValues.value}}<span class="unit">%</span></span>
+              </div>
+              <p class="para-center"> {{ statusMessage }}</p>
+            </ng-template>
+          </ng-container>
+        </ng-template>
+        <ng-template #success>
+          <ng-container *ngIf="show === 2;else error">
+            <i class="icon custom-icon center color-green" [ngClass]="iconStatus"></i>
+            <br>
+            <p class="para-center"> {{ statusMessage }}</p>
+          </ng-container>
+        </ng-template>
+        <ng-template #error>
+          <i class="icon icon-triangle-warning custom-icon center color-red"></i>
+          <br>
+          <ng-container *ngIf="!results;else result">
+            <ng-container *ngIf="!referenceDocType; else referenceBlock">
+              @if (statusMessage && statusMessage.length >=0) {
+              <p class="para-center">{{ statusMessage }}</p>
+              } @else if (errorDetailList && errorDetailList.length > 0){
+              <div class="accordion" appAccordion>
+                <ul>
+                  <li class="closed">
+                    <div role="button" class="title" tabindex="0">View details</div>
+                    <div class="content">
+                      <div *ngFor="let errorDetailLine of errorDetailList">
+                        <p>{{ errorDetailLine }}</p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              }
+              <ng-template #referenceBlock>
+                <p class="para-center wrap-line" *ngIf="referenceDocType">
+                  {{ textBefore }}
+                  <a [appHelpDocumentLoader]="referenceDocType" href="" target="_blank" rel="noopener noreferrer">
+                    {{referenceDocText}}
+                  </a>
+                  {{ textAfter }}
+                </p>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+          <ng-template #result>
+            <div class="row error-result">
+              <div class="column sm-6" *ngFor="let resultData of results">
+                <div class="title"><b>{{resultData.name}}</b></div>
+                <div class="content" *ngFor="let element of resultData.elements">{{element.elementName}}{{
+                  (element.message ? ': ' + element.message : '')}}</div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
+    <div class="bottom">
+      <button *ngIf="show !== 1" class="btn primary" (click)="closeDialog()">{{buttonText ?? 'Ok'}}</button>
+    </div>
+  </div>
+</div>

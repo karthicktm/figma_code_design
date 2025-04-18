@@ -1,0 +1,49 @@
+<div class="body">
+  <label class="text-sm required">Select reports</label>
+  <table class="table compact text-sm">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" id="cb-all"
+            [checked]="selectedReports.length > 0 && selectedReports.length === reportList.length"
+            (change)="onCheckAllReports($event)">
+          <label for="cb-all"></label>
+        </th>
+        <th>Report name</th>
+        <th>Created date</th>
+        <th>Parent report name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="reports | async as reportList">
+        <tr *ngFor="let report of reportList">
+          <td>
+            <input type="checkbox" id="cb-{{report.internalId}}" [value]="report.internalId"
+              [checked]="selectedReports.includes(report.internalId)" (change)="onReportCheckboxChange($event)">
+            <label for="cb-{{report.internalId}}"></label>
+          </td>
+          <td>{{report.name}}</td>
+          <td>{{(report?.createdDate | nullStringDate) || '--'}}</td>
+          <td>{{report.parentEvidenceName}}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+    <ng-container *ngIf="loading">
+      <tr>
+        <td colspan="100">
+          <div class="empty-state">
+            <div class="message">
+              <p class="loading large center"></p>
+              <p>Loading data...</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+
+<div class="bottom">
+  <button class="btn secondary" (click)="cancel()">Cancel</button>
+  <button class="btn secondary" (click)="onSubmitAddReport()" [disabled]="!(selectedReports?.length > 0)">Add report</button>
+</div>

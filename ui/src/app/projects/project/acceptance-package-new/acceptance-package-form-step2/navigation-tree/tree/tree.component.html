@@ -1,0 +1,75 @@
+<div class="tree" #tree>
+  <ul>
+    <ng-container *ngTemplateOutlet="(!!node.subTreeObservable) ? nestedNode: simpleNode; context: {node, rootNodeIndex}"></ng-container>
+  </ul>
+</div>
+
+<ng-template #simpleNode let-node="node" let-isLast="isLast">
+  <ng-container *ngIf="!isEdit">
+    <li>
+      <span
+        class="item"
+        tabindex="0"
+        (click)="selectNode(node)"
+        [ngClass]="{'active': node.id === selected?.id}
+        "
+      >
+        <i *ngIf="node.nodeType=== 'checklist'" class="icon" [ngClass]="getLevelIcon(node.nodeType)"></i>
+        <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node, isLast}"></ng-container>
+      </span>
+    </li>
+  </ng-container>
+  <ng-container *ngIf="isEdit">
+    <li>
+      <span
+        class="item"
+        tabindex="0"
+        (click)="selectNode(node)"
+        [ngClass]="{'active': checklistIds.includes(node.id) }
+        "
+      >
+        <i *ngIf="node.nodeType=== 'checklist'" class="icon" [ngClass]="getLevelIcon(node.nodeType)"></i>
+        <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node, isLast}"></ng-container>
+      </span>
+    </li>
+  </ng-container>
+</ng-template>
+
+<ng-template #nestedNode let-node="node" let-rootNodeIndex="rootNodeIndex" let-isLastBranch="isLast">
+  <li>
+    <span class="title item"
+      [class.opened]="rootNodeIndex === 0"
+      tabindex="0"
+    >
+      <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node}"></ng-container>
+    </span>
+    <ul>
+
+      <ng-container *ngIf="node.subTree !== undefined && !node.subTreeObservable">
+        <ng-container *ngFor="let subNode of node.subTree; last as isLast;">
+          <ng-container *ngTemplateOutlet="(!!subNode.subTree && subNode.subTree.length >0) ? nestedNode : simpleNode; context: {node: subNode, rootNodeIndex, isLast: isLastBranch && isLast} ">
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="node.subTreeObservable !== undefined && isActivated">
+        <ng-container *ngFor="let subNode of node.subTreeObservable | async; last as isLast">
+          <ng-container *ngTemplateOutlet="(!!subNode.subTree && subNode.subTree.length >0) ? nestedNode : simpleNode; context: {node: subNode, rootNodeIndex, isLast} ">
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+    </ul>
+  </li>
+</ng-template>
+
+<ng-template #nodeEntry let-node="node" let-isLast="isLast">
+  <div class="node-entry" [ngClass]="node.id">
+    <i class="icon" [ngClass]="getLevelIcon(node.type)"></i>
+    <div class="node-name mr-sm">{{node.name}}</div>
+    <div *ngIf="node.type !== 'LineItems'">
+      <i class="icon icon-info node-entry-cue" (click)="openLevelDetails($event, node.id, node)"></i>
+    </div>
+  </div>
+  <ng-container *ngIf="isLast ? initTree(tree) : false"></ng-container>
+</ng-template>

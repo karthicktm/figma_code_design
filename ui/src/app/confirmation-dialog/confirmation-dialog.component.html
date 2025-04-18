@@ -1,0 +1,14 @@
+<div #dialog class="dialog" data-type="simple" id="delete-confirmation-dialog">
+  <div class="content">
+    <div class="top">
+      <div class="title">{{ inputData.title }}</div>
+    </div>
+    <div class="body">
+      <div class="fullwidth">{{ inputData.message }}</div>
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" (click)="onConfirmAndClose()">{{ confirmLabel }}</button>
+      <button class="btn primary" (click)="onCancelAndClose()">{{ cancelLabel }}</button>
+    </div>
+  </div>
+</div>

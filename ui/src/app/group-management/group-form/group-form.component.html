@@ -1,0 +1,58 @@
+<div class="content">
+  <form class="eds-form" [formGroup]="groupForm">
+    <div class="row form-body">
+      <div class="column sm-12 md-12 lg-12">
+        <div class="form-header">
+          <div class="title">Create new group</div>
+        </div>
+        <div class="form-group">
+          <div class="form-element">
+            <label for="groupRoleType">Role type</label>
+            <app-select #groupRoleType class="select" name="groupRoleTypeSelect" data-type="single"
+            appAutofocus
+            formControlName="groupRoleTypeSelect"
+            emptySelectionText="Select role type"
+            [selectId]="'select-groupRoleType'" [options]="groupRoleTypes">
+            </app-select>
+          </div>
+          <div class="form-element">
+            <label for="customer">Assigned to customer</label>
+            
+            <app-select-with-input #customer class="select" name="customerSelect" data-type="input-single"
+            formControlName="customerSelect"
+            placeholder="Select customer"
+            [attr.name]="'customerSelect'"
+            [selectId]="'select-customer'"
+            [optionsWithValue]="customers | async">
+            (optionChanged)="onSelectCustomer($event)"
+            </app-select-with-input>
+          </div>
+          <div class="form-element">
+            <label for="input-groupname">Group name</label>
+            <div class="input-with-suffix">
+              <input type="text" id="input-groupname" name="groupnameInput" required
+                placeholder="Enter group name" formControlName="groupnameInput" [class.invalid]="groupname.errors">
+              <div class="suffix">{{customerSelect.value? ' - ' + customerMap[customerSelect.value] : ''}}</div>
+            </div>
+          </div>
+          <div *ngIf="groupname.errors?.duplicate" class="validation-msg invalid">Same group name is already existing for same customer. <br>Please provide an unique group name.</div>
+          <div *ngIf="groupname.errors?.whiteSpaceIssue" class="validation-msg invalid">White space issue in provided name. <br>The name shall not begin, end or have double spaces. <button class="btn-icon" type="button" (click)="correctGroupNameInput()" title="Correct input"><i class="icon icon-under-construction"></i></button></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm">You can add users after you create the group.</p>
+    <div class="form-footer">
+      <button class="btn"
+        type="button"
+        (click)="onCancel()">
+        Cancel
+      </button> 
+      <button class="btn primary"
+        [disabled]="!groupForm.valid"
+        [ngClass]="{'loading': loader === true}"
+        (click)="onAddUserGroup()">
+        Create group
+      </button>
+    </div>
+  </form>
+</div>

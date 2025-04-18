@@ -1,0 +1,22 @@
+@let package = packageDetailsObservable | async;
+@if (fetchPageHandler && isColumnsPropertiesReady()) {
+<app-table-server-side-pagination [limit]="limit" [filterSortColumns]="filterSortColumns"
+  [tableLimitStorageKey]="tableLimitStorageKey"
+  [tableSettingsStorageKey]="tableSettingsStorageKey"
+  [tableHeightStyleProp]="tableHeightStyleProp" [columnsProperties]="columnsProperties"
+  [tableRowNumSelectOptions]="tableRowNumSelectOptions" [fetchPageHandler]="fetchPageHandler" [options]="tableOptions"
+  [tableName]="tableName"
+  (isDataLoaded)="updatePageInputs($event)">
+  @if (isVerdictSubmissionAllowed()) {
+    <custom-table-buttons class="ml-bs">
+      @let decisionOptions = [ { value: 'Reject' }, { value: 'Approve' }];
+      @for (decisionOption of decisionOptions; track $index;) {
+        <button class="btn secondary" [disabled]="isVerdictSubmissionDisabled() || !TableUtils.isAnyRowCheckMarked(table()?.table)"
+          (click)="submitEvidencesDecision({decision: decisionOption.value, evidences: table()?.table.selected})">
+          {{decisionOption.value}}
+        </button>
+      }
+    </custom-table-buttons>
+  }
+</app-table-server-side-pagination>
+}

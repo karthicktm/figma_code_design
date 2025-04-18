@@ -1,0 +1,32 @@
+@import "@eds/vanilla/variables/global";
+
+.header {
+  padding-bottom: 0 !important;
+}
+
+.custom-subheader {
+  font-weight: 500;
+  margin-bottom: @space-base;
+}
+
+.bold {
+  font-weight: 500;
+}
+
+.long-text-overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  &:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
+.card-custom {
+  padding: @space-base;
+  margin: @space-small 0 @space-small 0;
+  &:hover {
+    cursor: default;
+  }
+}

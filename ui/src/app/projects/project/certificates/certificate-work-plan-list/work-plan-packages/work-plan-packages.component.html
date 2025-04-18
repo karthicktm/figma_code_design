@@ -1,0 +1,42 @@
+<div class="custom-table-wrapper">
+  @if (loadingTableData()) {
+    <div class="loading-table-data">
+      <div class="text-xl loading large">
+      </div>
+    </div>
+  }
+  <div class="table-top">
+    <div class="table-top-left">
+      <div class="table-info"></div>
+    </div>
+    <div class="table-top-right">
+      <div class="table-buttons">
+        <button class="btn table-filter">
+          <i class="icon icon-filter-off"></i>
+          Filter
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table-middle">
+    <div>
+      @if(isFilter) {
+        <div class="filter-criteria-pills">
+          @for (filter of filterSortColumns | keyvalue; track $index) {
+            @if(filter.value.searchText) {
+              <span
+              (click)="clearSelectedFilter(filter.key)"
+              class="pill removable"
+            >{{filter.value.columnName}}: {{ filter.value.searchText }}</span>
+            }
+          }
+          <a (click)="clearAllFilters()"> Remove all</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <table class="table" #table></table>
+
+</div>

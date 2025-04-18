@@ -1,0 +1,32 @@
+<div>
+  <div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top">
+        <div class="title">Submit feedback</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+      <div class="subtitle custom-subtitle">Help us improve Ericsson Customer Acceptance by providing us feedback.</div>
+      <div class="body">
+        <p>Feedback
+          <textarea class="fullwidth"
+            id="toImproveMessage"
+            placeholder=""
+            #toImproveMessage
+            (keyup)="onKey(toImproveMessage)"
+          ></textarea>
+        </p>
+      </div>
+      <div class="bottom">
+        <button class="btn"  
+        (click)="onCancel()"
+        >Cancel</button>
+          <button class="btn primary"                     
+          [disabled]="submitButtonDisabled"
+          (click)="sendRequest(toImproveMessage.value)"
+        >Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

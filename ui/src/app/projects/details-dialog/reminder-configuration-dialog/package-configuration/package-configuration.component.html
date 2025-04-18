@@ -1,0 +1,216 @@
+<div class="custom-content">
+  <p>{{infoText}}</p>
+  <form class="eds-form form-group" [formGroup]="configForm">
+    <div class="row custom-row">
+      <div class="column sm-6">
+        <label for="sla_input" class="required">SLA (Service level agreement)</label>
+      </div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">{{ sla.value || 'NULL' }}</div>
+        <input *ngIf="isEdit" id="sla_input" type="number" class="small-textbox" formControlName="sla" />
+        <span class="validation-msg invalid" *ngIf="sla.errors?.max"
+          >Maximum service level agreement days should be {{ MAX_SLA_DAYS }}
+        </span>
+        <span class="validation-msg invalid" *ngIf="sla.errors?.min"
+          >Minimum service level agreement days should be {{ MIN_SLA_DAYS }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">
+        <label for="sla_type_switch" [ngClass]="{ required: slaType.enabled }"
+          >SLA for multi-level</label
+        >
+      </div>
+      <div class="column sm-6">
+        @if (!isEdit || slaType.value === null) {
+          <div>
+            {{ slaType.value === null ? 'NA' : getSLATypeDescription(slaType.value) }}
+          </div>
+        } @else {
+          <label class="switch">
+            <input
+              id="sla_type_switch"
+              type="checkbox"
+              [checked]="slaType.value === SLAType.LevelSLA"
+              [disabled]="slaType.disabled"
+              (change)="updateSLAType($event.target.checked)"
+            />
+            <i class="ball"></i>
+            <span [attr.data-enabled]="getSLATypeDescription(SLAType.LevelSLA)" [attr.data-disabled]="getSLATypeDescription(SLAType.PackageSLA)"></span>
+          </label>
+          <span class="validation-msg invalid" *ngIf="slaType.errors?.required"
+            >SLA for multi-level is required
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">
+        <label for="acceptance_reminder_rbtn" [ngClass]="{ required: acceptanceReminder.enabled }"
+          >Acceptance reminder</label
+        >
+      </div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">
+          {{ acceptanceReminder.value === null ? 'NA' : acceptanceReminder.value ? 'Yes' : 'No' }}
+        </div>
+        <div *ngIf="isEdit" class="row">
+          <div class="mr-lg">
+            <input
+              id="acceptance_reminder_rbtn_yes"
+              name="acceptanceReminder"
+              type="radio"
+              formControlName="acceptanceReminder"
+              [value]="true"
+            />
+            <label for="acceptance_reminder_rbtn_yes" class="label_rbtn">Yes</label>
+          </div>
+          <div>
+            <input
+              id="acceptance_reminder_rbtn_no"
+              name="acceptanceReminder"
+              type="radio"
+              formControlName="acceptanceReminder"
+              [value]="false"
+            />
+            <label for="acceptance_reminder_rbtn_no">No</label>
+          </div>
+        </div>
+        <span class="validation-msg invalid" *ngIf="acceptanceReminder.errors?.required"
+          >Acceptance reminder is required
+        </span>
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">
+        <label for="daysReminder_input" [ngClass]="{ required: daysReminder.enabled }"
+          >Set the number of days after package submission for daily reminders to start</label
+        >
+      </div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">
+          {{ daysReminder.value || 'NA' }}
+        </div>
+        <input
+          *ngIf="isEdit"
+          id="daysReminder_input"
+          type="number"
+          class="small-textbox"
+          formControlName="daysReminder"
+        />
+        <span class="validation-msg invalid" *ngIf="daysReminder.errors?.required"
+          >Number of days for daily reminders is required
+        </span>
+        <span class="validation-msg invalid" *ngIf="daysReminder.errors?.max"
+          >Maximum number of days for daily reminders should be {{ sla.value - 1 }}
+        </span>
+        <span class="validation-msg invalid" *ngIf="daysReminder.errors?.min"
+          >Minimum number of days for daily reminders should be {{ MIN_SLA_DAYS }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">Additional email addresses</div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">{{ additionalEmails.value || 'NULL' }}</div>
+        <input
+          *ngIf="isEdit"
+          class="mr-0"
+          id="additionalEmails_input"
+          type="text"
+          formControlName="additionalEmails"
+        />
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">Deemed acceptance</div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">
+          {{ deemedAcceptance.value === null ? 'NA' : deemedAcceptance.value ? 'Yes' : 'No' }}
+        </div>
+        <div *ngIf="isEdit" class="row">
+          <div class="mr-lg">
+            <input
+              id="deemed_acceptance_rbtn_yes"
+              name="deemedAcceptance"
+              type="radio"
+              formControlName="deemedAcceptance"
+              [value]="true"
+            />
+            <label for="deemed_acceptance_rbtn_yes" class="label_rbtn">Yes</label>
+          </div>
+          <div>
+            <input
+              id="deemed_acceptance_rbtn_no"
+              name="deemedAcceptance"
+              type="radio"
+              formControlName="deemedAcceptance"
+              [value]="false"
+            />
+            <label for="deemed_acceptance_rbtn_no">No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row custom-row">
+      <div class="column sm-6">
+        Enable users to reuse the same evidence to multiple packages (once enabled and saved it cannot be undone)
+      </div>
+      <div class="column sm-6">
+        <div *ngIf="!isEdit">{{ reuseEvidences.value === null ? 'NA' : reuseEvidences.value ? 'Yes' : 'No' }}</div>
+        <div *ngIf="isEdit" class="row">
+          <div class="mr-lg">
+            <input
+              id="reuse_evidences_rbtn_yes"
+              name="reuseEvidences"
+              type="radio"
+              formControlName="reuseEvidences"
+              [value]="true"
+            />
+            <label for="reuse_evidences_rbtn_yes" class="label_rbtn">Yes</label>
+          </div>
+          <div>
+            <input
+              id="reuse_evidences_rbtn_no"
+              name="reuseEvidences"
+              type="radio"
+              formControlName="reuseEvidences"
+              [value]="false"
+            />
+            <label for="reuse_evidences_rbtn_no">No</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+@if (isUserAuthorized(ToolPermission.EditPackageConfiguration) | async) {
+  <div class="custom-bottom">
+    <button
+      *ngIf="!isEdit"
+      class="btn primary"
+      [disabled]="fetchingConfigurationError()"
+      (click)="this.isEdit = true"
+    >
+      Customize configuration
+    </button>
+    <button *ngIf="isEdit" class="btn ghost" (click)="resetDefaults()">Reset</button>
+    <button
+      *ngIf="isEdit"
+      class="btn primary"
+      [ngClass]="{ loading: saving() }"
+      [disabled]="configForm?.invalid"
+      (click)="saveConfiguration()"
+    >
+      Save configuration
+    </button>
+  </div>
+}

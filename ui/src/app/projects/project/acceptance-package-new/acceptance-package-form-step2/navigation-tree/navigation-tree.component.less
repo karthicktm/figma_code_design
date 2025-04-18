@@ -1,0 +1,39 @@
+@import "@eds/vanilla/variables/global";
+
+:host {
+  .filter-body {
+    height: calc(100vh - 490px);
+  }
+}
+
+::ng-deep.navigation-search .results-container {
+  margin-top: 17px;
+  padding-top: 16px;
+}
+
+.legends {
+  .header {
+    padding-bottom: @space-base;
+  }
+  .legend-title {
+    font-size: 12px;
+  }
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .legends {
+      .legend-title {
+          color: @white;
+      }
+  }
+}
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .legends {
+      .legend-title {
+          color: @gray-42;
+      }
+  }
+}

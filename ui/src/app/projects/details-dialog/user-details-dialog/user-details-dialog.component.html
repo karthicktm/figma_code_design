@@ -1,0 +1,40 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">User details: {{ userId }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <div class="body">
+      @let user = userDetails | async; 
+      @if (loading()) {
+      <div class="text-xl loading large"></div>
+      } @else if (user) {
+      <div class="row">
+        <div class="column sm-12">
+          <div>User name</div>
+          <p class="section text-sm">
+            {{ user.firstName + ' ' + user.lastName }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-12">
+          <div>Email</div>
+          <p class="section text-sm">
+            {{ user.email }}
+          </p>
+        </div>
+      </div>
+      } @else {
+      <div class="empty-state">
+        <div class="message">
+          <p>No details available.</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

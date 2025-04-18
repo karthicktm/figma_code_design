@@ -1,0 +1,30 @@
+@import '@eds/vanilla/variables/global';
+
+.tile .header.custom-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid;
+  margin-bottom: 12px;
+}
+.metrics {
+  display: flex;
+  justify-content: space-between;
+  max-width: 519px;
+}
+
+.metric {
+  display: flex;
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .tile .header.custom-header {
+    border-bottom-color: @gray-86;
+  }
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .tile .header.custom-header {
+    border-bottom-color: @gray-31;
+  }
+}

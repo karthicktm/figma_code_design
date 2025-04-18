@@ -1,0 +1,218 @@
+<div class="row full-height" *ngIf="packageDetails">
+  <div class="tile custom-tile sm-6">
+    <div class="tile" id="details-panel">
+      <div class="header">
+        <div class="left">
+          <div class="title">Package details</div>
+          <div class="subtitle"></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="row custom-row">
+          <div class="column sm-3">
+            <div>Package name</div>
+            <p class="text-sm color-gray attribute-detail">{{ packageDetails.name? packageDetails.name: "--" }}</p>
+          </div>
+          <div class="column sm-3">
+            <div>Package scope</div>
+            <p class="text-sm color-gray attribute-detail">{{ packageDetails.packageType? packageDetails.packageType: "--" }}</p>
+          </div>
+
+          @if (packageDetails.isMultiLevelAcceptance) {
+            <div class="column sm-3">
+              <div>Service level agreement days</div>
+              <p class="text-sm color-gray attribute-detail">{{ packageDetails.sla ? packageDetails.sla: "NA"}}</p>
+            </div>
+            <div class="column sm-3">
+              <div>Service level agreement type</div>
+              <p class="text-sm color-gray attribute-detail">{{ packageDetails.slaType ? getSLATypeDescription(packageDetails.slaType) : "NA"}}</p>
+            </div>
+          } @else {
+            <div class="column sm-6">
+              <div>Service level agreement days</div>
+              <p class="text-sm color-gray attribute-detail">{{ packageDetails.sla ? packageDetails.sla: "NA"}}</p>
+            </div>
+          }          
+        </div>
+
+        @if (packageDetails.isMultiLevelAcceptance) {
+          <div class="row custom-row">
+            <div class="column sm-6">
+              <div>Description</div>
+              <p class="text-sm color-gray">{{ packageDetails.description  ? packageDetails.description: "--"}}</p>
+            </div>
+            <div class="column sm-3">
+              <div>Multi-level type</div>
+              <p class="text-sm color-gray attribute-detail">{{ packageDetails.approvalSequence ? packageDetails.approvalSequence: "NA"}}</p>
+            </div>
+            <div class="column sm-3">
+              <div>Rework type</div>
+              <p class="text-sm color-gray attribute-detail">{{ packageDetails.reworkType ? getReworkTypeDescription(packageDetails.reworkType) : "NA"}}</p>
+            </div>
+          </div>
+        } @else {
+          <div class="row custom-row">
+            <div class="column sm-12">
+              <div>Description</div>
+              <p class="text-sm color-gray">{{ packageDetails.description  ? packageDetails.description: "--"}}</p>
+            </div>
+          </div>
+        }
+        
+        <div class="row custom-row">
+          <div class="column sm-3">
+            <div>Auto-approve</div>
+            <p class="text-sm color-gray">
+              {{ packageDetails.approvalMode === 'auto'? 'Yes' : 'No' }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Approval type</div>
+            <p class="text-sm color-gray">{{ packageDetails.approvalType ? packageDetails.approvalType: "--"}}</p>
+          </div>
+          <div class="column sm-3">
+            <div>Onboarded date</div>
+            <p class="text-sm color-gray">
+              {{ (packageDetails?.createdDate | nullStringDate) || "--" }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Onboarded by</div>
+            <p class="text-sm color-gray attribute-detail">
+              {{
+                packageDetails.createdByUsername
+                  ? packageDetails.createdByUsername
+                  : "--"
+              }}
+            </p>
+          </div>
+        </div>
+        <div class="row custom-row">
+          <div class="column sm-3">
+            <div>Last modified date</div>
+            <p class="text-sm color-gray">
+              {{ (packageDetails?.lastModifiedDate | nullStringDate) || "--" }}
+            </p>
+          </div>
+          <div class="column sm-3">
+            <div>Last modified by</div>
+            <p class="text-sm color-gray">
+              {{
+                packageDetails.lastModifiedByUsername
+                  ? packageDetails.lastModifiedByUsername
+                  : "--"
+              }}
+            </p>
+          </div>
+          <div class="column sm-6">
+            <div>Information transfer workflow</div>
+            <p class="text-sm color-gray">
+              {{
+                packageDetails.integrateToB2B
+                  ? IntegrateToB2B.transfer
+                  : IntegrateToB2B.noTransfer
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion" appAccordion>
+      <ul>
+        <li class="opened" tabindex="0" *ngIf="packageDetails.extendedAttributes && packageDetails.extendedAttributes.length > 0">
+          <div class="title">Extended details</div>
+          <div class="content no-inset">
+            <div class="row">
+              <div
+                class="column sm-3"
+                *ngFor="let extendedAttribute of packageDetails.extendedAttributes"
+              >
+                <div class="attribute-detail">
+                  {{
+                    extendedAttribute.attributeName || "---"
+                  }}
+                </div>
+                <p class="section text-sm attribute-detail">
+                  {{
+                    extendedAttribute.attributeValue || "---"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="opened" tabindex="0">
+          <div class="title">Comments</div>
+          <div class="content no-inset">
+            <app-comment-history [packageId]="packageLinearId" [commentLevel]="'package'" [packageStatus]="packageDetails.status"></app-comment-history>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tile sm-6" id="users-panel">
+    <div class="header">
+      <div class="left">
+        <div class="title">Users</div>
+        <div *ngIf="!usersInEdit && (showApprovedLegend || showRejectedLegend || showPendingLegend) ">
+          <div class="title">Legends</div>
+          <div>
+            <span class="legend-wrapper" *ngIf="showApprovedLegend">
+              <i class="icon icon-check"></i><span class="legend-text">Approved</span>
+            </span>
+            <span class="legend-wrapper" *ngIf="showRejectedLegend">
+              <i class="icon icon-cross"></i><span class="legend-text">Rejected</span>
+            </span>
+            <span class="legend-wrapper" *ngIf="showPendingLegend">
+              <i class="icon icon-time"></i><span class="legend-text">Pending</span>
+            </span>
+            <span class="legend-wrapper" *ngIf="showAwaitingLegend">
+              <i class="icon icon-eye"></i><span class="legend-text">Awaiting</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="btn"
+          *ngIf="!usersInEdit
+            && (packageDetails.status === AcceptanceStatus.CustomerNewPendingApproval || packageDetails.status === AcceptanceStatus.CustomerRejected
+              || packageDetails.status === AcceptanceStatus.CustomerReworked || packageDetails.status === AcceptanceStatus.CustomerReworkedPendingApproval)
+            && (isUserAuthorized('add-user')| async)"
+          (click)="usersInEdit = !usersInEdit">
+          Add user
+        </button>
+        <button class="btn"
+          *ngIf="usersInEdit"
+          (click)="usersInEdit = !usersInEdit">
+          Cancel
+        </button>
+        <button class="btn"
+          *ngIf="usersInEdit
+            && (packageDetails.status === AcceptanceStatus.CustomerNewPendingApproval || packageDetails.status === AcceptanceStatus.CustomerRejected
+              || packageDetails.status === AcceptanceStatus.CustomerReworked || packageDetails.status === AcceptanceStatus.CustomerReworkedPendingApproval)
+            && (isUserAuthorized('add-user')| async)"
+          [ngClass]="{'loading': savingUser}"
+          (click)="saveUserEdit()">
+          Update & notify
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <ng-container *ngIf="!usersInEdit; else editingBlock">
+        <app-package-users
+        [packageName]="packageDetails.name"
+        [packageStatus]="packageDetails.status"
+        (approvalStatus) = "approvalStatus($event)"
+        ></app-package-users>
+      </ng-container>
+
+      <ng-template #editingBlock>
+        <app-user-section-form class="eds-form" [detailsUsersForm]="usersForm" [isAddUserInPackage]="usersInEdit"/>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div attr.id='{{ selectId }}' #selectContent [ngClass]="{'larger' : custom}">
+  <button type="button" class="btn current-options"
+    [ngClass]="{'larger' : custom, 'faded' : custom && !optionSelected}"
+    [disabled]="disabled"
+  >{{emptySelectionText || 'Select'}}</button>
+  <div class="options-list">
+    <ng-container *ngIf="!!optionsWithValue; else simpleOptions">
+      <div *ngFor="let option of optionsWithValue" class="item"
+        [attr.data-value]="option.optionValue"
+        (click)="propagateChange(option.optionValue)"
+        [ngClass]="{'larger': custom, 'active': selected === option.optionValue}"
+      >{{ option.option }}</div>
+    </ng-container>
+
+    <ng-template #simpleOptions>
+      <div *ngFor="let option of options" class="item"
+        (click)="propagateChange(option)"
+        [ngClass]="{'larger': custom, 'active': selected === option}"
+      >{{ option }}</div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,223 @@
+<div #dialogWizard class="wizard">
+  <!-- Steps -->
+  <div class="wizard-steps">
+    <div class="arrow left">
+      <i class="icon icon-arrow-left"></i>
+    </div>
+
+    <div class="steps">
+      <div class="step current">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">1. Select country and customer</div>
+      </div>
+
+      <div class="step">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">2. Select project and site</div>
+      </div>
+
+      <div class="step">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">3. Select activities</div>
+      </div>
+    </div>
+
+    <div class="arrow right visible">
+      <i class="icon icon-arrow-right"></i>
+    </div>
+  </div>
+
+  <!-- Wizard Contents -->
+  <div class="wizard-content">
+
+    <!-- Content step 1 -->
+    <div class="content hidden">
+      <div class="body custom-body">
+        <div>
+          <label class="text-sm required">Select country</label>
+          <ng-container *ngIf="fetchingCountry; else countrySelectionBlock">
+            <div class="loading small"></div>
+          </ng-container>
+
+          <ng-template #countrySelectionBlock>
+            <div *ngIf="countryList && countryList.length > 0">
+              <app-select-with-input class="select fullwidth" data-type="input-single" [optionsWithValue]="countryList"
+                [selectId]="'countrySelection'" (optionChanged)="onSelectCountry($event)" [selected]="selectedCountry"
+                [placeholder]="'Select country'">
+              </app-select-with-input>
+            </div>
+          </ng-template>
+          <ng-container *ngIf="fetchingCountryError">
+            <p class="text-sm">
+              <i class="icon icon-triangle-warning color-red"></i> Failed to get list of countries. Please try again
+              later.
+            </p>
+          </ng-container>
+        </div>
+        <br>
+        <div>
+          <label class="text-sm required">Customer name</label>
+          <div *ngIf="customerList">
+            <app-select-with-input class="select fullwidth" data-type="input-single" [options]="customerList"
+              [selectId]="'customerSelection'" (optionChanged)="onSelectCustomer($event)"  [selected]="selectedCustomer"
+                [placeholder]="'Select customer'">
+              </app-select-with-input>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Content step 2 -->
+    <div class="content hidden">
+      <div class="body custom-body custom-overflow">
+        <div>
+          <ng-container *ngIf="!projectList || projectList.length === 0; else projectSelectionBlock">
+            <div>No projects available.</div>
+          </ng-container>
+
+          <ng-template #projectSelectionBlock>
+            <label class="text-sm required">Select project</label>
+            <app-select class="select fullwidth" data-type="single" [optionsWithValue]="projectList"
+              [selectId]="'projectSelection'" (optionChanged)="onSelectProject($event)"
+              [emptySelectionText]="'Select project'">
+            </app-select>
+          </ng-template>
+        </div>
+        <br>
+        <ng-container *ngIf="selectedProjectId">
+          <ng-container *ngIf="fetchingSite; else siteSelectionBlock">
+            <div class="loading small"></div>
+          </ng-container>
+
+          <ng-template #siteSelectionBlock>
+            <ng-container *ngIf="siteList && siteList.length > 0; else noSite">
+              <div>
+                <label class="text-sm required">Select site</label>
+                <app-select-with-input class="select fullwidth" data-type="input-single" [selectId]="'siteSelection'"
+                  [optionsWithValue]="siteList" [placeholder]="'Select site'" (optionChanged)="onSelectSite($event)">
+                </app-select-with-input>
+              </div>
+            </ng-container>
+          </ng-template>
+
+          <ng-template #noSite>
+            <div>No sites available.</div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Content step 3 -->
+    <div class="content hidden">
+      <div class="body custom-body">
+        <ng-container *ngIf="!show; else addReportBlock">
+          <ng-container *ngIf="loading; else activitySelectionBlock">
+            <div class="loading small"></div>
+          </ng-container>
+          <ng-template #activitySelectionBlock>
+            <label class="text-sm required">Select activities to generate report</label>
+            <table class="table compact text-sm" #activityListTable>
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" id="cb-all"
+                      [checked]="selectedActivityIds.length > 0 && selectedActivityIds.length === activityList.length"
+                      (change)="onCheckAllActivities($event)">
+                    <label for="cb-all"></label>
+                  </th>
+                  <th>Activity ID</th>
+                  <th>Activity name</th>
+                  <th>ASP name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let activity of activityList">
+                  <td>
+                    <input type="checkbox" id="cb-{{activity.activityId}}" [value]="activity.activityId"
+                      [checked]="selectedActivityIds.includes(activity.activityId)"
+                      (change)="onActivityCheckboxChange($event)">
+                    <label for="cb-{{activity.activityId}}"></label>
+                  </td>
+                  <td>{{activity.activityId}}</td>
+                  <td>{{activity.activityName}}</td>
+                  <td>{{activity.ASPName}}</td>
+                  <td>{{activity.status | titlecase}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+
+        </ng-container>
+        <ng-template #addReportBlock>
+          <ng-container *ngIf="show === 1">
+            <div class="loading large center"></div>
+            <br>
+            <p class="center">Processing....</p>
+          </ng-container>
+          <ng-container *ngIf="show === 2">
+            <i class="icon icon-success statusIcon center"></i>
+            <br>
+            <p class="para-center"> {{ statusMessage }}</p>
+          </ng-container>
+          <ng-container *ngIf="show === 3">
+            <i class="icon icon-warning-circle statusIcon center"></i>
+            <br>
+            <p class="para-center">
+              {{ textBefore }}
+              <a [appHelpDocumentLoader]="referenceDocType" href="" target="_blank" rel="noopener noreferrer">
+                {{referenceDocText}}
+              </a>
+              {{ textAfter }}
+            </p>
+          </ng-container>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Content step 4 -->
+    <div class="content hidden">
+      <div class="body">
+        <ng-container *ngIf="show === 2">
+          <i class="icon icon-success statusIcon center"></i>
+          <br>
+          <p class="para-center"> {{ statusMessage }}</p>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wizard footer -->
+  <div class="wizard-footer">
+    <div class="item">
+      <button *ngIf="currentStep !== 4" class="btn" (click)="onCancel()">Cancel</button>
+    </div>
+    <div class="item">
+      <button class="btn wizard-previous" [ngClass]="{'hidden': show === 3}">
+        <i class="icon icon-arrow-left"></i>
+        <span class="term">Previous</span>
+      </button>
+      <!-- Simulate 'go previous' action to stay at the same step when adding report failed -->
+      <button class="btn wizard-previous" (click)="quitSubmitResult()" [ngClass]="{'hidden': show !== 3}">
+        <i class="icon icon-arrow-left"></i>
+        <span class="term">Previous</span>
+      </button>
+      <button class="btn wizard-next" [disabled]="dialogForm.get('step'+currentStep)?.invalid">
+        <span class="term">Next</span>
+        <i class="icon icon-arrow-right"></i>
+      </button>
+      <button class="btn" [ngClass]="{'hidden': currentStep !== 3 || show}" [disabled]="dialogForm.invalid"
+        (click)="onSubmitAddReport()">Add report</button>
+      <!-- we need this button for initialization otherwise it fails -->
+      <button class="btn wizard-finish" style="display: none;">Add report</button>
+      <button class="btn wizard-finished" (click)="onCancel()">Close</button>
+    </div>
+  </div>
+</div>

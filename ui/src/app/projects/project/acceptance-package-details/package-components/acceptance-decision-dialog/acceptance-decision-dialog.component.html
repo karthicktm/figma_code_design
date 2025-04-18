@@ -1,0 +1,118 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Submit decision</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+      <p class="section">{{message}}</p>
+      <div class="row" *ngIf="workplans">
+        <ng-container [ngTemplateOutlet]="workPlans"></ng-container>
+      </div>
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Cancel</button>
+      <button class="btn primary" data-close="true" [disabled]="!submitButtonEnabled" (click)="submitVerdict()" >Submit</button>
+    </div>
+  </div>
+</div>
+<ng-template #workPlans>
+<div *ngFor="let workplan of workplans">
+  <div class="row workplan-wrapper">
+    <div class="row workplan-title">
+      <i class="icon icon-trowel"></i>
+      <a title="{{workplan?.workplanName}}" target="_blank"
+      [routerLink]="['/projects/'+ projectLinearId+'/browser/workplan/'+ workplan?.workplanLinearId]">
+      {{ workplan?.workplanName}}
+    </a>
+    </div>
+    <div class="coulmn sm-6 left-element" *ngIf="workplan.activities.length===0 && workplan.milestones.length===0">
+          <input id="rbtn1_{{workplan?.workplanLinearId}}" name="{{workplan?.workplanName}}" type="radio"
+            value="APPROVED" (change)="submitItemDecision(workplan, 'workplan', $event)">
+          <label for="rbtn1_{{workplan?.workplanLinearId}}" class="left-element">Approve</label>
+          <input id="rbtn2_{{workplan?.workplanLinearId}}" name="{{workplan?.workplanName}}" type="radio"
+            value="REJECTED" (change)="submitItemDecision(workplan, 'workplan', $event)" disabled>
+          <label for="rbtn2_{{workplan?.workplanLinearId}}" class="left-element">Reject</label>
+          &nbsp;<span class="tooltip pointer">
+            <i class="icon icon-info"></i> <span class="message bottom">coming soon</span>
+          </span>
+
+        </div>
+    <div class="row workplan-content">
+      <div class="row entries" *ngFor="let activity of workplan.activities">
+        <div class="coulmn sm-5 left-element">
+          <i class="icon icon-flag"></i>
+          <a title="{{activity?.activityName}}" target="_blank"
+          [routerLink]="['/projects/'+ projectLinearId+'/browser/activity/'+ activity?.activityLinearId]">
+            {{activity.activityName}}
+          </a>
+        </div>
+        <div class="coulmn sm-6 left-element">
+          <input id="rbtn1_{{activity.activityId}}" name="{{activity.activityName}}" type="radio"
+            value="APPROVED" (change)="submitItemDecision(activity, 'activity', $event)">
+          <label for="rbtn1_{{activity.activityId}}" class="left-element">Approve</label>
+          <input id="rbtn2_{{activity.activityId}}" name="{{activity.activityName}}" type="radio"
+            value="REJECTED" (change)="submitItemDecision(activity, 'activity', $event)" disabled>
+          <label for="rbtn2_{{activity.activityId}}" class="left-element" >Reject</label>
+          &nbsp;<span class="tooltip pointer">
+            <i class="icon icon-info"></i> <span class="message bottom">coming soon</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="row entries" *ngFor="let milestone of workplan.milestones">
+        <div class="coulmn sm-5 left-element">
+          <i class="icon icon-medal"></i>
+          <a title="{{milestone?.milestoneName}}" target="_blank"
+            [routerLink]="['/projects/'+ projectLinearId+'/browser/milestone/'+ milestone?.milestoneLinearId]">
+            {{milestone.milestoneName}}
+          </a>
+        </div>
+        <div class="coulmn sm-6 left-element">
+          <input id="rbtn1_{{milestone.milestoneId}}" name="{{milestone.milestoneName}}" type="radio"
+              value="APPROVED" (change)="submitItemDecision(milestone, 'milestone', $event)">
+          <label for="rbtn1_{{milestone.milestoneId}}" class="left-element">Approve</label>
+          <input id="rbtn2_{{milestone.milestoneId}}" name="{{milestone.milestoneName}}" type="radio"
+              value="REJECTED" (change)="submitItemDecision(milestone, 'milestone', $event)" disabled>
+          <label for="rbtn2_{{milestone.milestoneId}}" class="left-element">Reject</label>
+          &nbsp;<span class="tooltip pointer">
+            <i class="icon icon-info"></i> <span class="message bottom">coming soon</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="workplans.length===0">
+  <div class="row workplan-content">
+    <div class="coulmn sm-5 left-element">
+      <i class="icon icon-radio-base-antenna"></i>
+      <a title="{{site?.siteName}}" target="_blank"
+      [routerLink]="['/projects/'+ projectLinearId+'/browser/site-level/'+ site?.siteId]">
+      {{ site?.siteName}}
+    </a>
+    </div>
+    <div class="coulmn sm-6 left-element">
+      <input id="rbtn1_{{site?.siteId}}" name="{{site?.siteName}}" type="radio"
+        value="APPROVED" (change)="submitItemDecision(site, 'site', $event)">
+      <label for="rbtn1_{{site?.siteId}}" class="left-element">Approve</label>
+      <div>
+      <input id="rbtn2_{{site?.siteId}}" name="{{site?.siteName}}" type="radio"
+        value="REJECTED" (change)="submitItemDecision(site, 'site', $event)" disabled>
+      <label for="rbtn2_{{site?.siteId}}" class="left-element">Reject</label>
+      &nbsp;<span class="tooltip pointer">
+        <i class="icon icon-info"></i> <span class="message bottom">coming soon</span>
+      </span>
+      </div>
+    </div>
+    </div>
+</div>
+<div class="row">
+  <div class="coulmn sm-12">
+    <div class="title">Comment</div>
+    <textarea class="fullwidth" placeholder="Enter comment here" name=""></textarea>
+  </div>
+</div>
+</ng-template>

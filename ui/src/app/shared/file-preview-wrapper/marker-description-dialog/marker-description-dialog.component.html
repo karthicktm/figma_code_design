@@ -1,0 +1,22 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Add comment</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true" (click)="cancel()"></i>
+      </div>
+    </div>
+    <div class="body">
+      <textarea class="fullwidth"
+        placeholder="Type your comment here"
+        #comment
+        maxlength="255"
+      ></textarea>
+      <span class="validation-msg">{{comment.value.length + '/255'}}</span>
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" (click)="cancel()" data-close="true">Cancel</button>
+      <button class="btn primary" (click)="addComment(comment.value)" data-close="true">Proceed</button>
+    </div>
+  </div>
+</div>

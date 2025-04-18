@@ -1,0 +1,22 @@
+<div class="tile sm-12 fullscreen">
+  <div class="header">
+    <div class="left">
+      <div class="title">{{ pageTitle }}</div>
+      <div class="subtitle"></div>
+    </div>
+  </div>
+  <div class="content">
+    @if (fetchPageHandler) {
+      <app-table-server-side-pagination
+        [limit]="limit"
+        [filterSortColumns]="filterSortColumns"
+        [tableHeightStyleProp]="tableHeightStyleProp"
+        [columnsProperties]="columnsProperties"
+        [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+        [fetchPageHandler]="fetchPageHandler"
+        [options]="tableOptions"
+        (isDataLoaded)="updatePageInputs($event)"
+      />
+    }
+  </div>
+</div>

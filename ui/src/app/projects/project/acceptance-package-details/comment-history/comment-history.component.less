@@ -1,0 +1,22 @@
+@import "@eds/vanilla/variables/global";
+.comment-entry:not(:last-of-type){
+  margin-bottom: @space-large;
+}
+
+.comment-header {
+  justify-content: space-between;
+  margin-bottom: @space-base;
+}
+
+.comment-input-bottom {
+  display: flex;
+  justify-content: space-between;
+  .submit {
+    margin-left: auto;
+  }
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

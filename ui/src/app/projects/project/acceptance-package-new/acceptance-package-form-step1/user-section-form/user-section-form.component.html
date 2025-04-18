@@ -1,0 +1,170 @@
+<div class="header">
+  <div class="left">
+    <span class="title">Users</span>
+  </div>
+</div>
+<div class="row" [formGroup]="usersForm">
+  <div class="row sm-12" formGroupName="users">
+    <div class="column sm-6 pr-lg">
+      <div class="form-element">
+        <span class="custom-subheader"> Ericsson contributors </span>
+        <label for="contributors" class="required"> Add Ericsson contributors </label>
+        <div class="select-custom" *ngIf="contributorsObservable | async as contributorOptions; else loadingOptions">
+          <app-select-with-input
+            *ngIf="contributorOptions.length > 0; else usersFreeTextInput"
+            #contributors
+            class="select fullwidth"
+            name="contributors"
+            data-type="input-single"
+            placeholder="Select Ericsson contributors"
+            [optionsWithValue]="contributorOptions"
+            [selectId]="null"
+            (optionChanged)="onSelectContributor($event)"
+          />
+        </div>
+        <div
+          *ngIf="usersForm.controls.contributors.touched && usersForm.controls.contributors.invalid"
+          class="validation-error color-gray text-sm"
+        >
+          <span class="validation-msg invalid" *ngIf="usersForm.controls.contributors.errors.required">
+            Contributor is required</span
+          >
+        </div>
+        <div *ngFor="let user of usersForm.controls.contributors.value" class="card card-custom">
+          <div class="header">
+            <div class="left long-text-overflow">
+              {{ user.name }}
+            </div>
+            <div class="right">
+              <button
+                *ngIf="canDelete('contributors', user)"
+                class="btn-icon icon icon-trashcan"
+                (click)="onDeleteContributor(user)"
+                type="button"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column sm-6">
+      <span class="custom-subheader">Customer approvers</span>
+
+      <div class="form-element">
+        <label class="switch">
+          <input
+            type="checkbox"
+            [checked]="multiLevelApprovalsInput.value"
+            (change)="toggleMultiLevelApprovals()"
+            [disabled]="shouldDisableToggleMultiLevelApprovals()"
+          />
+          <i class="ball"></i>
+          <span>Multi-level approvals</span>
+        </label>
+      </div>
+
+      <div class="form-element">
+        <span>Add customer approvers</span>
+        <div *ngFor="let customerApproversLevel of approversFormArray.controls; let i = index; let first = first">
+          <label class="custom-subheader mt-bs" [class]="{ required: first }">
+            Level {{ i + 1 }} approvers
+            <i
+              *ngIf="multiLevelApprovalsInput.value"
+              class="icon icon-info"
+              title="The same user is not allowed to be added in multiple levels"
+            ></i>
+          </label>
+          <div
+            class="select-custom"
+            *ngIf="customerApproversObservable | async as customerApproverOptions; else loadingOptions"
+          >
+            <app-select-with-input
+              *ngIf="customerApproverOptions.length > 0; else usersFreeTextInput"
+              #customerApprovers
+              class="select fullwidth"
+              name="customerApprovers[i]"
+              data-type="input-single"
+              placeholder="Select customer approvers"
+              [optionsWithValue]="customerApproverOptions"
+              [selectId]="'customerApprovers' + i"
+              (optionChanged)="onSelectCustomerApprover($event, i)"
+            />
+            @if (!first && customerApproversLevel.value.length <= 0) {
+            <div class="color-gray mt-sm">
+              <i class="icon icon-info"></i> Empty level will be omitted in the new package
+            </div>
+            }
+          </div>
+          <div *ngFor="let user of customerApproversLevel.value" class="card card-custom">
+            <div class="header">
+              <div class="left long-text-overflow">
+                {{ user?.name }}
+              </div>
+              <div class="right">
+                <button
+                  *ngIf="canDelete('customerApprovers', user, i)"
+                  class="btn-icon icon icon-trashcan"
+                  (click)="onDeleteCustomerApprover(user, i)"
+                  type="button"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="approversFormArray.touched && approversFormArray.invalid"
+          class="validation-error color-gray text-sm"
+        >
+          <span class="validation-msg invalid"> Customer approver is required</span>
+        </div>
+      </div>
+
+      <div class="form-element">
+        <span class="custom-subheader"> Customer observers </span>
+        <label for="customerObservers">Add customer observers</label>
+        <div
+          class="select-custom"
+          *ngIf="customerObserversObservable | async as customerObserverOptions; else loadingOptions"
+        >
+          <app-select-with-input
+            *ngIf="customerObserverOptions.length > 0; else usersFreeTextInput"
+            #customerObservers
+            class="select fullwidth"
+            name="customerObservers"
+            data-type="input-single"
+            placeholder="Select customer Observers"
+            [optionsWithValue]="customerObserverOptions"
+            [selectId]="customerObservers"
+            (optionChanged)="onSelectCustomerObserver($event)"
+          />
+        </div>
+
+        <div *ngFor="let user of usersForm.controls.customerObservers.value" class="card card-custom">
+          <div class="header">
+            <div class="left long-text-overflow">
+              {{ user.name }}
+            </div>
+            <div class="right">
+              <button
+                *ngIf="canDelete('customerObservers', user)"
+                class="btn-icon icon icon-trashcan"
+                (click)="onDeleteCustomerObserver(user)"
+                type="button"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #usersFreeTextInput>
+  <input type="text" placeholder="No users available" disabled />
+</ng-template>
+
+<ng-template #loadingOptions>
+  <input type="text" placeholder="Loading options..." disabled />
+</ng-template>

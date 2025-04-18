@@ -1,0 +1,142 @@
+<div class="row">
+  <div class="tile sm-12" id="package-components">
+    <div class="content">
+      <div class="row multi-panel-tile" #multiPanelTile>
+        <div class="left-panel container hidden">
+          <div class="header">
+            <div class="left">
+              <span class="title">Filter by</span>
+            </div>
+
+            <div class="right">
+              <span class="tooltip pointer">
+                <i class="icon icon-cross actionable left-panel-trigger"></i>
+                <span class="message bottom-end">Collapse panel</span>
+              </span>
+            </div>
+          </div>
+          <div class="content">
+            <div class="custom-row">
+              <app-taxonomy-tree *ngIf="taxonomyFilterKey && taxonomyFilterKey.length > 0"
+                [packageId]="packageLinearId"
+                [projectId]="projectId"
+                [packageTaxonomy]="taxonomyFilterKey"
+                [applyFilter]="applyTaxonomyFilter"
+                [clearFilter]="clearTaxonomyFilter"
+                (selectedFilter)="filterLineItem($event)"
+                (selectionCleared)="clearAllFilters($event)">
+              </app-taxonomy-tree>
+              <div class="right">
+                <button class="btn secondary" (click)="onClearTaxonomyFilter()">Reset</button>
+                <button class="btn primary" (click)="onApplyTaxonomyFilter()">Apply</button>
+              </div>
+            </div>
+          </div>
+          <div class="end">
+            <div class="legends">
+              <div class="header">
+                <div class="left">
+                  <div class="title"> Legends </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column sm-6">
+                  <i class="icon icon-radio-base-antenna"></i>
+                  <span class="legend-title"> Site </span>
+                </div>
+                <div class="column sm-6">
+                  <i class="icon icon-tasks"></i>
+                  <span class="legend-title"> Workplan </span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column sm-6">
+                  <i class="icon icon-medal"></i>
+                  <span class="legend-title"> Milestone </span>
+                </div>
+                <div class="column sm-6">
+                  <i class="icon icon-trowel"></i>
+                  <span class="legend-title"> Activity </span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column sm-12">
+                  <i class="icon icon-list"></i>
+                  <span class="legend-title"> Checklist </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mid-panel">
+
+          <div class="header">
+            <div class="left">
+              <span class="tooltip pointer">
+                <i class="icon icon-filter actionable left-panel-trigger"></i>
+                <span class="message bottom" style="left: -10px;">Toggle filters</span>
+              </span>
+              <span class="separator"></span>
+              <!-- title with button switch -->
+              <div class="title btn-group horizontal custom-row" >
+                @for (type of ComponentViewType | keyvalue: originalOrder; track $index) {
+                <button class="btn" [class.active]="type.value === show" (click)="switchFilter(type.value)">{{type.value}}</button>
+                }
+              </div>
+            </div>
+            <div class="right">
+              <div class="action" data-type="maximize" [ngClass]="{'hidden': !tileMaximizeVisible}" #maximizeAction>
+                <span class="tooltip pointer">
+                  <i class="icon icon-maximize"></i> <span class="message left blue">Maximize tile</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="content">
+            @if (show === ComponentViewType.lineItems) {
+            <ng-container [ngTemplateOutlet]="lineItemBlock" />
+            }
+            @else if (show === ComponentViewType.lineItemEvidences) {
+            <ng-container [ngTemplateOutlet]="evidenceBlock" />
+            }
+            @else if (show === ComponentViewType.milestoneEvidences) {
+            <app-package-milestone-evidences [packageId]="packageLinearId" [isPackageCompleted]="isPackageCompleted"
+              [isTileMaximized]="isTileMaximized" />
+            }
+            <ng-template #lineItemBlock>
+              <app-line-item
+                *ngIf="packageStatus"
+                [taxonomyFilterData]="selectedTaxonomyFilter"
+                [applyFilter]="applyFilterFlag"
+                [packageStatus]="packageStatus"
+                [isPackageCompleted]="isPackageCompleted"
+                [isMultiLevelAcceptance]="isMultiLevelAcceptance()"
+                [isTileMaximized]="isTileMaximized"
+                [approvalRule]="approvalRule"
+                (isTableLoaded)="tileMaximizeVisible = $event"
+                (isUpdatePackageStatus)="isUpdatePackageStatus.emit($event)"
+              ></app-line-item>
+            </ng-template>
+
+            <ng-template #evidenceBlock>
+              <app-evidences
+                *ngIf="packageStatus"
+                [taxonomyFilterData]="selectedTaxonomyFilter"
+                [applyFilter]="applyFilterFlag"
+                [packageStatus]="packageStatus"
+                [isPackageCompleted]="isPackageCompleted"
+                [isMultiLevelAcceptance]="isMultiLevelAcceptance()"
+                [isTileMaximized]="isTileMaximized"
+                (isTableLoaded)="tileMaximizeVisible = $event"
+                (isUpdatePackageStatus)="isUpdatePackageStatus.emit($event)"
+              ></app-evidences>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

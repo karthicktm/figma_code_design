@@ -1,0 +1,17 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Download report</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="body">
+      <p>Your usage report is being downloaded</p>
+      <div class="status" [ngClass]="inputData.status | async"></div>
+
+      <a data-close="true">Run in background</a>
+    </div>
+
+  </div>
+</div>

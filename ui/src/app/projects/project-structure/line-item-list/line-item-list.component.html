@@ -1,0 +1,38 @@
+<div class="tile sm-12 fullscreen">
+  <div class="header">
+    <div class="left">
+      <div class="title">{{ pageTitle }}</div>
+      <div class="subtitle"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="table-header">
+      <div class="right">
+        <button
+          class="btn"
+          [disabled]="isStatusButtonDisabled(CustomerAcceptanceStatus.Draft)"
+          (click)="onConvertStatus($event, CustomerAcceptanceStatus.Ready)"
+        >
+          Convert to ready
+        </button>
+        <button
+          class="btn"
+          [disabled]="isStatusButtonDisabled(CustomerAcceptanceStatus.Ready)"
+          (click)="onConvertStatus($event, CustomerAcceptanceStatus.Draft)"
+        >
+          Convert to draft
+        </button>
+      </div>
+    </div>
+    <app-table-server-side-pagination
+      *ngIf="fetchPageHandler"
+      [limit]="limit"
+      [filterSortColumns]="filterSortColumns"
+      [tableHeightStyleProp]="tableHeightStyleProp"
+      [columnsProperties]="columnsProperties"
+      [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+      [fetchPageHandler]="fetchPageHandler"
+      [options]="tableOptions"
+    />
+  </div>
+</div>

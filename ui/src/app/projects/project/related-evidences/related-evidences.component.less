@@ -1,0 +1,15 @@
+@import "@eds/vanilla/variables/global";
+.evidence-item{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  &:not(:last-of-type) {
+    margin-bottom: @space-base;
+  }
+}

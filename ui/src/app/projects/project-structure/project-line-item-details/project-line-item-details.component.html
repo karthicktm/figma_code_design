@@ -1,0 +1,208 @@
+<div #fullscreen class="tile full-height custom-tile">
+  <ng-container *ngIf="fullScreenMode; then fullscreenModeTemplate else normalMode"></ng-container>
+</div>
+<ng-template #normalMode>
+  <div class="row">
+    <div class="column sm-12">
+      <div class="tile">
+        <div class="header custom-header">
+          <div class="left custom-left">
+            <div class="title">{{ lineItemDetails?.lineItemName || 'Line item details' }}</div>
+            <div class="truncate text-sm color-gray">{{ lineItemDetails?.description ? lineItemDetails.description : ''
+              }}</div>
+          </div>
+          <div class="right">
+            <i class="icon icon-cross custom-icon" (click)="onClose()" data-close="true"></i>
+          </div>
+        </div>
+
+        <div class="content" *ngIf="compactMode">
+          <div class="row">
+            <div class="column sm-12">
+              <div>Filter by status</div>
+              <app-status-filter [selectedFilter]="selectedFilter" [offChain]="true" (changeStatus)="selectedEvidenceFilterBy($event)">
+              </app-status-filter>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr-line"></div>
+
+      <div class="row">
+
+        <div class="tile" *ngIf="!compactMode">
+          <div class="header custom-header">
+            <div class="left">
+              <div class="title">Evidence details</div>
+            </div>
+          </div>
+          <div class="content">
+            <ng-container *ngIf="evidenceDetails?.length > 0; else noEvidenceDetails">
+              <div class="row">
+                <div class="column custom-file-viewer">
+                  <app-evidence-thumbnails
+                    class="thumbnails"
+                    [allEvidenceDetails]="evidenceDetails"
+                    [dataSourceTool]="dataSourceTool"
+                    [zoomLevel]="zoomLevel"
+                    [withCheckbox]="withCheckbox"
+                    (selectedThumbnail)="onSelectedThumbnail($event)"
+                    (switchToEvidence)="switchToEvidence($event)"
+                  >
+                  </app-evidence-thumbnails>
+                  <app-file-toolbar #fileToolbar [allIcons]="getToolbarIcons()" [tooltipPosition]="left"
+                    (zoomEvents)="zoomEvents($event)" (download)="downLoadFile($event)" (maximize)="maximizeScreen()"
+                    (thumbnail)="switchThumbnail()" (list)="switchToEvidence($event)" (delete)="deleteFile($event)">
+                  </app-file-toolbar>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <ng-container *ngIf="compactMode">
+          <div class="tile sm-9 custom-tile">
+            <div class="header custom-header">
+              <div class="left">
+                <div class="title">Evidence details</div>
+              </div>
+            </div>
+            <div class="content">
+              <ng-container *ngIf="filterEvidenceDetails?.length > 0; else noEvidenceDetails">
+                <div class="row custom-row">
+                  <div>
+                    <div>Status</div>
+                    <p class="section text-sm">
+                      <kbd class="tag"
+                        [ngClass]="getStatusColor(filterEvidenceDetails?.[selectedPage - 1])"
+                      >{{getStatus(filterEvidenceDetails?.[selectedPage - 1])}}</kbd>
+                    </p>
+                  </div>
+                  <div>
+                    <div>Name</div>
+                    <p class="section text-sm">{{filterEvidenceDetails[selectedPage - 1].name || '--'}}</p>
+                  </div>
+                  <div>
+                    <div>Size</div>
+                    <p class="section text-sm detail">{{(filterEvidenceDetails[selectedPage - 1].fileSizeInKB * 1024 | formatBytes) || '--'}}</p>
+                  </div>
+                  <div>
+                    <div>Latitude</div>
+                    <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                      1]?.latitude?filterEvidenceDetails[selectedPage - 1].latitude:'--'}}</p>
+                  </div>
+                  <div>
+                    <div>Longitude</div>
+                    <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                      1]?.longitude?filterEvidenceDetails[selectedPage - 1].longitude:'--'}}</p>
+                  </div>
+                  <div>
+                    <div>Type</div>
+                    <p class="section text-sm">{{filterEvidenceDetails?.[selectedPage -
+                      1]?.type?filterEvidenceDetails[selectedPage -
+                      1].type:'--'}}</p>
+                  </div>
+                  <div *ngIf="filterEvidenceDetails?.[selectedPage - 1]?.status === 'Customer Rejected'"
+                    class="actions">
+                    <span class="separator"></span>
+                    <button *ngIf="allowAttachmentsDelete" class="btn icon-btn secondary" title="Upload new evidence"
+                      (click)="onUploadNewLineItemEvidence()">
+                      <i class="icon icon-upload"></i>
+                    </button>
+                    <button class="btn icon-btn secondary" title="Source report" (click)="sourceReportAsEvidence()"><i
+                        class="icon icon-hierarchy-chart"></i></button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="column custom-file-viewer">
+                    <app-file-preview-wrapper [zoom]="fileToolbar.zoomEvents" (download)="downLoadFile($event)">
+
+                    </app-file-preview-wrapper>
+                    <app-file-toolbar #fileToolbar [allIcons]="getToolbarIcons()" [tooltipPosition]="left"
+                      (zoomEvents)="zoomEvents($event)" (download)="downLoadFile($event)" (maximize)="maximizeScreen()"
+                      (thumbnail)="switchThumbnail()" (list)="switchToEvidence($event)" (delete)="deleteFile($event)">
+                    </app-file-toolbar>
+                  </div>
+                </div>
+                <div class="row">
+                  <app-pagination [totalRecords]="filterEvidenceDetails?.length" [currentPage]="selectedPage"
+                    (changePage)="onPageChange($event.currentPage)"
+                    [numPerPage]="1"></app-pagination>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="loadingEvidences">
+                <div class="background-shadow">
+                  <div id="loading-spinner-align" class="loading large"></div>
+                </div>
+              </ng-container>
+              <ng-template #noEvidenceDetails *ngIf="!loadingEvidences">
+                <div class="row">
+                  <div class="column sm-12">
+                    <div class="empty-state">
+                      <div class="message">
+                        <p>No results found for active filter.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="tile sm-3 custom-tile">
+            <div class="accordion normal-mode" appAccordion>
+              <ul>
+                <li class="opened" tabindex="0">
+                  <div class="title">
+                    Related evidences
+                    <i class="icon icon-info" title="Related evidences that are rejected or reworked."></i>
+                  </div>
+                  <div class="content no-inset">
+                    <app-related-evidences [relatedEvidenceList]="relatedEvidenceList"
+                      (selectedRelatedEvidence)="switchToEvidence($event)"></app-related-evidences>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</ng-template>
+<ng-template #fullscreenModeTemplate>
+  <div class="header custom-header-fullscreen">
+    <div class="left"></div>
+    <div class="right minimize-icon-wrapper">
+      <i class="icon icon-minimize custom-icon" (click)="onCloseMinimize()" data-close="true"></i>
+      <i class="icon icon-cross custom-icon" (click)="onClose()" data-close="true"></i>
+    </div>
+  </div>
+  <div class="hr-line"></div>
+  <div class="tile">
+    <div class="content">
+      <div class="row">
+        <div class="column sm-12">
+          <div class="column custom-file-viewer expanded">
+            <app-file-preview-wrapper [zoom]="fileToolbarExpanded.zoomEvents" (download)="downLoadFile($event)">
+            </app-file-preview-wrapper>
+            <app-file-toolbar #fileToolbarExpanded class="toolbar" [allIcons]="getToolbarIcons()" [maximized]="true"
+              [horizontal]="true" [tooltipPosition]="left" (download)="downLoadFile($event)" (thumbnail)="switchThumbnail()"
+              (minimize)="onCloseMinimize()" (delete)="deleteFile($event)"></app-file-toolbar>
+            <button class="btn toggle-button-prev" [disabled]="filterEvidenceDetails?.length <= 1"
+              (click)="goPrevious()">
+              <i class="icon icon-chevron-left"></i>
+            </button>
+            <button class="btn toggle-button-next" [disabled]="filterEvidenceDetails?.length <= 1" (click)="goNext()">
+              <i class="icon icon-chevron-right"></i>
+            </button>
+            <div class="page-counter">{{selectedPage}}/{{filterEvidenceDetails?.length}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,52 @@
+<div class="row h-100">
+  <div class="tile" [formGroup]="step2FormGroup">
+    <div class="select-input" >
+      <fieldset class="radio-group">
+        <legend>Select an option</legend>
+        <div class="mr-lg">
+          <input
+            id="select_option_rbtn_site"
+            name="selectOption"
+            type="radio"
+            formControlName="multiSelectOption"
+            [value]="SelectOptions.SITE"
+          />
+          <label for="select_option_rbtn_site" class="label_rbtn">Select site(s)</label>
+        </div>
+        <div>
+          <input
+            id="select_option_rbtn_workplan"
+            name="selectOption"
+            type="radio"
+            formControlName="multiSelectOption"
+            [value]="SelectOptions.WORKPLAN"
+          />
+          <label for="select_option_rbtn_workplan">Select workplan(s)</label>
+        </div>
+      </fieldset>
+      <div class="action mr-xxl">
+        <span class="mr-bs">Show only selected</span>
+        <label class="switch">
+          <input type="checkbox" [checked]="selectedOnly" (click)="toggleSelected($event)">
+          <i class="ball"></i>
+          <span data-enabled="Yes" data-disabled="No"></span>
+        </label>
+      </div>
+    </div>
+    @if (multiSelectOption.value === SelectOptions.SITE) {
+      <app-acceptance-package-form-sites
+        [packageForm]="packageForm"
+        [doLITableReset]="doLITableReset"
+        [isEdit]="isEdit"
+        [selectedOnly]="selectedOnly"
+      ></app-acceptance-package-form-sites>
+    } @else if (multiSelectOption.value === SelectOptions.WORKPLAN) {
+      <app-acceptance-package-form-workplans
+        [packageForm]="packageForm"
+        [doLITableReset]="doLITableReset"
+        [isEdit]="isEdit"
+        [selectedOnly]="selectedOnly"
+      ></app-acceptance-package-form-workplans>
+    }
+  </div>
+</div>

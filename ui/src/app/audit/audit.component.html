@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="tile sm-12 fullscreen">
+    <div class="header">
+      <div class="left">
+        <div class="title">Audit logs</div>
+      </div>
+    </div>
+  <div class="content">
+    <app-table-server-side-pagination
+      *ngIf="fetchPageHandler"
+      [limit]="limit"
+      [filterSortColumns]="filterSortColumns"
+      [tableHeightStyleProp]="tableHeightStyleProp"
+      [columnsProperties]="columnsProperties"
+      [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+      [fetchPageHandler]="fetchPageHandler"
+    />
+  </div>
+</div>

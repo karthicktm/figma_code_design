@@ -1,0 +1,15 @@
+@let count = getPendingCounts | async;
+@let packageCount = count?.pendingPackages;
+@let certificateCount = count?.pendingCertificates;
+<div class="badges">
+  <span class="badge orange m-bs counter" #badgePackage [attr.data-badge-content]="packageCount" 
+      [ngClass]="packageCount == '0' ? 'hidden': ''"
+      [title]="!packageCount || packageCount === '0' ? 'Package request(s) - There is nothing pending' : 'Pending package requests'">
+    <i class="icon icon-file-approved"></i>
+  </span>
+  <span class="badge orange m-bs counter" #badgeCertificate [attr.data-badge-content]="certificateCount" 
+      [ngClass]="certificateCount == '0' ? 'hidden': ''"
+      [title]="!certificateCount || certificateCount === '0' ? 'Certificate request(s) - There is nothing pending' : 'Pending certificate requests'">
+    <i class="icon icon-certificate"></i>
+  </span>
+</div>

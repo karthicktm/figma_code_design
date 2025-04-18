@@ -1,0 +1,33 @@
+.h-100 {
+  height: 100%;
+}
+.custom-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .custom-title {
+    color: @gray-14;
+  }
+}
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .custom-title {
+    color: @gray-95;
+  }
+}
+:host::ng-deep .evidence-table{
+  border: none;
+  width: 100%;
+  tr td{
+    border: none;
+  }
+  thead {
+    font-weight: 500;
+  }
+}

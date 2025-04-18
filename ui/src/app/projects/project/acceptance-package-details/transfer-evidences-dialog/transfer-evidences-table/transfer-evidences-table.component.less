@@ -1,0 +1,28 @@
+.custom-table-wrapper {
+  position: relative;
+
+  .loading-table-data {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pagination-group .select>.options-list {
+    position: fixed;
+    width: unset;
+    min-width: 60px;
+  }
+}
+
+:host::ng-deep {
+  .cell-nowrap {
+    white-space: nowrap;
+  }
+}

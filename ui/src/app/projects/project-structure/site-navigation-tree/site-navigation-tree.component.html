@@ -1,0 +1,88 @@
+<app-search class="navigation-search"
+  [menuItems]="navigationTree"
+  [sourceTreeViewPort]="treeViewPort"
+/>
+<div #treeViewPort class="tree-view-port">
+  <div class="tree" #tree *ngIf="navigationTree && navigationTree.length > 0">
+    <ul>
+      <!-- Add static node of site details -->
+      <li>
+        <span class="item"
+          tabindex="0"
+          [routerLink]="'site-details'"
+          [routerLinkActive]="'active'"
+          [queryParamsHandling]="'preserve'"
+          (isActiveChange)="onRouterLinkActive($event)"
+        >
+        <i class="icon" [ngClass]="getLevelIcon('Site')"></i>
+          Site details
+        </span>
+      </li>
+
+      @if (!isInWorkItemContext) {
+        <li>
+          <span class="item"
+            tabindex="0"
+            [routerLink]="'all-line-items'"
+            [routerLinkActive]="'active'"
+            [queryParamsHandling]="'preserve'"
+            (isActiveChange)="onRouterLinkActive($event)"
+          >
+            <i class="icon" [ngClass]="getLevelIcon('LineItems')"></i>
+            All line items
+          </span>
+        </li>
+      }
+      
+      <ng-container *ngFor="let node of navigationTree">
+        <ng-container *ngTemplateOutlet="(!!node.subTree && node.subTree.length > 0) ? nestedNode : simpleNode; context: {node: node}">
+        </ng-container>
+      </ng-container>
+    </ul>
+  </div>
+</div>
+
+<ng-template #simpleNode let-node="node">
+  <li>
+    <span class="item"
+      tabindex="0"
+      [routerLink]="node.enabledLink ? node?.uri : null"
+      [routerLinkActive]="node.enabledLink ? 'active' : ''"
+      [queryParamsHandling]="'preserve'"
+      (isActiveChange)="onRouterLinkActive($event)"
+    >
+      <i *ngIf="node.nodeType=== 'checklist'" class="icon" [ngClass]="getLevelIcon(node.nodeType)"></i>
+      <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node}"></ng-container>
+    </span>
+  </li>
+</ng-template>
+
+<ng-template #nestedNode let-node="node">
+  <li>
+    <span class="title item opened"
+      tabindex="0"
+      [routerLink]="node.enabledLink ? node?.uri : null"
+      [routerLinkActive]="node.enabledLink ? 'active' : ''"
+      [queryParamsHandling]="'preserve'"
+      (isActiveChange)="onRouterLinkActive($event)"
+    >
+      <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node}"></ng-container>
+    </span>
+    <ul>
+      <ng-container *ngFor="let subNode of node.subTree">
+        <ng-container *ngTemplateOutlet="(!!subNode.subTree && subNode.subTree.length >0) ? nestedNode : simpleNode; context: {node: subNode} ">
+        </ng-container>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template>
+
+<ng-template #nodeEntry let-node="node">
+  <div class="node-entry">
+    <i class="icon" [ngClass]="getLevelIcon(node.type)"></i>
+    <div class="node-name">{{node.name}}</div>
+    @if (![NodeType.MilestoneEvidence, NodeType.LineItems].includes(node?.nodeType)) {
+      <i class="icon icon-info node-entry-cue" (click)="openLevelDetails($event, node.id, node)"></i>
+    }
+  </div>
+</ng-template>

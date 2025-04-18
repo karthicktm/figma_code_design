@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="tile site-navigation full-height">
+    <div class="legends">
+      <div class="header">
+        <div class="left">
+          <div class="title"> Hierarchy </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column sm-4">
+          <input type="checkbox" id="NetworkSite" [checked]="hierarchyChangeSignal().NetworkSite.checked"
+            [disabled]="hierarchyChangeSignal().NetworkSite.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="NetworkSite"> <i class="icon icon-radio-base-antenna"> </i> Site </label>
+        </div>
+
+        <div class="column sm-4">
+          <input type="checkbox" id="Workplan" [checked]="hierarchyChangeSignal().Workplan.checked"
+            [disabled]="hierarchyChangeSignal().Workplan.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="Workplan"> <i class="icon icon-tasks"> </i> Workplan </label>
+        </div>
+
+        <div class="column sm-4">
+          <input type="checkbox" id="Activity" [checked]="hierarchyChangeSignal().Activity.checked"
+            [disabled]="hierarchyChangeSignal().Activity.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="Activity"> <i class="icon icon-trowel"> </i> Activity </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column sm-4">
+          <input type="checkbox" id="Milestone" [checked]="hierarchyChangeSignal().Milestone.checked"
+            [disabled]="hierarchyChangeSignal().Milestone.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="Milestone"> <i class="icon icon-medal"> </i> Milestone </label>
+        </div>
+
+        <div class="column sm-4">
+          <input type="checkbox" id="Checklist" [checked]="hierarchyChangeSignal().Checklist.checked"
+            [disabled]="hierarchyChangeSignal().Checklist.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="Checklist"> <i class="icon icon-list"> </i> Checklist </label>
+        </div>
+
+        <div class="column sm-4">
+          <i class="icon icon-drag-handle"></i>
+          <span class="title"> Line items </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column sm-8">
+          <input type="checkbox" id="evidences" [checked]="hierarchyChangeSignal().Evidence.checked"
+            [disabled]="hierarchyChangeSignal().Evidence.disabled" (click)="updateCheckboxState($event)">
+          <label class="title" for="evidences"> <i class="icon icon-folder"> </i> Milestone evidences</label>
+        </div>
+      </div>
+    </div>
+    <app-site-navigation-tree [hierarchyChangeSignal]="hierarchyChangeSignal()"></app-site-navigation-tree>
+  </div>
+  <router-outlet></router-outlet>
+</div>

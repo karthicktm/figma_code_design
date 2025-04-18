@@ -1,0 +1,142 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top custom-top">
+      <div class="title">{{ details?.type | titlecase }} - {{ details?.workItemId }}</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div>
+      <div class="row">
+        <div class="column sm-3">
+          <div>Name</div>
+          <p class="section text-sm">
+            {{ details?.name ? details?.name : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Status</div>
+          <p class="section text-sm">
+            <kbd class="tag" [ngClass]="getStatusColor(details?.status)">{{ getStatus(details?.status) || '--' }}</kbd>
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Type of work</div>
+          <p class="section text-sm">
+            {{ details?.typeOfWork ? details?.typeOfWork : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Type</div>
+          <p class="section text-sm">
+            {{ details?.type ? details?.type : '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column sm-12">
+          <div>Description</div>
+          <p class="section text-sm">
+            {{ details?.description ? details?.description : '--' }}
+          </p>
+        </div>
+      </div>
+      @if (details?.type === 'Workplan') {
+      <div class="row">
+        <div class="column sm-3">
+          <div>Customer scope ID</div>
+          <p class="section text-sm">
+            {{ details?.customerScopeId || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Project type</div>
+          <p class="section text-sm">
+            {{ details?.projectType || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Project category</div>
+          <p class="section text-sm">
+            {{ details?.projectCategory || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>FAS ID</div>
+          <p class="section text-sm">
+            {{ details?.fasId || '--' }}
+          </p>
+        </div>
+      </div>
+      }
+      <div class="row">
+        <div class="column sm-3">
+          <div>Actual start date</div>
+          <p class="section text-sm">
+            {{ (details?.actualStartDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Actual end date</div>
+          <p class="section text-sm">
+            {{ (details?.actualEndDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Planned start date</div>
+          <p class="section text-sm">
+            {{ (details?.plannedStartDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Planned end date</div>
+          <p class="section text-sm">
+            {{ (details?.plannedEndDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row custom-row">
+        <div class="column sm-3">
+          <div>Created by</div>
+          <p class="section text-sm">
+            {{ details?.createdByUsername ? details?.createdByUsername : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Created date</div>
+          <p class="section text-sm">
+            {{ (details?.createdDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Last modified by</div>
+          <p class="section text-sm">
+            {{ details?.lastModifiedByUsername ? details?.lastModifiedByUsername : '--' }}
+          </p>
+        </div>
+        <div class="column sm-3">
+          <div>Last modified date</div>
+          <p class="section text-sm">
+            {{ (details?.lastModifiedDate | nullStringDate) || '--' }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="subtitle custom-subtitle">Extended details</div>
+        <div class="row" *ngIf="details.extendedAttributes?.length > 0; else noData">
+          <div class="column sm-3" *ngFor="let extendedProperty of details.extendedAttributes">
+            <div>
+              {{ extendedProperty?.attributeName || '--' }}
+            </div>
+            <p class="section text-sm">
+              {{ extendedProperty?.attributeValue || '--' }}
+            </p>
+          </div>
+        </div>
+        <ng-template #noData>
+          <div class="row">No data available</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

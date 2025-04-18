@@ -1,0 +1,38 @@
+<div>Remarks</div>
+<div class="section">
+  @let selected = selectedRemark()?.charAt(0).toUpperCase() + selectedRemark()?.slice(1).toLowerCase();
+  @if ((isViewSelectedOnly() || selected) && !isEditMode()) {
+    @if (selected) {
+      <span [ngClass]="{
+          'disabled': true,
+          'severity-cleared': selected === Remarks.OK,
+          'severity-indeterminate': selected === Remarks.OBSERVATION,
+          'severity-minor': selected === Remarks.MINOR,
+          'severity-major': selected === Remarks.MAJOR,
+          'severity-critical': selected === Remarks.CRITICAL
+        }" class="pill severity-cleared toggle"
+      >{{selected}}</span>
+    }
+    @else {
+      <span>--</span>
+    }
+    @if (!isDisabled()) {
+      <a href="javascript:void(0);" role="button" (click)="isEditMode.set(true)">Edit</a>
+    }
+  }
+  @else {
+    @for (remark of Remarks | keyvalue; track $index) {
+    <span [ngClass]="{
+        'unselected': selected !== remark.value,
+        'disabled': isDisabled(),
+        'severity-cleared': remark.value === Remarks.OK,
+        'severity-indeterminate': remark.value === Remarks.OBSERVATION,
+        'severity-minor': remark.value === Remarks.MINOR,
+        'severity-major': remark.value === Remarks.MAJOR,
+        'severity-critical': remark.value === Remarks.CRITICAL
+      }" class="pill severity-cleared toggle"
+      (click)="selectedRemark.set(remark.value); isEditMode.set(false)"
+    >{{remark.value}}</span>
+    }
+  }
+</div>

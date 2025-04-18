@@ -1,0 +1,15 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Create new template</div>
+      <div class="right">
+        <i #cancel class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <app-certificate-template-form
+      [projectId]="inputData.projectId"
+      [cancelElement]="cancel"
+      (submitForm)="onSubmit()"
+    />
+  </div>
+</div>

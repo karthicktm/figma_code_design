@@ -1,0 +1,23 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">{{ inputData.commentContext.name || 'Comments' }}</div>
+      <div class="right">
+        <button class="btn-icon ml-bs" data-close="true">
+          <i class="icon icon-cross"></i>
+        </button>
+      </div>
+    </div>
+    <div class="mt-lg">
+      <app-comment-history 
+        [commentLevel]="inputData.commentContext.commentLevel"
+        [evidenceLevel]="inputData.commentContext.evidenceLevel"
+        [evidenceId]="inputData.commentContext.evidenceId"
+        [lineItemUniqueId]="inputData.commentContext.lineItemUniqueId"
+        [packageStatus]="inputData.commentContext.packageStatus"
+        [packageId]="inputData.commentContext.packageId"
+        [internalCommentInput]="true"
+      />
+    </div>
+  </div>
+</div>

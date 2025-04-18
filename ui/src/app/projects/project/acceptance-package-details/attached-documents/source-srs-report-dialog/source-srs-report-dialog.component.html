@@ -1,0 +1,94 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+
+    <div class="top">
+      <div class="title">Source report</div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true" (click)="cancelDialog()"></i>
+      </div>
+    </div>
+
+    <ng-container *ngTemplateOutlet="currentStep === 1 ? selectTool : selectedTool === 'SRS' ? selectSRSReports : selectSDEReports"></ng-container>
+
+  </div>
+
+</div>
+
+<ng-template #selectTool>
+  <div class="body custom-body">
+    <label class="text-sm required">Select a tool that you would like to source report from</label>
+
+    <div>
+      <app-select
+        class="select fullwidth"
+        data-type="single"
+        [options]="toolList"
+        [selectId]="'toolSelection'"
+        (optionChanged)="onSelectExternalTool($event)"
+        [selected]="selectedTool"
+        [emptySelectionText]="'Select tool'">
+      </app-select>
+    </div>
+  </div>
+  <div class="bottom">
+    <button class="btn secondary" (click)="currentStep = currentStep + 1">Proceed</button>
+  </div>
+</ng-template>
+
+<ng-template #selectSRSReports>
+  <div class="body">
+    <label class="text-sm required">Select reports</label>
+    <table class="table compact text-sm">
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" id="cb-all"
+              [checked]="selectedReports.length > 0 && selectedReports.length === reportList.length"
+              (change)="onCheckAllReports($event)">
+            <label for="cb-all"></label>
+          </th>
+          <th>Report name</th>
+          <th>Created date</th>
+          <th>Parent report name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="reports | async as reportList">
+          <tr *ngFor="let report of reportList">
+            <td>
+              <input type="checkbox" id="cb-{{report.internalId}}" [value]="report.internalId"
+                [checked]="selectedReports.includes(report.internalId)" (change)="onReportCheckboxChange($event)">
+              <label for="cb-{{report.internalId}}"></label>
+            </td>
+            <td>{{report.name}}</td>
+            <td>{{(report?.createdDate | nullStringDate) || '--'}}</td>
+            <td>{{report.parentEvidenceName}}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+      <ng-container *ngIf="loading">
+        <tr>
+          <td colspan="100">
+            <div class="empty-state">
+              <div class="message">
+                <p class="loading large center"></p>
+                <p>Loading data...</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+
+  <div class="bottom">
+    <button class="btn secondary" (click)="cancelDialog()" data-close="true">Go back</button>
+    <button class="btn secondary" (click)="onSubmitAddReport()" [disabled]="!(selectedReports?.length > 0)">Add report</button>
+  </div>
+</ng-template>
+
+<ng-template #selectSDEReports>
+  <div class="body">
+    <app-source-sde-report-wizard [inputData]="inputData" (submissionResult)="onSubmitAddSDEProjectReport($event)"></app-source-sde-report-wizard>
+  </div>
+</ng-template>

@@ -1,0 +1,37 @@
+<div class="custom-table-wrapper">
+  @if (loadingTableData()) {
+    <div class="loading-table-data">
+      <div class="text-xl loading large">
+      </div>
+    </div>
+  }
+
+  <div class="table-top">
+    <div class="table-top-left">
+      <div class="table-info"></div>
+    </div>
+  </div>
+
+  <table class="table" [id]="name()+'_table'" #table></table>
+
+  <div class="pagination-group">
+    <ul class="pagination"></ul>
+    <div class="actions">
+      <label class="left">Go to</label>
+      <input type="number"
+        min="1">
+      <label class="left">Show</label>
+      <div class="select"
+        data-type="single">
+        <button class="btn current-options">{{limit}}</button>
+        <div class="options-list">
+          @for (option of tableRowNumSelectOptions; track $index) {
+            <div class="item" [ngClass]="{ active: limit === option }">
+              {{ option }}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

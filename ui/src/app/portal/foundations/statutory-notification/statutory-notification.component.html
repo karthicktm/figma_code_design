@@ -1,0 +1,13 @@
+@if (showStatutoryNotification()) {
+  <div class="notification banner stripe-yellow" role="alert">
+    <div class="top-row">
+      <div class="title" [attr.aria-label]="statutoryText()">
+        <i class="icon icon-flag"></i>
+        {{statutoryText()}} &nbsp;<a title="Close for this session. You can enable this notification again in the profile section." (click)="hide('permanently')">Close for this session</a>
+      </div>
+      <i class="icon icon-cross close" title="Close notification" role="button" aria-label="Close notification" tabindex="0"
+        (click)="hide()"
+      ></i>
+    </div>
+  </div>
+}

@@ -1,0 +1,30 @@
+<div>
+  <div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top custom-top">
+        <div class="title">Select fields</div>
+      </div>
+      <div class="body">
+          <div class="card" *ngFor="let field of reportFields">
+            <div class="header">
+              <div class="left">
+                <div class="title"> {{ field.title }}</div>
+              </div>
+              <div class="right">
+                <input type="checkbox"
+                id="{{field.columnName}}"
+                (click)="updateFieldsSelection($event)"
+                [checked]="field.checked">
+                <label for="{{field.columnName}}"></label>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="bottom custom-bottom">
+        <a class="reset-link" href="javascript: void(0);" (click)="onReset()">Reset</a>
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button class="btn primary" data-close="true" (click)="sendRequest($event)">Export</button>
+      </div>
+    </div>
+  </div>
+</div>

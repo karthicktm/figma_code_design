@@ -1,0 +1,88 @@
+:host {
+  width: 100%;
+}
+
+.carousel-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.carousel-slide {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carousel-container .carousel-button-next {
+  right: calc(16px + 450px);
+}
+
+.custom-header {
+  display: flex;
+  button {
+    margin-left: auto;
+  }
+}
+
+.cs-content {
+  min-width: 450px;
+  max-width: 450px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px 16px 16px 16px;
+  .accordion {
+    width: 100%;
+  }
+  .inline {
+    display: flex;
+    .left {
+      align-content: center;
+    }
+  }
+}
+
+.cs-content-full {
+  height: 100%;
+  padding: 50px 80px;
+}
+
+.carousel-slide p {
+  font-size: 12px;
+}
+
+.cs-title {
+  font-size: 16px;
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.5em;
+  margin-bottom: 8px;
+}
+
+.cs-img {
+  width: calc(100% - 450px);
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@import "@eds/vanilla/variables/global";
+.custom-file-viewer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .toolbar {
+    position: absolute;
+    transition: opacity .4s;
+    top: 0px;
+    right: 0px;
+  }
+
+  app-file-preview-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+}

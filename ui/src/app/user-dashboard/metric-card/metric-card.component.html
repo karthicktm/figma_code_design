@@ -1,0 +1,10 @@
+<div class="card selectable" [routerLink]="generatedUrl()" [routerLinkActive]="'selected'">
+  <div class="content">
+    <div class="mb-bs" title="{{generatedUrl().toString()}}">
+      @if(icon()) { <i class="icon pr-sm text-lg" [class]="icon()"></i> }
+      {{ label() }}
+    </div>
+    <div class="mb-bs text-xl">{{ receivedValue() || placeholder() }}</div>
+    <a [routerLink]="generatedExternalUrl()" target="_blank" rel="noopener noreferrer">Go to {{contentType()}}</a>
+  </div>
+</div>

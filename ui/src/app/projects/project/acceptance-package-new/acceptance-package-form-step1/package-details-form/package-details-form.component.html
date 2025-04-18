@@ -1,0 +1,81 @@
+<div class="header">
+  <div class="left">
+    <span class="title">Package details</span>
+  </div>
+</div>
+<div class="row" [formGroup]="packageForm.controls.step1">
+  <div class="column sm-8" formGroupName="packageDetails">
+      <div class="form-element">
+        <label for="input-packageName" class="required">Package name</label>
+          <input #packageName
+            type="text"
+            id="input-packageName"
+            name="nameInput"
+            formControlName="nameInput"
+            placeholder="Enter package name"
+            required
+          >
+          <div *ngIf="nameInput.touched && nameInput.invalid" class="validation-error color-gray text-sm">
+            <span class="validation-msg invalid" *ngIf="nameInput.errors.required">Package name is required</span>
+          </div>
+      </div>
+      <div class="form-element">
+        <label for="input-packageScope">Package scope</label>
+        <input #packageScope
+          type="text"
+          id="input-packageScope"
+          name="scopeInput"
+          formControlName="scopeInput"
+          placeholder="Enter package scope"
+        >
+        <div *ngIf="scopeInput.touched && scopeInput.invalid" class="validation-error color-gray text-sm">
+          <span class="validation-msg invalid" *ngIf="scopeInput.errors.minlength">Minimum one character is required</span>
+          <span class="validation-msg invalid" *ngIf="scopeInput.errors.maxlength">Maximum length should be 255</span>
+        </div>
+      </div>
+      <div class="form-element">
+        <label for="input-sladays">Service level agreement days</label>
+        <input #slaDays
+          type="text"
+          id="input-sladays"
+          name="slaDaysInput"
+          formControlName="slaDaysInput"
+          readonly="true"
+        >
+      </div>
+
+      @if (integrateToB2B.enabled) {
+        <div class="form-element">
+          <label>Information transfer workflow</label>
+          <label class="switch">
+            <input
+              type="checkbox"
+              name="integrateToB2B"
+              formControlName="integrateToB2B"
+            >
+            <i class="ball"></i>
+            <span
+              [attr.data-enabled]="IntegrateToB2B.transfer"
+              [attr.data-disabled]="IntegrateToB2B.noTransfer"
+            ></span>
+          </label>
+        </div>
+      }
+
+      <div class="form-element">
+        <label for="input-description">Description</label>
+        <div>
+          <textarea #description
+            id="input-description"
+            name="descriptionInput"
+            formControlName="descriptionInput"
+            placeholder="Enter description"
+          ></textarea>
+          <div *ngIf="descriptionInput.touched && descriptionInput.invalid" class="validation-error color-gray text-sm">
+            <span class="validation-msg invalid" *ngIf="descriptionInput.errors.minlength">Minimum one character is required</span>
+            <span class="validation-msg invalid" *ngIf="descriptionInput.errors.maxlength">Maximum length should be 1024</span>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

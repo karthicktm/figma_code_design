@@ -1,0 +1,18 @@
+::ng-deep {
+  .cell-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 22em;
+
+    &:hover {
+      text-overflow: clip;
+      white-space: normal;
+      word-break: break-all;
+    }
+  }
+
+  .column-date {
+    white-space: nowrap;
+  }
+}

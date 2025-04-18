@@ -1,0 +1,66 @@
+@import "@eds/vanilla/variables/global";
+.card-custom {
+  padding: @space-base;
+  margin-left: 0px;
+  &:hover {
+    cursor: default;
+  }
+
+  .title {
+    word-break: break-word;
+  }
+}
+.card-custom-dotted {
+  padding: @space-base;
+  border: 1px dotted #999;
+  margin-left: 0px;
+  &:hover {
+    cursor: default;
+  }
+
+  .title {
+    word-break: break-word;
+  }
+}
+.custom-header{
+  padding-bottom: 0 !important;
+}
+.justify-content {
+  display: flex;
+  justify-content: space-between;
+
+  .icon,
+  a {
+    padding-right: @space-base;
+  }
+}
+.preserve{
+  min-width: 200px;
+}
+.input-custom{
+  width:100%;
+}
+.custom-number{
+  padding-right: 8px;
+}
+
+.center {
+  flex: 1;
+  padding: @space-large;
+  text-align: center;
+  font-size: 16px;
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.5em;
+}
+.status-align-right {
+  text-align: right;
+}
+.status-icon {
+  margin-left: 10px;
+}
+.container {
+  display: flex;
+  align-items: center; 
+  text-align: center;
+}

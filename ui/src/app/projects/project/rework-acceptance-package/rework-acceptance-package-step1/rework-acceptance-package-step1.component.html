@@ -1,0 +1,50 @@
+
+<div class="tile h-100">
+  <div class="header">
+    <div class="left">
+      <span class="custom-title" *ngIf="targetTab==='line-item-components'">Total {{lineItemTotalRecords}} line items,
+        <span #evidenceCount>{{evidences.length}}</span>
+      {{ evidences.length>1 ? 'evidences are' : 'evidence is' }}
+       rejected</span>
+      <span class="custom-title" *ngIf="targetTab==='package-evidences'">Total {{evidenceTotalRecords}}
+        {{ evidenceTotalRecords > 1 ? 'evidences are' : 'evidence is' }}
+        rejected
+      </span>
+      @if (targetTab==='milestone-evidences') {
+        <span class="custom-title">Total {{milestoneEvidenceTotalRecords}}
+          {{ milestoneEvidenceTotalRecords > 1 ? 'milestone evidences are' : 'milestone evidence is' }}
+          rejected
+        </span>
+      }
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="titles">
+      <div *ngFor="let tab of tabConfigs" class="title" [class.selected]="targetTab===tab.status"
+        (click)="openTab(tab.status)" tabindex="0">
+        {{ tab.name }}
+      </div>
+    </div>
+    <div class="contents">
+      <div class="content"
+        [class.selected]="targetTab==='line-item-components'"
+      >
+        <table id="line-item-components" class="table" #lineItemComponentTable></table>
+      </div>
+
+      @if (isMilestoneAcceptance()) {
+        <div class="content"
+        [class.selected]="targetTab==='milestone-evidences'"
+        >
+        <table id="milestone-evidences" class="table" #milestoneEvidenceTable></table>
+        </div>
+      } @else {
+        <div class="content"
+        [class.selected]="targetTab==='package-evidences'"
+        >
+        <table id="package-evidences" class="table" #packageEvidenceTable></table>
+        </div>
+      }
+     </div>
+  </div>
+</div>

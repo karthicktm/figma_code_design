@@ -1,0 +1,49 @@
+@import "@eds/vanilla/variables/global";
+
+.dialog {
+  z-index: 1200;
+}
+
+.center{
+    margin-left: auto;
+    margin-right: auto;
+}
+.para-center{
+    text-align: center;
+    margin-top: @space-large;
+    white-space: pre-line;
+}
+.error-result{
+  margin-top: @space-large;
+}
+.custom-icon {
+  font-size: 62px;
+  height: 64px;
+  width: 64px;
+  border: none;
+  display: block;
+}
+
+.wrap-line {
+  white-space: pre-line;
+}
+
+:host-context(.light) * {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .icon-check{
+      color: @green-40;
+    }
+  .icon-cross{
+    color: @red-46;
+  }
+
+}
+:host-context(.dark) * {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .icon-check{
+      color: @green-35;
+    }
+  .icon-cross{
+    color: @red-52;
+  }
+}

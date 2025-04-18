@@ -1,0 +1,22 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) .custom-tile {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+    border-top: 1px solid @gray-55;
+}
+:host-context(.light) .custom-tile {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+    border-top: 1px solid @gray-86;
+}
+
+.custom-add-button {
+    margin-left: 10px;
+}
+
+.custom-header {
+  font-weight: 600;
+}
+
+.min-height-100 {
+  min-height: 100%;
+}

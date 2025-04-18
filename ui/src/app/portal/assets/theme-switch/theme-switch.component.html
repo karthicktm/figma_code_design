@@ -1,0 +1,13 @@
+<label class="switch">
+  <input
+    themeChange
+    type="checkbox"
+    [checked]="themeSwitch.theme === 'light'"
+    (change)="onThemeChange()"
+  >
+  <i class="ball"></i>
+  <span
+    [attr.data-enabled]="options.enabledState"
+    [attr.data-disabled]="options.disabledState"
+  ></span>
+</label>

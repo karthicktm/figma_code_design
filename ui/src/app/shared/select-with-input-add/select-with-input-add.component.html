@@ -1,0 +1,15 @@
+<div attr.id='{{ selectId }}' #selectContent>
+  <div class="clickable current-options">
+    <input type="search" [placeholder]="placeholder? placeholder: 'Select option'" [disabled]="disabled"/>
+  </div>
+  <div class="options-list">
+    <div
+      class="item addable"
+      *ngFor="let option of options"
+      (click)="add($event, option.emailId)"
+    >
+      <span>{{option.firstName}}&nbsp;{{option.lastName}}</span>
+      <span class="blue">Add</span>
+    </div>
+  </div>
+</div>

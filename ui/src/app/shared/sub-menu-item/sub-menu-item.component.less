@@ -1,0 +1,57 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) * {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .header {
+    background: @blue;
+  }
+
+}
+
+:host-context(.light) * {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .header {
+    background: @blue;
+  }
+}
+
+.disabled{
+  opacity: .6;
+  pointer-events: none;
+}
+
+.card {
+    max-width: 256px;
+    padding: 0;
+    &:hover:not(.clickable) {
+      cursor: unset;
+    }
+}
+
+.header {
+  padding-top: 10px;
+  padding-bottom: 9px!important;
+  padding-left: @space-large;
+  padding-right: 14px;
+}
+
+.content {
+  padding: @space-large;
+  ::ng-deep {
+    .section:nth-child(1) {
+      padding-top: 0px;
+    }
+    .section:nth-last-child(1) {
+      padding-bottom: 0px;
+    }
+  }
+}
+
+.custom-header{
+  padding-bottom: 9px!important;
+  padding-right: 14px;
+  font-size: 14px;
+  font-weight: 500;
+}

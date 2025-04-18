@@ -1,0 +1,150 @@
+<div class="row">
+  <div class="column sm-12">
+    <div class="tabs">
+      <div class="tile">
+        @let packageDetailsData = packageDetails | async;
+        <div class="header">
+          <div class="left">
+            <div class="title"><i class="icon icon-folder"></i> {{title}}</div>
+            <div class="title color-gray">Package scope: {{packageType || "--"}}</div>
+          </div>
+          @if ((isUserAuthorized('transfer-evidences')| async) && packageDetailsData.integrateToB2B &&
+            [
+              AcceptanceStatus.CustomerApproved, AcceptanceStatus.DeemedApproved, AcceptanceStatus.AcceptanceDocumentInitiate,
+              AcceptanceStatus.AcceptanceDocumentReady, AcceptanceStatus.AcceptanceDocumentSent, AcceptanceStatus.AcceptanceDocumentSendFailed
+            ].includes(packageStatus)
+          ) {
+            <div class="right">
+              <input type="button" class="btn"
+                [disabled]="packageStatus === AcceptanceStatus.AcceptanceDocumentInitiate || packageStatus === AcceptanceStatus.AcceptanceDocumentReady
+                  || packageStatus === AcceptanceStatus.AcceptanceDocumentSent"
+                (click)="onTransferEvidences($event)"
+                value="Transfer evidences">
+              <!-- Transfer evidence failure reason -->
+              @if(transferFailureReason()) {
+                <div class="suffix">
+                  <i class="icon icon-warning-circle ml-sm mr-0 color-red"
+                  title="{{transferFailureReason()}}"></i>
+                </div>
+              }
+            </div>
+          }
+          <div class="right">
+            <app-acceptance-package-download-drop-down class="mr-bs"
+              [packageLinearId]="packageLinearId"
+              [packageStatus]="packageStatus"
+              *ngIf="(isUserAuthorized('acceptance-package-report') | async)"
+            />
+          </div>
+          @if (isBlockchainValidationRequired &&
+            [
+              AcceptanceStatus.CustomerRejected, AcceptanceStatus.CustomerApproved,
+              AcceptanceStatus.CustomerNewPendingApproval, AcceptanceStatus.CustomerReworkedPendingApproval,
+              AcceptanceStatus.AcceptanceDocumentInitiate, AcceptanceStatus.AcceptanceDocumentReady,
+              AcceptanceStatus.AcceptanceDocumentSent, AcceptanceStatus.AcceptanceDocumentSendFailed, AcceptanceStatus.DeemedApproved
+            ].includes(packageStatus)
+          ) {
+            <div class="right">
+              <button class="btn"(click)="validate()">
+                <i class="icon icon-lock-locked"></i>Validate with Blockchain
+              </button>
+            </div>
+          }
+
+          @if ((isUserAuthorized('edit-package')| async) && isEditSupported((projectDetails | async)?.sourceTool) && (packageStatus === AcceptanceStatus.CustomerNew || packageStatus === AcceptanceStatus.CustomerRevision)) {
+            <div class="right">
+              <button class="btn" (click)="onEditPackage()">Edit package</button>
+            </div>
+          }
+          @if ((isUserAuthorized('rework-package')| async) && isReworkSupported((projectDetails | async)?.sourceTool) && packageStatus === AcceptanceStatus.CustomerRejected) {
+            <div class="right">
+              <button class="btn" (click)="onReworkPackage()">Rework package</button>
+            </div>
+          }
+          <div class="right">
+            <button class="btn"
+              *ngIf="(isUserAuthorized('abandon-package')| async)
+                && [AcceptanceStatus.CustomerNew, AcceptanceStatus.CustomerRevision,
+                  AcceptanceStatus.CustomerRejected, AcceptanceStatus.CustomerNewPendingApproval
+                ].includes(packageStatus)"
+              (click)="onAbandonPackage()">
+              Abandon package
+            </button>
+          </div>
+
+          @if ((isUserAuthorized('submit-for-contributor')| async) && isSubmitPackageSupported((projectDetails | async)?.sourceTool) && !isPackageCompleted) {
+            <div class="right">
+              <button class="btn primary" [disabled]="disabledSubmissionPackage" (click)="onSubmitPackage()">Submit package</button>
+            </div>
+          }
+
+          <div class="right" *ngIf="!isPackageCompleted && (isUserAuthorized('submit-for-approver')| async)">
+            <button (click)="onSubmitDecision()" [disabled]="disabledSubmissionDecision" class="btn primary">Submit decision</button>
+          </div>
+        </div>
+        <div class="text-overflow color-gray">Sites in scope: {{siteList || "--"}}</div>
+
+        <div class="titles">
+          <div *ngFor="let tab of tabConfigs" class="title" [class.selected]="targetTab===tab.status"
+            (click)="openTab(tab.status)">
+            {{ tab.name }}
+          </div>
+        </div>
+      </div>
+
+      <div class="contents">
+        <ng-template #loading>
+          <ng-container *ngIf="showLoader">
+            <div class="background-shadow">
+              <div id="loading-spinner-align" class="loading large"></div>
+            </div>
+          </ng-container>
+        </ng-template>
+
+        <div class="content"
+          [class.selected]="targetTab==='details'"
+        >
+          <ng-container *ngTemplateOutlet="loading"></ng-container>
+          <ng-container *ngIf="packageDetailsData">
+            <app-users-details [packageDetails]="packageDetailsData" [packageLinearId]="packageLinearId"></app-users-details>
+          </ng-container>
+        </div>
+
+        <div class="content"
+          [class.selected]="targetTab==='package-components'"
+        >
+          <ng-container *ngTemplateOutlet="loading"></ng-container>
+          @if (packageStatus) {
+            <app-package-components
+              [packageStatus]="packageStatus"
+              [isPackageCompleted]="isPackageCompleted"
+              [approvalRule]="approvalRule"
+              [isMultiLevelAcceptance]="isMultiLevelAcceptance"
+              (isUpdatePackageStatus)="isPackageUpdated($event)"
+            ></app-package-components>
+          }
+        </div>
+
+        <div class="content"
+          [class.selected]="targetTab==='package-evidences'"
+        >
+          <ng-container *ngTemplateOutlet="loading"></ng-container>
+          <app-attached-documents
+            *ngIf="packageStatus && (projectDetails |async) as projectDetails"
+            [projectDetails]="projectDetails"
+            [packageStatus]="packageStatus"
+            [isPackageCompleted]="isPackageCompleted"
+            [isMultiLevelAcceptance]="isMultiLevelAcceptance"
+            (isUpdatePackageStatus)="isPackageUpdated($event)"
+          ></app-attached-documents>
+        </div>
+
+        <div class="content" [class.selected]="targetTab === 'package-timeline'">
+          <ng-container *ngTemplateOutlet="loading"></ng-container>
+          <app-package-timeline [packageId]="packageLinearId"></app-package-timeline>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

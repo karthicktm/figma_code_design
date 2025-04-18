@@ -1,0 +1,26 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title title-full">
+        Email notifications
+      </div>
+      <button class="btn-icon" data-close="true">
+        <i class="icon icon-cross"></i>
+      </button>
+    </div>
+    <div class="body custom-table-wrapper">
+      <div class="loading loading-table-data large" *ngIf="loading"></div>
+      <div class="err-msg loading-table-data" *ngIf="errorOnLoading">
+        <div class="message">
+          <p>Failed to load the configuration. Close this dialog and open again after some time</p>
+        </div>
+      </div>
+      <table id="emailNotifyCfgTbl" class="table" #emailNotifyCfgTbl>
+      </table>
+    </div>
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Close</button>
+      <button class="btn primary" [class.loading]="isSaving()" (click)="onSubmit()" [disabled]="isSaving() || !isDataChanged">Submit</button>
+    </div>
+  </div>
+</div>

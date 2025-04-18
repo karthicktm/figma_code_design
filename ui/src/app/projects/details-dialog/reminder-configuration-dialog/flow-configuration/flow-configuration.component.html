@@ -1,0 +1,58 @@
+<div class="custom-content">
+  <p>{{infoText}}</p>
+  <div class="row custom-row">
+    <div class="column sm-6">
+      <label for="approval_rule" class="required">Approval rule</label>
+    </div>
+    <div class="column sm-6">
+      <div id="approval_rule" >{{ configuration().approvalRule }}</div>
+    </div>
+  </div>
+
+  <div class="row custom-row">
+    <div class="column sm-6">
+      <label for="acceptance_workflow" class="required">Acceptance workflow</label>
+    </div>
+    <div class="column sm-6">
+      <div id="acceptance_workflow" >{{ configuration().workflowName }}</div>
+    </div>
+  </div>
+
+  <div class="row custom-row">
+    <div class="column sm-6">
+      <label for="acceptance_package_rule" class="required">Acceptance package rule</label>
+    </div>
+    <div class="column sm-6">
+      <div id="acceptance_package_rule" >{{ configuration().ruleName }}</div>
+    </div>
+  </div>
+
+  <div class="row custom-row">
+    <div class="column sm-6">
+      <label for="multi_level_type">Multi level type</label>
+    </div>
+    <div class="column sm-6">
+      <div id="multi_level_type" >{{ configuration().multiLevelType || 'NA' }}</div>
+    </div>
+  </div>
+
+  <div class="row custom-row">
+    <div class="column sm-6">
+      <label for="rework_type">Rework type</label>
+    </div>
+    <div class="column sm-6">
+      <div id="rework_type" >{{ configuration().reworkType || 'NA' }}</div>
+    </div>
+  </div>
+</div>
+
+@if (isUserAuthorized(ToolPermission.EditPackageConfiguration) | async) {
+  <div class="custom-bottom">
+    <button
+      class="btn primary"
+      (click)="supportLink.click()"
+    >
+    <a #supportLink id="raiseSupportTicket" [href]="eSupportTicketLink" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation();"></a>Raise support ticket
+    </button>
+  </div>
+}

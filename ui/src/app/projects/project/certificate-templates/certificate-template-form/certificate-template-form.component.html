@@ -1,0 +1,96 @@
+<form class="eds-form form-group" [formGroup]="certificateTemplateForm" (ngSubmit)="onSubmit()">
+  <div class="row form-body">
+    <div class="column">
+      <div class="form-group">
+        <div class="form-element">
+          <label class="required" for="name">Template name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter template name"
+            class="validation"
+            formControlName="name"
+            [class.invalid]="name.errors"
+          />
+          <span *ngIf="name.errors?.duplicate" class="validation-msg">Template with same name already added.</span>
+          <span *ngIf="name.errors?.validationFailed" class="validation-msg"
+            >Error when validating name of certificate template!</span
+          >
+          <span *ngIf="name.errors?.maxlength" class="validation-msg invalid">{{
+            'Max length of value exceeded ' + name.value?.length + '/' + name.errors?.maxlength?.requiredLength
+          }}</span>
+        </div>
+
+        <div class="form-element rbtn-group" id="signature-type">
+          <label class="required" for="signature-type">Signature type</label>
+          <input
+            id="rbtn_electronic"
+            name="signatureType"
+            formControlName="signatureType"
+            type="radio"
+            [value]="SignatureType.Electronic"
+          />
+          <label for="rbtn_electronic">Electronic signature</label>
+          <!-- TODO : to enable when the feature is ready-->
+          <input
+            id="rbtn_digital"
+            name="signatureType"
+            formControlName="signatureType"
+            type="radio"
+            [value]="SignatureType.Digital"
+            disabled="true"
+          />
+          <label for="rbtn_digital">Digital signature</label>
+        </div>
+
+        <div class="form-element" *ngIf="!loadingInitialTemplateFile(); else loadingTemplateBlock">
+          <label class="required" for="template">HTML template</label>
+          <app-file-upload-button
+            id="template"
+            name="template"
+            [buttonText]="'Choose file'"
+            [accept]="'text/html'"
+            [initialFile]="template.value"
+            [downloadEnabled]="isEdit"
+            (fileChange)="onFileChange($event)"
+          />
+          <span *ngIf="template.errors?.invalidType" class="validation-msg invalid"
+            >The file needs to be of type {{ 'text/html' }}. {{ template.errors?.invalidType[0] }}</span
+          >
+          <span *ngIf="template.errors?.invalidSize" class="validation-msg invalid"
+            >The file exceed the allowed size. {{ template.errors?.invalidSize[0] }}</span
+          >
+          <span *ngIf="template.errors?.initLoadingFailed" class="validation-msg invalid"
+            >Failed to load existing template file. Please try again later or upload a new file.</span
+          >
+          <span *ngIf="isEdit" class="text-sm">
+            <i class="icon icon-info"></i> <em>*If you upload a new HTML template, it will replace existing HTML.</em>
+          </span>
+        </div>
+
+        <div *ngIf="!isEdit" class="form-element">
+          <input type="checkbox" id="isDefaultElement" formControlName="isDefault" [checked]="isDefault.value"
+            (change)="onIsDefaultChange($event)">
+          <label for="isDefaultElement" class="checkbox-label">
+            Add to default templates
+            <span class="tooltip">
+              <i class="icon icon-info"></i>
+              <span class="message top">Default templates will not be editable and cannot be deleted</span>
+            </span>
+          </label>
+        </div>
+
+        <ng-template #loadingTemplateBlock>
+          <div class="loading"></div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="form-footer">
+    <button class="btn" type="cancel" (click)="onCancel()">Cancel</button>
+    <button class="btn primary" [ngClass]="{ loading: saving() }" [disabled]="!certificateTemplateForm?.valid">
+      Save
+    </button>
+  </div>
+</form>

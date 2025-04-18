@@ -1,0 +1,24 @@
+<div class="tile sm-12">
+  <div class="header table-top custom-padding-bottom">
+    <div class="left">
+      <div class="title">{{title}}</div>
+    </div>
+    <div class="right">
+      <div class="action mr-xxl">
+        <span class="mr-bs">Show only selected</span>
+        <label class="switch">
+          <input type="checkbox" [checked]="selectedOnly" (click)="toggleSelected($event)">
+          <i class="ball"></i>
+          <span data-enabled="Yes" data-disabled="No"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <app-table-server-side-pagination *ngIf="fetchPageHandler" [limit]="limit" [filterSortColumns]="filterSortColumns"
+      [tableHeightStyleProp]="tableHeightStyleProp" [columnsProperties]="columnsProperties"
+      [tableRowNumSelectOptions]="tableRowNumSelectOptions" [fetchPageHandler]="fetchPageHandler"
+      [tableName]="tableName"
+      [options]="tableOptions" />
+  </div>

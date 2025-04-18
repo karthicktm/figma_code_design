@@ -1,0 +1,83 @@
+<ng-container #imagePreview>
+  <img
+    #img
+    *ngIf="!isFullscreenMode; else fullscreenMode"
+    [src]="evidenceUrl | safe:'url'"
+    [style.display]="'none'"
+    [alt]="alt"
+    draggable="false"
+    (load)="onLoad($event)"
+    />
+
+    <svg
+    *ngIf="!isFullscreenMode; else fullscreenMode"
+    [attr.viewBox]="viewBox"
+    [style]="imgStyles"
+    draggable="false"
+    [appMarkable]="markings"
+    [edit]="edit"
+    (markingsChange)="markingsChange.next($event)"
+    (mousedown)="onImgEvent($event)"
+    (touchstart)="onImgEvent($event)"
+    (mousemove)="onImgEvent($event)"
+    (touchmove)="onImgEvent($event)"
+    (mouseup)="onImgEvent($event)"
+    (touchend)="onImgEvent($event)"
+    (mouseleave)="onImgEvent($event)"
+    (touchcancel)="onImgEvent($event)"
+  >
+    <defs>
+      <image
+        id="image"
+        [attr.href]="evidenceUrl"
+        [style.width]="'100%'"
+        [style.height]="'100%'"
+      ></image>
+    </defs>
+    <use
+      href="#image"
+    ></use>
+  </svg>
+</ng-container>
+<ng-template #fullscreenMode>
+<div #fullscreenWrapper
+        class="fullscreen-wrapper"
+        (mousedown)="onImgEvent($event)"
+        (touchstart)="onImgEvent($event)"
+        (mouseup)="onImgEvent($event)"
+        (touchend)="onImgEvent($event)">
+    <img [src]="evidenceUrls[selectedEvidence] | safe:'url'"
+        [style]="imgStyles"
+        [alt]="alt"
+        draggable="false"
+        (load)="onFullscreenLoad($event)"
+        (mousemove)="onImgEvent($event)"
+        (touchmove)="onImgEvent($event)"
+        (mouseleave)="onImgEvent($event)"
+        (touchcancel)="onImgEvent($event)">
+</div>
+<div class="inner-toolbar">
+    <div class="icon-wrapper">
+        <div class="tooltip" (click)="onZoomIn($event)">
+        <i class="custom-icon icon icon-zoom-in action"></i>
+        <span class="message left">Zoom the file in.</span>
+        </div>
+        <div class="tooltip" (click)="onZoomOut($event)">
+        <i class="custom-icon icon icon-zoom-out action"></i>
+        <span class="message left">Zoom the file out.</span>
+        </div>
+        <!-- <div class="tooltip" (click)="onRotate($event)">
+        <i class="custom-icon icon icon-arrow-rotate-horizontal action"></i>
+        <span class="message left">Rotate the file.</span>
+        </div> -->
+        <!-- <div class="tooltip" (click)="onDownload($event)">
+        <i class="custom-icon icon icon-download-save action"></i>
+        <span class="message left">Download the file.</span>
+        </div> -->
+        <div class="tooltip" (click)="onToggleFullscreenMode($event)">
+        <i class="custom-icon icon icon-minimize action"></i>
+        <span class="message left">Minimize the file.</span>
+        </div>
+    </div>
+</div>
+</ng-template>

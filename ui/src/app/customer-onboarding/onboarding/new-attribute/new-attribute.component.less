@@ -1,0 +1,23 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .new-attr-wrapper {
+    border: 1px solid @gray-42;
+  }
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .new-attr-wrapper {
+    border: 1px solid @gray-46;
+  }
+}
+
+.new-attr-wrapper {
+  margin: @space-base @space-base @space-large;
+  padding: @space-base;
+  height: auto;
+}

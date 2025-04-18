@@ -1,0 +1,20 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title"> Add new document </div>
+      <div class="right">
+        <i class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+    <div class="custom-body">
+      <p>All files will automatically be uploaded to the reference folder.</p>
+
+
+    </div>
+    <div class="bottom">
+      <button class="btn secondary" data-close="true">Cancel</button>
+      <button class="btn primary" (click)="uploadReferenceFiles()"><i class="icon icon-upload"></i>Upload file</button>
+      <input #fileSelectInput type="file" style="display: none" multiple [accept]="supportedMIME" (change)="onFileChange($event)"/>
+    </div>
+  </div>
+</div>

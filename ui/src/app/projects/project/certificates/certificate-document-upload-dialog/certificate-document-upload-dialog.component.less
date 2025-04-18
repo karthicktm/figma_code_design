@@ -1,0 +1,94 @@
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .custom-drop-area {
+    background-color: @gray-31;
+  }
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .custom-drop-area {
+    background-color: @gray-92;
+  }
+}
+
+// convert input to drop area
+input[type="file"] {
+  font-size: 0;
+  &::file-selector-button {
+    display: none;
+  }
+  // Safari only
+  @media not all and (min-resolution:.001dpcm) {
+    @supports (-webkit-appearance:none) {
+      text-indent: -120px;
+      margin-left: -7em;
+
+      &::file-selector-button {
+        display: inline;
+      }
+    }
+  }
+}
+
+.custom-bottom {
+  display: flex !important;
+  align-items: center;
+}
+
+.item-checkbox {
+  margin-right: auto;
+}
+
+.custom-icon-size {
+  font-size: 28px;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+input[type="file"] {
+  cursor: pointer;
+  position: absolute;
+  height: 75px;
+  width: 100%;
+  background: none;
+  z-index: 1;
+  background-color: transparent ! important;
+}
+
+.custom-drop-area {
+  height: 75px;
+  position: relative;
+  width: 100%;
+  &_item {
+    position: absolute;
+    flex-direction: column;
+    z-index: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+
+  }
+}
+
+.upload-diag-scroll {
+  overflow-y: auto;
+}
+
+.error {
+  color: red;
+}

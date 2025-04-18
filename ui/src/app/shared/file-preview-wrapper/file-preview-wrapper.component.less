@@ -1,0 +1,50 @@
+@import '@eds/vanilla/variables/global';
+@import '@eds/vanilla/variables/light';
+
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0);
+}
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+.loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+  }
+
+.hidden {
+    display: none;
+}
+
+:host-context(.light) {
+    .icon.action {
+        border: @space-small @white solid;
+        background-color: @white;
+    }
+    .empty-state {
+        border: 1px @gray-42 solid;
+        background-color: @gray-92;
+    }
+}
+
+:host-context(.dark) {
+    .icon.action {
+        border: @space-small @gray-31 solid;
+        background-color: @gray-31;
+    }
+    .empty-state {
+        border: 1px @gray-46 solid;
+        background-color: @gray-31;
+    }
+}

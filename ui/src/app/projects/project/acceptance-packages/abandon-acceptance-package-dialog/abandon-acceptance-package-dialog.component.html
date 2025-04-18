@@ -1,0 +1,18 @@
+<div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top">
+        <div class="title">Abandon package?</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+      <div class="body">
+        <div>{{ message }}</div>
+      </div>
+      <div class="bottom">
+        <button class="btn" data-close="true">Cancel</button>
+        <button class="btn" data-close="true" (click)="delete()">Abandon</button>
+      </div>
+    </div>
+  </div>
+  

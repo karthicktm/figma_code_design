@@ -1,0 +1,92 @@
+<div class="tile">
+  <p class="filter-criteria-pills">
+    @for (filter of filterSortColumns | keyvalue; track $index) {
+      @if (filter.value.searchText) {
+        <span  (click)="clearSelectedFilter(filter.key)"
+          class="pill removable"
+        >{{filter.value.columnName}} : {{ filter.value.searchText }}</span>
+      }
+    }
+    @if (isFilter) {
+      <a (click)="clearAllFilters()"> Remove all</a>
+    }
+  </p>
+
+  <div class="content">
+    <div class="table-top">
+      <div class="table-top-left">
+        <div class="table-info"></div>
+      </div>
+      <div class="table-top-right">
+        <div class="table-buttons">
+          <button class="btn table-filter">
+            <i class="icon icon-filter-off"></i>
+            Show column filter
+          </button>
+
+          @if (projectDetails.sourceTool !== SourceTool.dpm && !disabledContribution) {
+            <button
+              class="btn secondary"
+              *ngIf="!isPackageCompleted && (isUserAuthorized('package-evidence-source-report') | async)"
+              (click)="sourceReportAsEvidence()"
+            >
+              <i class="icon icon-hierarchy-chart"></i>Source report
+            </button>
+            <button
+              class="btn secondary"
+              aria-label="Add new evidence"
+              *ngIf="!isPackageCompleted && (isUserAuthorized('create-new-evidence') | async)"
+              (click)="addNew()"
+            >
+              <i class="icon icon-plus"></i>Evidence
+            </button>
+          }
+
+          @if (!isPackageCompleted && (isUserAuthorized('create-new-reference-document') | async) && isAddReferenceDocumentAllowed()) {
+            <button
+              class="btn secondary"
+              aria-label="Add new reference document"
+              (click)="addReferenceDocument()"
+            >
+              <i class="icon icon-plus"></i>Reference
+            </button>
+          }
+
+          <ng-container *ngIf="!isPackageCompleted && (isUserAuthorized('accept-reject-all-button') | async)">
+            <button class="btn secondary" [disabled]="disabledSubmission || !tableUtils.isAnyRowCheckMarked(attachedEvidencesTable)" (click)="acceptAndRejectPackageEvidences('Reject')">
+              Reject
+            </button>
+            <button class="btn secondary" [disabled]="disabledSubmission || !tableUtils.isAnyRowCheckMarked(attachedEvidencesTable)" (click)="acceptAndRejectPackageEvidences('Approve')">
+             Approve
+            </button>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+    <table class="table striped sortable"
+      id="package-evidences-table"
+      #attachedEvidencesTableElement
+    ></table>
+    <div class="pagination-group">
+      <ul class="pagination"></ul>
+      <div class="actions">
+        <label class="left">Go to</label>
+        <input type="number" min="1">
+
+        <label class="left">Show</label>
+        <div class="select" data-type="single" >
+          <button class="btn current-options">10</button>
+
+          <div class="options-list">
+            <div class="item active">10</div>
+            <div class="item">25</div>
+            <div class="item">50</div>
+            <div class="item">75</div>
+            <div class="item">100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

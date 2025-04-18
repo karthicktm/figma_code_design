@@ -1,0 +1,62 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .charts .chart-container {
+    border: 1px solid @gray-55;
+  }
+
+  .mixin()
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .charts .chart-container {
+    border: 1px solid @gray-86;
+  }
+
+  .mixin()
+}
+
+.mixin() {
+  .tile.full-height {
+    min-height: calc(100vh - 110px);
+    min-width: min-content;
+  }
+
+  .charts {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: @space-large;
+
+    .chart-container {
+      width: 320px;
+      flex: 1 0 auto;
+      padding: @space-large;
+
+      .chart-header {
+        display: flex;
+        margin-bottom: 10px;
+        .chart-title {
+          display: inline-block;
+          font-weight: @weight-medium;
+          margin-right: @space-base;
+        }
+
+        .chart-subtitle {
+          font-size: 12px;
+          color: @gray-text;
+          display: inline-block;
+        }
+      }
+
+      app-donut-chart {
+        text-align: center;
+      }
+    }
+  }
+}

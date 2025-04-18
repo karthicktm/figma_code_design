@@ -1,0 +1,56 @@
+<div class="thumbnail-header">
+  <div class="checkbox-selector">
+    <input
+      *ngIf="_withCheckbox"
+      type="checkbox"
+      [id]="'cb' +evidenceDetails?.internalId"
+      (change)="selectThumbnail($event, evidenceDetails?.internalId)" />
+    <label [for]="'cb' +evidenceDetails?.internalId" (click)="$event.stopPropagation()"
+      title="{{evidenceDetails?.name}}">{{evidenceDetails?.name}}</label>
+  </div>
+
+  <span>
+    <kbd class="tag status-indicator"
+      [ngClass]="getStatusColor(evidenceDetails)"
+    >{{getStatus(evidenceDetails)}}</kbd>
+
+    <i *ngIf="!maximized !loading"
+      class="icon icon-maximize custom-position-maximize-icon"
+      (click)="onMaximize(evidenceDetails?.internalId)"></i>
+  </span>
+</div>
+<div class="thumbnail"
+  [ngClass]="{
+    'zoom-step1': zoomLevel === 1,
+    'zoom-step2': zoomLevel === 2,
+    'zoom-step3': zoomLevel === 3,
+    'zoom-step4': zoomLevel === 4
+  }"
+  appObserveVisibility
+  [debounceTime]="50"
+  [threshold]="0.1"
+  [id]="evidenceDetails?.internalId"
+  (visible)="onVisible(evidenceDetails?.internalId)"
+  (click)="selectEvidence(evidenceDetails?.internalId)">
+  <ng-container *ngIf="visible; else nameOnly">
+    <ng-container
+      *ngIf="loading; then loadingThumbnail; else (
+        loadingError ? nameOnly : showThumbnail)"
+    >
+    </ng-container>
+    <ng-template #loadingThumbnail>
+      <div [class.loading]="loading"></div>
+    </ng-template>
+    <ng-template #showThumbnail>
+      <img #thumbnailImg
+        [ngClass]="{'invert': isSVGFile}"
+        [src]="thumbnailUrl | safe:'url'"
+        [alt]="evidenceDetails?.name">
+
+    </ng-template>
+  </ng-container>
+
+  <ng-template #nameOnly>
+    <span>{{evidenceDetails?.name}}</span>
+  </ng-template>
+</div>

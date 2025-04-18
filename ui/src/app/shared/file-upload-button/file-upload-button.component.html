@@ -1,0 +1,20 @@
+@if(type === 'simple-icon') {
+  <button class="btn icon-btn" [aria-label]="buttonText || 'Choose file'" [title]="buttonText || 'Choose file'" type="button" (click)="fileSelectInput.click()">
+    <i class="icon icon-upload"></i>
+  </button>
+}
+@else {
+  <button class="btn" type="button" (click)="fileSelectInput.click()">
+    <i class="icon icon-upload"></i>{{ buttonText || 'Choose file' }}
+  </button>
+}
+<input #fileSelectInput type="file" style="display: none" [accept]="accept" (change)="onFileChange($event)" />
+@if(type !== 'simple-icon') {
+  <kbd class="tag big ml-bs mt-sm" *ngFor="let file of filesNames()">
+    <span>
+      {{ file.name }} {{ file.size | formatBytes }}
+      <button *ngIf="downloadEnabled" class="btn-icon" type="button" title="Download" (click)="downloadFile(file)">
+        <i class="icon icon-download-save"></i></button
+    ></span>
+  </kbd>
+}

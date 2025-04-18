@@ -1,0 +1,136 @@
+<form class="h-100" [formGroup]="packageForm">
+<div #reworkPackageWizard class="wizard">
+  <!-- Steps -->
+  <div class="wizard-steps">
+    <div class="arrow left">
+      <i class="icon icon-arrow-left"></i>
+    </div>
+
+    <div class="steps">
+      <div class="step current">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">1. Rejected items summary</div>
+      </div>
+
+      <div class="step">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">2. Link or upload new evidences</div>
+      </div>
+
+      <div class="step">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">{{isMilestoneAcceptance()? '3. Rework milestone evidences' : '3. Upload new package evidences'}}</div>
+      </div>
+
+      <div class="step">
+        <div class="prevbar"></div>
+        <div class="nextbar"></div>
+        <div class="sphere"></div>
+        <div class="description">4. Finish rework</div>
+      </div>
+    </div>
+
+    <div class="arrow right visible">
+      <i class="icon icon-arrow-right"></i>
+    </div>
+  </div>
+
+  <!-- Wizard Contents -->
+    <div class="wizard-content">
+
+      <!-- Content step 1 -->
+      <div class="content">
+        <ng-container *ngTemplateOutlet="loader"></ng-container>
+        @if (isMilestoneAcceptance() !== undefined) {
+          <app-rework-acceptance-package-step1
+            [lineItemData]="packageComponentTable | async"
+            [evidenceData]="evidenceTable | async"
+            [milestoneEvidenceData]="milestoneEvidenceTable | async"
+            [lineItems]="lineItems"
+            [packageId]="packageId"
+            [isMilestoneAcceptance]="isMilestoneAcceptance()"
+          />
+        }
+      </div>
+
+      <!-- Content step 2 -->
+      <div class="content hidden">
+        <app-rework-acceptance-package-step2
+          [lineItemData]="packageComponentTable | async"
+          [lineItems]="lineItems"
+          [packageDetails]="packageDetails"
+          [projectId]="projectId"
+          [packageForm]="packageForm"
+        />
+      </div>
+      <!-- Content step 3 -->
+      <div class="content hidden">
+        @if (isMilestoneAcceptance() !== undefined) {
+          <app-rework-acceptance-package-step3
+            [packageEvidenceData]="evidenceTable | async"
+            [milestoneEvidenceData]="milestoneEvidenceTable | async"
+            [packageDetails]="packageDetails"
+            [projectId]="projectId"
+            [packageForm]="packageForm"
+            [isMilestoneAcceptance]="isMilestoneAcceptance()"
+          />
+        }
+      </div>
+      <!-- Content step 4 -->
+      <div class="content hidden">
+        @if (isMilestoneAcceptance() !== undefined) {
+          <app-rework-acceptance-package-step4
+            [lineItems]="lineItems"
+            [packageId]="packageId"
+            [projectId]="projectId"
+            [packageForm]="packageForm"
+            [isMilestoneAcceptance]="isMilestoneAcceptance()"
+          />
+        }
+      </div>
+    </div>
+
+  <!-- Wizard footer -->
+  <div class="wizard-footer">
+    <div class="item">
+      <button class="btn" (click)="goBack()">Cancel</button>
+      <ng-container *ngIf="isStatusLegendEnabled">
+        <span><i class="ml-bs icon icon-alarm-level6 color-green"></i> Rework completed</span>
+        <span><i class="ml-bs icon icon-alarm-level6 color-red"></i> Rework required</span>
+      </ng-container>
+    </div>
+
+    <div class="item" [class]="{ hidden: !wizardIsLoaded }">
+      <button class="btn wizard-previous">
+        <i class="icon icon-arrow-left"></i>
+        <span class="term">Previous</span>
+      </button>
+      <button class="btn primary" *ngIf="!isLastStep()" (click)="onNextStep()" [disabled]="(loadingLineItemDetails || loadingPackageEvidences || loadingMilestoneEvidences) || currentStepIsInvalid()">
+        <span class="term">Next</span>
+        <i class="icon icon-arrow-right"></i>
+      </button>
+      <!-- we need this button for initialization otherwise it fails -->
+      <button class="btn primary wizard-next" style="display: none;">
+        <span class="term">Next</span>
+        <i class="icon icon-arrow-right"></i>
+      </button>
+      <button class="btn primary wizard-finish" #updateButton (click)="onSubmit()" [ngClass]="{'loading': processing}"
+        [disabled]="!packageForm.valid">Update</button>
+      <button class="btn primary wizard-finished" disabled>Updated</button>
+    </div>
+  </div>
+</div>
+</form>
+
+<ng-template #loader>
+  <div
+    *ngIf="loadingLineItemDetails || loadingPackageEvidences || loadingMilestoneEvidences"
+    class="loading large"
+  ></div>
+</ng-template>

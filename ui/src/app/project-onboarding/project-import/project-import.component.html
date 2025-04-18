@@ -1,0 +1,260 @@
+<form class="eds-form" [formGroup]="projectImportForm" (ngSubmit)="onSubmit()" (reset)="onReset()">
+  <!-- No form header -->
+
+  <div class="row form-body">
+    <div class="column sm-12 md-12 lg-12">
+      <div class="form-group">
+        <div class="form-element">
+          <label class="required" for="customer">Customer ID </label>
+          <div *ngIf="getAllCustomers | async; else customerFreeTextInput">
+            <app-select
+              class="select fullwidth"
+              #customerIdSelect
+              name="customerId"
+              data-type="single"
+              [emptySelectionText]="'Select customer'"
+              [optionsWithValue]="customerOptions"
+              [selectId]="'customer-select'"
+              formControlName="customerId"
+            />
+          </div>
+          <ng-template #customerFreeTextInput>
+            <input
+              type="text"
+              name="customerSelectInput"
+              id="customer"
+              formControlName="customerId"
+              placeholder="Enter customer ID"
+              class="fullwidth"
+              required
+            />
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="project">Project ID </label>
+          <div *ngIf="getProjectsBy | async; else projectIdFreeTextInput">
+            <ng-container *ngIf="projectOptions.length > 0; else projectNotFoundTextInput">
+              <app-select
+                class="select fullwidth"
+                name="projectId"
+                #projectSelection
+                data-type="single"
+                [emptySelectionText]="'Select project'"
+                [optionsWithValue]="projectOptions"
+                [selectId]="'project-select'"
+                formControlName="projectId"
+              />
+            </ng-container>
+          </div>
+          <ng-template #projectIdFreeTextInput>
+            <input
+              type="text"
+              name="projectId"
+              id="project"
+              [placeholder]="'Select a customer first.'"
+              class="fullwidth"
+              disabled
+              required
+            />
+          </ng-template>
+          <ng-template #projectNotFoundTextInput>
+            <input
+              type="text"
+              name="projectId"
+              id="project"
+              placeholder="No project available"
+              class="fullwidth"
+              disabled
+              required
+            />
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label for="project-name">Project name</label>
+          <input
+            type="text"
+            id="project-name"
+            [placeholder]="'Select customer and project first.'"
+            name="projectName"
+            placeholder="Project name"
+            class="fullwidth validation"
+            formControlName="projectName"
+          />
+        </div>
+
+        <div class="form-element">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            [placeholder]="'Select customer and project first.'"
+            name="country"
+            placeholder="Country"
+            class="fullwidth validation"
+            formControlName="country"
+          />
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="approvalRuleSelect">Approval rule</label>
+          <app-select
+            class="select"
+            *ngIf="!!approvalRuleList && approvalRuleList.length > 0; else approvalRuleNotFoundTextInput"
+            data-type="single"
+            [emptySelectionText]="'Select approval rule'"
+            [selectId]="'approvalRuleSelect'"
+            [optionsWithValue]="approvalRuleList"
+            name="approvalRule"
+            formControlName="approvalRule"
+          />
+          <ng-template #approvalRuleNotFoundTextInput>
+            <input
+              type="text"
+              name="approvalRule"
+              id="approvalRule"
+              placeholder="No approval rule available"
+              class="fullwidth"
+              disabled
+              required
+            />
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="workflowSelect">Workflow</label>
+          <ng-container *ngIf="workflows | async as workflowList">
+            <app-select
+              class="select"
+              *ngIf="!!workflowList && workflowList.length > 0; else workflowNotFoundTextInput"
+              data-type="single"
+              [emptySelectionText]="'Select workflow'"
+              [selectId]="'workflowSelect'"
+              [selected]="defaultWorkflow()"
+              [optionsWithValue]="workflowList"
+              name="workflowSelect"
+              formControlName="workflowId"
+            />
+          </ng-container>
+          <ng-template #workflowNotFoundTextInput>
+            <input
+              type="text"
+              name="workflow"
+              id="workflow"
+              placeholder="No workflow available"
+              class="fullwidth"
+              disabled
+              required
+            />
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="ruleSelect">Acceptance package rule</label>
+          <ng-container *ngIf="acceptancePackageRules | async as acceptancePackageRuleList">
+            <app-select
+              class="select"
+              *ngIf="
+                !!acceptancePackageRuleList && acceptancePackageRuleList.length > 0;
+                else acceptancePackageRuleNotFoundTextInput
+              "
+              data-type="single"
+              placeholder="Select acceptance package rule"
+              [selectId]="'ruleSelect'"
+              [selected]="defaultAcceptancePackageRule()"
+              [optionsWithValue]="acceptancePackageRuleList"
+              name="ruleSelect"
+              formControlName="rulesetId"
+            />
+          </ng-container>
+          <ng-template #acceptancePackageRuleNotFoundTextInput>
+            <input
+              type="text"
+              name="acceptancePackageRule"
+              id="acceptancePackageRule"
+              placeholder="No acceptance package rule available"
+              class="fullwidth"
+              disabled
+              required
+            />
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="multiLevelTypeSelect">Multi-level type</label>
+          @if (!!multiLevelTypeList && multiLevelTypeList.length > 0) {
+          <app-select
+            class="select"
+            data-type="single"
+            [emptySelectionText]="'Select multi-level type'"
+            [selectId]="'multiLevelTypeSelect'"
+            [optionsWithValue]="multiLevelTypeList"
+            name="multiLevelTypeSelect"
+            formControlName="multiLevelType"
+          />
+          } @else {
+          <input
+            type="text"
+            name="multiLevelType"
+            id="multiLevelType"
+            placeholder="No multi-level type available"
+            class="fullwidth"
+            disabled
+            required
+          />
+          }
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="reworkTypeSelect">Rework type</label>
+          @if (multiLevelType.value === 'Serial' && !!reworkTypeListSerial && reworkTypeListSerial.length > 0) {
+          <app-select
+            class="select"
+            data-type="single"
+            [emptySelectionText]="'Select rework type'"
+            [selectId]="'reworkTypeSelect'"
+            [selected]="defaultReworkType"
+            [optionsWithValue]="reworkTypeListSerial"
+            name="reworkTypeSelect"
+            formControlName="reworkType"
+          />
+          } @else if (multiLevelType.value === 'Parallel' && !!reworkTypeListParallel && reworkTypeListParallel.length > 0) {
+          <app-select
+            class="select"
+            data-type="single"
+            [emptySelectionText]="'Select rework type'"
+            [selectId]="'reworkTypeSelect'"
+            [selected]="defaultReworkType"
+            [optionsWithValue]="reworkTypeListParallel"
+            name="reworkTypeSelect"
+            formControlName="reworkType"
+          />
+          } @else {
+          <input
+            type="text"
+            name="reworkType"
+            id="reworkType"
+            placeholder="No rework type available"
+            class="fullwidth"
+            disabled
+            required
+          />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="reset" class="btn">Reset</button>
+    <button
+      type="submit"
+      class="btn primary"
+      [class.loading]="submitting()"
+      [disabled]="!projectImportForm?.valid || submitting()"
+    >
+      Import
+    </button>
+  </div>
+</form>

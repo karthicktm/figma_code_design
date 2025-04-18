@@ -1,0 +1,48 @@
+{
+  "name": "Ericsson Customer Acceptance",
+  "short_name": "ECA",
+  "description": "Machine to machine communications and blockchain based automation will improve, track and orchestrate the acceptance approval process. Ericsson Customer Acceptance platform strengthen trust between all involved parties by adding immutability and security to the data layer and full traceability end to end.",
+  "theme_color": "#005499",
+  "background_color": "#0C0C0C",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/icons/ECON_RGB.svg",
+      "type": "image/svg",
+      "sizes": "any",
+      "purpose": "monochrome any"
+    },
+    {
+      "src": "assets/icons/ECON_RGB_20px.png",
+      "sizes": "20x20",
+      "type": "image/png",
+      "purpose": "monochrome any"
+    },
+    {
+      "src": "assets/icons/ECON_RGB_32px.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "monochrome any"
+    },
+    {
+      "src": "assets/icons/ECON_RGB_48px.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "monochrome any"
+    },
+    {
+      "src": "assets/icons/ECON_RGB_96px.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "monochrome any"
+    },
+    {
+      "src": "assets/icons/ECON_RGB.png",
+      "sizes": "800x800",
+      "type": "image/png",
+      "purpose": "monochrome any"
+    }
+  ]
+}

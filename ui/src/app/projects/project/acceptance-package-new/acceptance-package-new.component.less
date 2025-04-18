@@ -1,0 +1,41 @@
+@import "@eds/vanilla/variables/global";
+
+.h-100 {
+    height: 100%;
+}
+
+.wizard {
+    padding-bottom: @space-large;
+    margin: 0 @space-large;
+
+    .tile-horizontal {
+        flex-direction: row;
+    }
+
+    .wizard-steps {
+        padding-top: @space-xl;
+        margin-top: 0;
+        height: 96px;
+        border-bottom: unset;
+        width: auto;
+    }
+
+    .wizard-content {
+        margin: @space-base 0 0 0;
+        .content {
+            margin-bottom: 0;
+            height: 100%;
+        }
+        ::ng-deep .eds-form {
+          padding: 0;
+        }
+    }
+
+    .wizard-footer {
+        padding: @space-large;
+        margin-top: 3px;
+        border-color: transparent;
+    }
+
+}
+

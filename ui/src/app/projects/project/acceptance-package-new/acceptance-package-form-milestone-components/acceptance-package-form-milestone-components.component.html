@@ -1,0 +1,42 @@
+<div class="row h-100">
+  <div class="tile">
+    <div class="header">
+      <div class="left">
+        <div class="title btn-group horizontal" #btnGroup>
+          @for (type of MilestoneComponentTypes | keyvalue; track $index) {
+          <button class="btn" [class.active]="selectedType === type.value" (click)="switchType(type.value)">
+            {{ type.value }}
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      @let milestoneIds = milestoneIdObservable | async;
+      @defer (when milestoneIds) {
+        @if (milestoneIds && milestoneIds.length > 0) {
+          @if (selectedType === MilestoneComponentTypes.lineItems) {
+          <app-acceptance-package-form-milestone-line-items [projectId]="projectId()" [milestoneIds]="milestoneIds" />
+          }
+          @else if (selectedType === MilestoneComponentTypes.milestoneEvidences) {
+          <app-acceptance-package-form-milestone-evidences [projectId]="projectId()" [milestoneIds]="milestoneIds" />
+          }
+        }
+        @else {
+          <ng-container [ngTemplateOutlet]="noMilestone" />
+        }
+      }
+      @placeholder {
+        <ng-container [ngTemplateOutlet]="noMilestone" />
+      }
+      <ng-template #noMilestone>
+        <div class="empty-state">
+          <div class="message">
+            <p>No milestone selected.</p>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

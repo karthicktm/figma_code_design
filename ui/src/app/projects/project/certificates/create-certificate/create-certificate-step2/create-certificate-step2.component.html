@@ -1,0 +1,99 @@
+<form class="eds-form" [formGroup]="certificateForm.controls.step2">
+  <div class="row form-body override-max-width">
+
+    <div class="column sm-2 md-2 lg-2">
+      <div class="form-group" formGroupName="ericssonSignatory">
+        <div class="form-element">
+          <div class="form-group-title">
+            Ericsson signatory
+            <i class="icon icon-info" title="The same user is not allowed to be added in multiple levels"></i>
+          </div>
+          <div formArrayName="eSignatory">
+            <ng-container>
+              <div
+                *ngFor="let ericssonSignatoryLevel of ericssonSignatoryArray.controls; let i = index; let first = first">
+                <label class="custom-subheader mt-bs required"> Signatory {{ i + 1 }} </label>
+                <div *ngIf="ericssonSignatoryArray.value[i]; else eSelectTextInput">
+                  <div class="header">
+                    <div class="select select-custom long-text-overflow">
+                      {{ ericssonSignatoryArray.value[i]?.name }}
+                    </div>
+                    <div>
+                      <button class="btn-icon icon icon-trashcan"
+                        (click)="onSignatoryDelete($event, i, SignatoryType.Ericsson)" type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #eSelectTextInput>
+                  <app-select-with-input #eSignatory class="select select-custom"
+                    [attr.name]="'eSignatory_' + i" data-type="input-single" placeholder="Select Ericsson signatory"
+                    [optionsWithValue]="ericssonSignatoryObservable | async" [selectId]="'eSignatory_' + i"
+                    (optionChanged)="onSelectSignatory($event, i, SignatoryType.Ericsson)">
+                  </app-select-with-input>
+                </ng-template>
+              </div>
+            </ng-container>
+            <div *ngIf="ericssonSignatoryArray.controls.length === 0">
+              <div class="form-element mt-bs">
+                <label>NA</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column sm-2 md-2 lg-2">
+      <div class="form-group" formGroupName="customerSignatoryArray">
+        <div class="form-element">
+          <div class="form-group-title">
+            Customer signatory
+            <i class="icon icon-info" title="The same user is not allowed to be added in multiple levels"></i>
+          </div>
+
+          <div formArrayName="cSignatory">
+            <div *ngFor="let customerSignatoryLevel of customerSignatoryArray.controls; let i = index">
+              <label class="custom-subheader mt-bs required"> Signatory {{ i + 1 }} </label>
+
+              <div *ngIf="customerSignatoryArray.value[i]; else cSelectTextInput">
+                <div class="header">
+                  <div class="select select-custom long-text-overflow">
+                    {{ customerSignatoryArray.value[i]?.name }}
+                  </div>
+                  <div>
+                    <button class="btn-icon icon icon-trashcan"
+                      (click)="onSignatoryDelete($event, i, SignatoryType.Customer)" type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #cSelectTextInput>
+                <app-select-with-input #cSignatory class="select select-custom"
+                  [attr.name]="'cSignatory_' + i" data-type="input-single" placeholder="Select customer signatory"
+                  [optionsWithValue]="customerSignatoryObservable | async" [selectId]="'cSignatory_' + i"
+                  (optionChanged)="onSelectSignatory($event, i, SignatoryType.Customer)">
+                </app-select-with-input>
+              </ng-template>
+            </div>
+
+            <div *ngIf="customerSignatoryArray.controls.length === 0">
+              <div class="form-element mt-bs">
+                <label>NA</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column sm-6 md-6 lg-6">
+      <div class="form-group">
+        <div class="form-element" formGroupName="referenceDocument">
+          <app-certificate-request-document [projectId]="projectId" [parentComponentName]="componentName"
+            (certificateRequestDocumentArray)="updateCertificateRequestDocumentArray($event)"
+            class="width-hundred-percent">
+          </app-certificate-request-document>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,109 @@
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .color-status-green{
+    color: @green-35;
+    &.bar{
+      stroke: @green-35 !important;
+    }
+  }
+
+  .color-status-red{
+    color: @red-52;
+    &.bar{
+      stroke: @red-52 !important;
+    }
+  }
+
+  .color-status-purple{
+    color: @purple-59;
+    &.bar{
+      stroke: @purple-59 !important;
+    }
+  }
+
+  .color-status-orange{
+    color: @orange-50;
+    &.bar{
+      stroke: @orange-50 !important;
+    }
+  }
+
+  .color-status-blue{
+    color: @blue-43;
+    &.bar{
+      stroke: @blue-43 !important;
+    }
+  }
+
+  .color-status-gray{
+    color: @gray-68;
+    &.bar{
+      stroke: @gray-68 !important;
+    }
+  }
+
+  .mixin()
+}
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .color-status-green{
+    color: @green-40;
+    &.bar{
+      stroke: @green-40 !important;
+    }
+  }
+
+  .color-status-red{
+    color: @red-46;
+    &.bar{
+      stroke: @red-46 !important;
+    }
+  }
+
+  .color-status-purple{
+    color: @purple-48;
+    &.bar{
+      stroke: @purple-48 !important;
+    }
+  }
+
+  .color-status-orange{
+    color: @orange-46;
+    &.bar{
+      stroke: @orange-46 !important;
+    }
+  }
+
+  .color-status-blue{
+    color: @blue-48;
+    &.bar{
+      stroke: @blue-48 !important;
+    }
+  }
+
+  .color-status-gray{
+    color: @gray-53;
+    &.bar{
+      stroke: @gray-53 !important;
+    }
+  }
+
+  .mixin()
+}
+
+.mixin() {
+  .empty-state {
+    border: 1px gray solid;
+  }
+
+  .custom-tile {
+    min-height: calc((100vh - 102px) / 2);
+  }
+
+  app-bar-chart.wider-bar .bar {
+    stroke-width: 48 !important;
+  }
+}

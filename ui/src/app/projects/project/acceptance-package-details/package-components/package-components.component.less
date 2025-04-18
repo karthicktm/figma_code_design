@@ -1,0 +1,57 @@
+@import "@eds/vanilla/variables/global";
+
+.entity-count-cue{
+  margin-left: @space-base;
+  cursor: pointer;
+}
+::ng-deep.cursor-remove{
+  cursor: default !important;
+}
+.switch-content{
+  width: 8em ;
+}
+.horizontal .btn:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.checkbox-entry {
+  display: flex;
+  .checkbox-name{
+    margin-left: @space-small;
+  }
+}
+
+.child-checkbox{
+  margin-left: 10%;
+}
+
+.custom-row {
+  margin-bottom: @space-base;
+}
+.custom-inset{
+  padding: 0 0 16px 16px !important;
+}
+
+.checkbox-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
+.action.hidden {
+  display: none !important;
+}
+
+.container {
+  flex-direction: column;
+  display: flex;
+}
+
+.end {
+  margin-top: auto; 
+}

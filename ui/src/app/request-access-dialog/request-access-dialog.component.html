@@ -1,0 +1,26 @@
+<div>
+  <div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top">
+        <div class="title">Request access</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+      <div class="body">
+        <p>Provide information of what your role is and why you think you should be granted access to this section.</p>
+        <textarea class="fullwidth"
+          placeholder=""
+          #message
+        ></textarea>
+      </div>
+      <div class="bottom">
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button class="btn primary"
+          (click)="sendRequest(message.value)"
+          data-close="true"
+        >Request access</button>
+      </div>
+    </div>
+  </div>
+</div>

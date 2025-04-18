@@ -1,0 +1,54 @@
+<div
+  class="tree results-container"
+  [ngClass]="{'hidden': !searchItem.selected || searchItem.phrase === ''}"
+  #searchResultListRef
+>
+  <ng-template #searchResultListTemplateRef let-items>
+    <ul>
+      <li *ngFor="let item of items">
+        <a
+          class="result-item"
+          #searchResultElem
+          *ngIf="!item.subTree"
+          [routerLink]="item.uri"
+          [ngClass]="{
+              title: item.subTree,
+              opened: item.subTree || item.subTreeObservable,
+              item: true
+            }"
+          (click)="selectedNode.emit(item.origin || item); resetSearch()"
+        >
+          <i *ngIf="item.icon" class="icon {{ item.icon }}"></i>
+          <span [innerHTML]="item.name"></span>
+        </a>
+        <span
+          *ngIf="item.subTree"
+          [ngClass]="{
+              title: item.subTree,
+              opened: item.subTree,
+              item: true
+            }"
+          [routerLink]="item.uri"
+          (click)="selectedNode.emit(item.origin || item)"
+        >
+          <i *ngIf="item.icon" class="icon {{ item.icon }}"></i>
+          <span [innerHTML]="item.name"></span>
+        </span>
+        <ng-container *ngTemplateOutlet="searchResultListTemplateRef; context:{ $implicit: item.subTree }"></ng-container>
+      </li>
+    </ul>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="searchResultListTemplateRef; context:{ $implicit: searchResult }"></ng-container>
+
+  <div *ngIf="searchResult.length === 0" class="empty-results">
+    <div class="empty-state">
+      <div class="message">
+        <p>No matches found.</p>
+        <p>Try with a different phrase.</p>
+        <a [appHelpDocumentLoader]="'FAQ'" href="" target="_blank" rel="noopener noreferrer">
+          FAQs
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

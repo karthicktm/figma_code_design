@@ -1,0 +1,43 @@
+<div class="tree" #tree *ngIf="taxonomyTree && taxonomyTree.length > 0">
+  <ul>
+    <ng-container *ngFor="let node of taxonomyTree">
+      <ng-container *ngTemplateOutlet="(!!node.subTree && node.subTree.length >0) ? nestedNode : simpleNode; context: {node: node}">
+      </ng-container>
+    </ng-container>
+  </ul>
+</div>
+
+<ng-template #simpleNode let-node="node">
+  <li>
+    <span class="item" tabindex="0">
+      <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node}"></ng-container>
+    </span>
+  </li>
+</ng-template>
+
+<ng-template #nestedNode let-node="node">
+  <li>
+    <span class="title item" tabindex="0">
+      <ng-container *ngTemplateOutlet="nodeEntry; context: {node: node}"></ng-container>
+    </span>
+    <ul>
+      <ng-container *ngFor="let subNode of node.subTree">
+        <ng-container *ngTemplateOutlet="(!!subNode.subTree && subNode.subTree.length >0) ? nestedNode : simpleNode; context: {node: subNode}">
+        </ng-container>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template>
+
+<ng-template #nodeEntry let-node="node">
+  <div class="node-entry">
+    <input type="checkbox" id="cb-{{node.id}}" (change)="onChangeSelection($event, node)" [indeterminate]="node.isIndeterminate" [checked]="node.isChecked">
+    <label for="cb-{{node.id}}"></label>
+    <i class="icon" [ngClass]="getLevelIcon(node.type !== 'Checklist' ? node.type : node.nodeType)"></i>
+    <div class="node-name">{{node.name}} </div>
+    <div *ngIf="node.type !== 'Checklist'">
+      <i class="icon icon-info node-entry-cue" (click)="openNodeDetails($event, node.id, node.nodeType)"></i>
+    </div>
+    
+  </div>
+</ng-template>

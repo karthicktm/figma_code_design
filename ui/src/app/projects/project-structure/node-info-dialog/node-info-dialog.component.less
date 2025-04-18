@@ -1,0 +1,49 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .extended-attributes{ 
+    border-top: 2px solid @gray-86;
+  }
+  .custom-top {
+    border-bottom: 2px solid @gray-86;
+  }
+  .node-name {
+    color: @gray-42;
+  }
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .extended-attributes{ 
+    border-top: 2px solid @gray-86;
+  }
+  .custom-top {
+    border-bottom: 2px solid @gray-86;
+  }
+  .node-name {
+    color: @gray-92;
+  }
+}
+.custom-content{
+  overflow: auto;
+  min-width: 60% !important;
+  .section {
+    padding: 0px;
+  }
+  .custom-label{
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .extended-attributes{
+    padding-top: 10px;
+  }
+  .custom-top {
+    margin-bottom: @space-base;
+    padding-bottom: @space-base;
+  }
+  .node-name {
+    font-size: 16px;
+    margin: 3px 0 0 10px;
+  }
+}

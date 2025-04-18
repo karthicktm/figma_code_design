@@ -1,0 +1,23 @@
+@let selectedItems = value();
+@let isEdit = isEditMode();
+@if ((selectedItems.length === 0) && !isEdit) {
+  <span class="color-gray mr-bs">No recipient added</span>
+}
+@if (!isEdit) {
+  @for (selectedItem of selectedItems; track selectedItems) {
+    <span class="pill toggle removable" role="checkbox" aria-checked="true" (click)="toggle(selectedItem)"
+    >{{options[selectedItem]}}</span>
+  }
+  <a href="javascript:void(0);" role="button" (click)="isEditMode.set(true)">Show unselected</a>
+}
+@else {
+  @for (option of options | keyvalue; track $index) {
+    @let isSelected = selectedItems.includes(option.key);
+  <span [ngClass]="{
+      'unselected': !isSelected,
+    }" class="pill toggle" role="checkbox" aria-checked="{{isSelected}}"
+    (click)="toggle(option.key)"
+  >{{option.value}}</span>
+  }
+  <a href="javascript:void(0);" role="button" (click)="isEditMode.set(false)" title="Hide unselected">Hide unselected</a>
+}

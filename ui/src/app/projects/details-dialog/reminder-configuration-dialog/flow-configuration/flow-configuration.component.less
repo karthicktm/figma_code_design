@@ -1,0 +1,27 @@
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .custom-bottom {
+    border-top: 1px solid @gray-53;
+    padding-top: 10px;
+  }
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .custom-bottom {
+    border-top: 1px solid @gray-53;
+    padding-top: 10px;
+  }
+}
+
+.custom-content {
+  min-height: 450px;
+}
+
+.custom-row{
+  margin-bottom: 10px;
+}
+
+.custom-bottom {
+  text-align: right;
+}

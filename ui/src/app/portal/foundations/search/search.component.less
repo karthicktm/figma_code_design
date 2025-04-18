@@ -1,0 +1,61 @@
+@import (reference, once) "@eds/vanilla/variables/global";
+
+:host-context(.light) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+  .mixin()
+}
+
+:host-context(.dark) ::ng-deep {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+  .mixin()
+}
+
+.mixin() {
+  .search-holder {
+    position: relative;
+    white-space: nowrap;
+
+    .search-field {
+      margin-bottom: @space-large;
+      width: calc(~"100%" - 38px);
+      margin-left: 18px;
+    }
+
+    .results-container {
+      background: @layer2;
+      position: absolute;
+      width: 100%;
+      overflow-y: auto;
+
+      &.hidden {
+        display: none;
+      }
+
+      .item {
+        white-space: preserve nowrap;
+      }
+
+      .selected {
+        background: @tree-hover;
+      }
+
+      .highlight {
+        font-weight: 700;
+        color: @blue;
+        display: inline;
+      }
+
+      .empty-results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
+  @media @tablet {
+    .search-holder {
+      padding: 0;
+    }
+  }
+}

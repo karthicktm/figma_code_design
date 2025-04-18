@@ -1,0 +1,98 @@
+<form class="eds-form" [formGroup]="certificateForm.controls.step2">
+  Request Details
+  <div class="row form-body override-max-width">
+    <div class=" sm-10 md-10 lg-10">
+      <div class="form-group" formGroupName="generalDetails">
+        <div class="row">
+          <div class="sm-2 md-2 lg-2">
+            <div class="form-element">
+              <label for="input-requestName" class="required">Request name</label>
+              <input #requestName type="text" id="input-requestName" name="requestNameInput"
+                formControlName="requestNameInput" placeholder="Enter request name" class="validation input-custom"
+                [class.invalid]="requestNameInput.errors" />
+              <span *ngIf="requestNameInput.touched && requestNameInput.errors?.required" class="validation-msg">Request
+                name is required</span>
+              @if(requestNameInput?.errors?.maxlength) {
+              <span class="validation-msg">Maximum length should be
+                255</span>
+              }
+            </div>
+          </div>
+          <div class="sm-2 md-2 lg-2">
+            <div class="form-element">
+              <label for="input-template" class="required">Select certificate template</label>
+              <app-select #templateSelection class="select select-custom" name="templateSelectInput" data-type="single"
+                [emptySelectionText]="'Select template'" [optionsWithValue]="templateOptions | async"
+                [selectId]="'select-template'" formControlName="templateSelectInput">
+              </app-select>
+              <span *ngIf="!templateSelectInput.value" class="text-sm mt-bs">
+                <i class="icon icon-info"></i> <em>Select template for certificate request signatory details.</em>
+              </span>
+            </div>
+          </div>
+          <div class="sm-2 md-2 lg-2">
+            <div class="form-element" *ngIf="selectedTemplate">
+              <label for="input-signatureType">Signature type</label>
+              <input readonly type="text" id="input-signatureType" class="input-custom" name="requestSignatureType"
+                [value]="selectedTemplate?.signatureType + ' signature'" />
+            </div>
+          </div>
+          <div class="sm-2 md-2 lg-2">
+            <div class="form-element">
+              <label for="input-certificateScope">Scope</label>
+              <input #certificateScope type="text" id="input-certificateScope" name="certificateScopeInput"
+                formControlName="certificateScopeInput" placeholder="Enter scope" class="validation input-custom"
+                [class.invalid]="certificateScopeInput.errors" />
+              @if(certificateScopeInput?.errors?.maxlength) {
+              <span class="validation-msg">Maximum length should be
+                255</span>
+              }
+            </div>
+          </div>
+          <div class="sm-4 md-4 lg-4" *ngFor="let controlName of getAdditionalInfoControlNames(); let i = index">
+            <div class="form-element" *ngIf="generalDetailsForm.controls[controlName]">
+              <label [for]="'input-' + controlName">Additional information {{i + 1}}</label>
+              <textarea [formControl]="generalDetailsForm.controls[controlName]"
+                [maxlength]="maxLengthAdditionalInformation" id="'input-' + controlName"
+                name="'additionalInformationInput_' + i" class="input-custom additional-info-height"
+                placeholder="Enter additional information"></textarea>
+              <span class="validation-error color-gray text-sm">
+                {{ generalDetailsForm.controls[controlName].value.length + '/' + maxLengthAdditionalInformation }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row form-body override-max-width">
+      Additional attributes
+      <table class="table">
+        <thead>
+          <tr>
+            <th *ngFor="let header of tableHeaders">
+              {{ header.columnName }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableData; let rowIndex = index">
+            <td *ngFor="let header of tableHeaders">
+              <ng-container *ngIf="isDynamicColumn(header.attr); else normalText">
+                <input type="text" [formControl]="row.formControls[header.key]" (input)="updateDb(rowIndex, header.key)"
+                  maxlength="50" class="validation input-custom"
+                  [class.invalid]="row.formControls[header.key]?.hasError('maxlength')" />
+                <span
+                  *ngIf="row.formControls[header.key]?.hasError('maxlength') && row.formControls[header.key]?.touched"
+                  class="validation-msg">
+                  Maximum length is 24 characters
+                </span>
+              </ng-container>
+              <ng-template #normalText>{{ row[header.key] }}</ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>

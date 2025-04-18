@@ -1,0 +1,54 @@
+    <!-- Header -->
+    <div class="header">
+      <div class="left">
+        <div class="title">Comment history</div>
+      </div>
+    </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="row input-row">
+      <label class="color-gray">Add your comment</label>
+      <div>
+        <div>
+          <input id="comment-input" placeholder="Enter comment here"
+                    #commentInput
+                    (keyup)="onKey(commentInput.value)"
+          />
+        </div>
+        <div class="row visibility-options">
+          <div class="column sm-4 radio-buttons">
+            <input id="internal" name="visibility" type="radio" 
+            [value]="'internal'"
+            (change)="updateCommentVisibility($event)"
+            checked>
+            <label for="internal">Internal</label>
+          </div>
+          <div class="column sm-4 radio-buttons">
+            <input id="external" name="visibility" type="radio" 
+            [value]="'external'"
+            (change)="updateCommentVisibility($event)"
+            >
+            <label for="external">External</label>
+          </div>
+        </div>
+        <div>
+          <button class="btn primary comment-button"
+            [disabled]="submitButtonDisabled"
+            (click)="submitButtonClick(); commentInput.value=''; onKey(commentInput.value) "
+          >Add comment</button>
+        </div>
+      </div>
+      <div>
+        <app-filter-pills
+        [pillOptions] = "filterOptions"
+        (selectionChanged) = "onFilterChanged($event)"
+        [selectedPill]="seletedFilter"
+        ></app-filter-pills>
+      </div>
+    </div>
+
+    <div class="row timeline-row">
+      <div class="timeline" #commentsTimeline></div>
+    </div>
+  </div>

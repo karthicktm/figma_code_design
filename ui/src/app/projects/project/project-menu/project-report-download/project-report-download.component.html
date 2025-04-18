@@ -1,0 +1,22 @@
+<div *ngIf="!status">
+  <button class="btn" type="button" disabled>N/A</button>
+</div>
+<div
+  *ngIf="
+    status === ProjectReportStatus.NOT_STARTED ||
+    status === ProjectReportStatus.COMPLETE ||
+    status === ProjectReportStatus.FAILED
+  "
+>
+  <button class="btn" type="button" (click)="generateReport()">
+    <i class="icon icon-download-save"></i>Export {{ type === ProjectReportType.SNAG ? 'snag ' : '' }}report
+  </button>
+</div>
+<div *ngIf="status === ProjectReportStatus.IN_PROGRESS">
+  <button class="btn" type="button" disabled><i class="icon icon-download-save"></i>In progress</button>
+</div>
+<div *ngIf="status === ProjectReportStatus.READY">
+  <button class="btn" type="button" (click)="downloadReport($event)">
+    <i class="icon icon-download-save"></i>Ready to download
+  </button>
+</div>

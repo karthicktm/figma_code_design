@@ -1,0 +1,75 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+
+    <form class="eds-form"
+      (ngSubmit)="onSubmit()"
+      [formGroup]="form"
+    >
+      <div class="form-header">
+        <div class="title">
+          Sign request
+        </div>
+        <button class="btn-icon">
+          <i class="icon icon-cross" (click)="onCancel()"></i>
+        </button>
+      </div>
+
+      <div class="form-body">
+
+        <div class="form-group">
+
+          <div class="form-element">
+            <label for="designation" class="required">Signature</label>
+            <div class="designation-wrapper">
+              @if (preview()) {
+                <img [src]="preview()" alt="Signature preview" class="preview" />
+              }
+              @else {
+                <div class="preview color-gray">Signature preview will be shown here.</div>
+              }
+              <app-file-upload-button id="designation" [accept]="'image/png'" (fileChange)="onSignatureFileChange($event)" [type]="'simple-icon'"/>
+            </div>
+            @if(form?.controls.signature?.errors?.invalidType) {
+              <span class="validation-msg invalid"
+                >The file needs to be of type {{ 'image/png' }}. {{ form?.controls.signature?.errors?.invalidType[0] }}</span
+              >
+            }
+            @if(form?.controls.signature?.errors?.invalidSize) {
+              <span class="validation-msg invalid"
+              >The file exceed the allowed size. {{ form?.controls.signature?.errors?.invalidSize[0] }}</span
+              >
+            }
+          </div>
+
+          <div class="form-element">
+            <label for="designation" class="required">Designation</label>
+            <input #designationInputElement
+              class="with-icon fullwidth"
+              type="text"
+              id="designation"
+              name="designation"
+              formControlName="designation"
+              placeholder="Enter designation"
+            >
+            @if(form?.controls.designation?.errors?.maxlength) {
+            <span class="validation-msg invalid">{{
+              'Max length of value exceeded ' + form?.controls.designation?.value?.length + '/' + form?.controls.designation?.errors?.maxlength?.requiredLength
+            }}</span>
+            }
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="form-footer custom-bottom">
+        <button class="btn" type="button" (click)="onCancel()">Cancel</button>
+        <button class="btn primary" type="submit" tabindex="0" 
+          [disabled]="!isSubmissionAllowed()" 
+          [class.loading]="isSubmitting()">Sign</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<div id="filter-pills">
+  <span  *ngFor="let option of pillOptions"
+  class="pill toggle"
+  [ngClass]="{'unselected': selectedPill !== option.key}"
+  id="{{ option.key }}"
+  (click)="onPillSelect($event)">{{ option.label }}</span>
+</div>

@@ -1,0 +1,16 @@
+<div class="preview">
+  <iframe *ngIf="previewURL | async as previewURL; else loading" 
+    [src]="previewURL"
+    sandbox
+  ></iframe>
+  <ng-template #loading>
+    <div>
+      <div [class.loading]="loadingPreview()">
+      </div>
+      <button class="btn mt-xl"
+        type="retryLoading"
+        (click)="retryLoading()"
+      >Reload</button>
+    </div>
+  </ng-template>
+</div>

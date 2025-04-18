@@ -1,0 +1,25 @@
+@import "@eds/vanilla/variables/global";
+
+@statusSize: 72px;
+@statusTextSize: 14px;
+
+.status {
+  margin: @space-xxl auto @space-xxl;
+  height: @statusSize;
+  width: @statusSize;
+  font-size: @statusSize;
+  &.success {
+    &::after {
+      content: "Success";
+      position: absolute;
+      font-size: @statusTextSize;
+    }
+  }
+  &.failed {
+    &::after {
+      content: "Failed";
+      position: absolute;
+      font-size: @statusTextSize;
+    }
+  }
+}

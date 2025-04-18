@@ -1,0 +1,41 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">Clone template</div>
+      <div class="right">
+        <i #cancel class="icon icon-cross" data-close="true"></i>
+      </div>
+    </div>
+
+    <form class="eds-form form-group" [formGroup]="templateForm" (ngSubmit)="onSubmit()">
+      <div class="row form-body">
+        <div class="column sm-12">
+          <div class="form-element">
+            <label class="required" for="name">Template name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter template name"
+              class="validation fullwidth"
+              formControlName="name"
+              [class.invalid]="name.errors"
+            />
+            <span *ngIf="name.errors?.duplicate" class="validation-msg">Template with same name already added.</span>
+            <span *ngIf="name.errors?.validationFailed" class="validation-msg"
+              >Error when validating name of certificate template!</span
+            >
+            <span *ngIf="name.errors?.maxlength" class="validation-msg invalid">{{
+              'Max length of value exceeded ' + name.value?.length + '/' + name.errors?.maxlength?.requiredLength
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button class="btn primary" [ngClass]="{ loading: saving() }" [disabled]="!templateForm?.valid">Clone</button>
+      </div>
+    </form>
+  </div>
+</div>

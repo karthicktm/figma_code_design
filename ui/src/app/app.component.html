@@ -1,0 +1,209 @@
+<ng-container>
+</ng-container>
+<ng-container>
+  <header class="sysbar">
+    <div class="items-container">
+      <div class="item" routerLink="/">
+        <i class="icon icon-econ"></i>
+        <span class="product">Ericsson Customer Acceptance</span>
+        <span class="acronym"></span>
+      </div>
+    </div>
+    <div class="items-container">
+      <div class="dropdown more item hover" data-type="click" #helpDropdown>
+        <button class="btn clickable"><i class="icon icon-help"></i></button>
+        <div class="menu right">
+          <div class="item" (click)="faqLink.click()">
+            <a #faqLink [appHelpDocumentLoader]="'FAQ'" href="" target="_blank" rel="noopener noreferrer">
+              FAQs
+            </a>
+          </div>
+          <div class="item" (click)="userGuideLink.click()">
+            <a #userGuideLink [appHelpDocumentLoader]="'UserGuide'" href="" target="_blank" rel="noopener noreferrer">
+              User Guide
+            </a>
+          </div>
+          <div class="item" (click)="releaseNoteLink.click()">
+            <a #releaseNoteLink [appHelpDocumentLoader]="'ReleaseNotes'" href="" target="_blank" rel="noopener noreferrer">
+              Release notes
+            </a>
+          </div>
+          <div class="item">
+            <a appFeedbackDialog>Give feedback</a>
+          </div>
+          
+          <div class="item" (click)="supportLink.click()">
+            <a #supportLink id="raiseSupportTicket" href="" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation();">Raise support ticket</a>
+          </div>
+        </div>
+      </div>
+      <div class="item notification-log-trigger">
+        <span class="notification-log-number"></span>
+        <i class="icon icon-notification"></i>
+        <i class="icon icon-notification-ring"></i>
+      </div>
+      <div *ngIf="!(userSession.roleType.length === 1 && userSession.roleType[0] === 'Operations Admin')" class="item history-log-trigger">
+        <i class="icon icon-bookmark"></i>
+      </div>
+      <div class="item hover settings-trigger">
+        <i class="icon icon-profile"></i>
+        <span>
+          {{userSession.firstName || userSession.lastName ? userSession.firstName + ' ' + userSession.lastName: userSession.emailId}}
+        </span>
+      </div>
+    </div>
+  </header>
+  <main>
+    <aside class="syspanel hidden">
+      <div class="settings">
+        <div class="syspanel-top">
+          <span class="syspanel-title"></span>
+          <i class="syspanel-close icon icon-cross"></i>
+        </div>
+        <div class="row">
+          <div class="column sm-12 container">
+
+            <div class="profile">
+              <i class="icon icon-profile"></i>
+              <div class="username">
+                {{userSession.firstName || userSession.lastName ? userSession.firstName + ' ' + userSession.lastName: userSession.emailId}}
+              </div>
+              <p class="company">Belongs to {{userSession.userType | titlecase}}</p>
+              <p class="roles">
+                My app role{{userSession.roleType?.length > 1 ? 's' : ''}}
+                <kbd
+                  title="{{RoleTooltipMapping[role]}}"
+                  *ngFor="let role of userSession.roleType"
+                  class="tag"
+                >{{role}}</kbd>
+              </p>
+              <hr>
+            </div>
+
+            <div class="content">
+              <div class="title">My settings</div>
+              <div class="item">
+                <div class="left">
+                  Switch theme
+                </div>
+                <div class="right">
+                  <eds-theme-switch [options]="{
+                                enabledState: 'Light',
+                                disabledState: 'Dark'
+                              }"
+                              (selectedTheme)="onThemeChange($event)"
+                  ></eds-theme-switch>
+                </div>
+              </div>
+              <div class="item">
+                <div class="left">
+                  <span>
+                    {{ version || '' }}
+                  </span>
+                  <kbd class="tag green"
+                    *ngIf="showAlreadyOnLatestVersionInfo | async"
+                  >
+                    <i class="icon icon-check"></i> already on latest version
+                  </kbd>
+                  <kbd class="tag blue"
+                    *ngIf="promptUpdateService.isUpdateAvailable | async"
+                  >
+                    <i class="icon icon-info"></i> Nearly up to date
+                  </kbd>
+                </div>
+                <div class="right">
+                  <button class="btn update"
+                    *ngIf="(promptUpdateService.isUpdateAvailable | async) !== true; else reloadPageButton"
+                    aria-label="Check for update"
+                    [disabled]="(promptUpdateService.isAppStable | async) === false || (showAlreadyOnLatestVersionInfo | async) === true"
+                    (click)="promptUpdateService.checkForUpdate()"
+                  >Check for update</button>
+                  <ng-template #reloadPageButton>
+                    <button class="btn update"
+                      aria-label="Reload to update"
+                      (click)="reloadPage()"
+                    >Reload to update</button>
+                  </ng-template>
+                </div>
+              </div>
+
+              <div class="item mt-bs">
+                <div class="left">
+                  Show statutory notification on startup
+                </div>
+                <div class="right">
+                  <label class="switch">
+                    <input type="checkbox" [checked]="!getLocalConfig(AppConfigKey.statutory)?.hideOnStartup" (change)="statutoryNotificationComponent.toggleHideOnStartup(!$event.target.checked)">
+                    <i class="ball"></i>
+                    <span data-enabled="Yes" data-disabled="No"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom">
+              <button type="button" class="btn big" (click)="signout()"><i class="icon icon-logout"></i> Sign out</button>
+            </div>
+            <div class="footnote text-sm">
+              <p>
+                By using ECA you agree to Ericsson's
+                <a href="https://erilink.ericsson.se/eridoc/erl/objectId/09004cff8d361458?docno=GFHR-18:002231Uen&action=current&format=pdf" target="_blank" rel="noopener noreferrer">privacy notice</a>
+                and <a href="https://www.ericsson.com/en/legal" target="_blank" rel="noopener noreferrer">terms of use</a>
+              </p>
+              <p>
+                <a href="https://www.ericsson.com/en/contact/extranet-support" target="_blank" rel="noopener noreferrer">Extranet support</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="notification-log">
+        <div class="syspanel-top">
+          <span class="syspanel-title">Notifications</span>
+          <i class="syspanel-close icon icon-cross"></i>
+        </div>
+        <div class="notification-log-container">
+          <div class="notification-log-empty">No new notifications.</div>
+        </div>
+      </div>
+      <app-recent-package-history></app-recent-package-history>      
+    </aside>
+    <div class="app" id="app">
+      <div class="notification banner stripe-green no-hover"
+        *ngIf="promptUpdateService.isUpdateAvailable | async"
+      >
+        <div class="top-row">
+          <div class="title"><i class="icon icon-reload"></i>
+            <span>
+              New app version is available.
+              <a href="" (click)="reloadPage()">Reload to update</a>.
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="notification banner stripe-red no-hover"
+        *ngIf="(promptUpdateService.unrecoverable | async) as unrecoverableMessage"
+      >
+        <div class="top-row">
+          <div class="title"><i class="icon icon-fault"></i>
+            <span>
+              {{ unrecoverableMessage }}
+              Please <a href="" (click)="reloadPage()">reload</a> the page.
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <app-statutory-notification [storageKey]="AppConfigKey.statutory"/>
+
+      <nav id="appBar" class="appbar">
+      </nav>
+      <div class="appbody">
+        <div class="appnav" (navigationState)="hideNav()"></div>
+        <div class="appcontent">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </main>
+</ng-container>

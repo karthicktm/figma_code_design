@@ -1,0 +1,88 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content">
+    <div class="top">
+      <div class="title">{{ dialogueTitle }}</div>
+    </div>
+    <div class="body">
+      <p class="section color-text">
+        Acceptance package creation status : 
+        <ng-container
+          *ngTemplateOutlet="cAdditionalMessage === 'Pending'
+          ? statusPending
+            : cAdditionalMessage === 'In progress'
+          ? statusInProgress
+            : cAdditionalMessage === 'Success'
+          ? statusCompleted
+            : statusFailed"
+        >
+        </ng-container>
+        <ng-template #statusPending>
+          <kbd class="tag big purple">Not started</kbd>
+        </ng-template>
+        <ng-template #statusInProgress>
+          <kbd class="tag big blue">In progress</kbd>
+        </ng-template>
+        <ng-template #statusCompleted>
+          <kbd class="tag big green">Success</kbd>
+        </ng-template>
+        <ng-template #statusFailed>
+          <kbd class="tag big red">Failed</kbd>
+        </ng-template>
+      </p>
+      <p class="section color-text">
+        Acceptance package submission status : 
+        <ng-container
+          *ngTemplateOutlet="sAdditionalMessage === 'Pending'
+          ? statusPending
+            : sAdditionalMessage === 'In progress'
+          ? statusInProgress
+            : sAdditionalMessage === 'Success'
+          ? statusCompleted
+            : statusFailed"
+        >
+        </ng-container>
+        <ng-template #statusPending>
+          <kbd class="tag blue">Pending</kbd>
+        </ng-template>
+        <ng-template #statusInProgress>
+          <kbd class="tag purple">In progress</kbd>
+        </ng-template>
+        <ng-template #statusCompleted>
+          <kbd class="tag green">Completed</kbd>
+        </ng-template>
+        <ng-template #statusFailed>
+          <kbd class="tag red">Failed</kbd>
+        </ng-template>
+      </p>
+      <ng-container>
+        <p class="para-center" *ngIf="!referenceDocType; else referenceBlock">{{ statusMessage }}</p>
+        @if (errorDetailList && errorDetailList.length > 0){
+          <div class="accordion" appAccordion>
+            <ul>
+              <li class="closed">
+                <div role="button" class="title" tabindex="0">View details</div>
+                <div class="content">
+                  <div *ngFor="let errorDetailLine of errorDetailList">
+                    <p>{{ errorDetailLine }}</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        }
+        <ng-template #referenceBlock>
+          <p class="para-center wrap-line" *ngIf="referenceDocType">
+            {{ textBefore }}
+            <a [appHelpDocumentLoader]="referenceDocType" href="" target="_blank" rel="noopener noreferrer">
+              {{referenceDocText}}
+            </a>
+            {{ textAfter }}
+          </p>
+        </ng-template>
+      </ng-container>    
+    </div>
+    <div class="bottom">
+      <button class="btn primary" [disabled]="show === 1" (click)="onOk()">Ok</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+@import "@eds/vanilla/variables/global";
+@import (reference, multiple) "@eds/vanilla/variables/light";
+.custom-content {
+  width: 300px;
+  .custom-body {
+    padding-top: @space-base;
+    padding-bottom: 0;
+
+    form {
+      padding-top: 0;
+
+      .rbtn-group label:not(:first-of-type){
+        padding-top: @space-base;
+      }
+    }
+  }
+
+  .new-folder {
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}

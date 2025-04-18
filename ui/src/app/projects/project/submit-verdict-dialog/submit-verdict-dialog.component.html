@@ -1,0 +1,56 @@
+<div>
+  <div #dialog class="dialog" data-type="simple">
+    <div class="content">
+      <div class="top">
+        <div class="title">Submit verdict</div>
+        <div class="right">
+          <i class="icon icon-cross" data-close="true"></i>
+        </div>
+      </div>
+
+      <div class="body">
+        <p class="section">{{message}}</p>
+
+        <div class="dropdown"
+          #selectVerdict
+          data-type="divided"
+        >
+          <div class="btns-wrap">
+            <button class="btn primary"
+              #verdict
+              name="verdict"
+              value="Approve"
+            >{{verdictButtonText}}</button>
+            <button class="btn extra primary"></button>
+          </div>
+
+          <div class="menu">
+            <div class="item"
+              *ngFor="let item of ['Approve', 'Reject']"
+              (click)="verdict.value = item; verdictButtonText = item; validateInput(requestDescription)"
+              [hidden]="verdict.value === item"
+            >{{item}}</div>
+          </div>
+        </div>
+
+        <p class="section">Comment
+          <textarea class="fullwidth"
+            id="requestDescription"
+            placeholder="Enter comment here"
+            #requestDescription
+            (keyup)="validateInput(requestDescription)"
+          ></textarea>
+        </p>
+      </div>
+
+      <div class="bottom">
+        <button class="btn ghost" data-close="true">Cancel</button>
+        <button class="btn primary"
+          data-close="true"
+          [disabled]="submitButtonDisabled"
+          (click)="sendRequest(requestDescription.value, verdict.value)"
+        >Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

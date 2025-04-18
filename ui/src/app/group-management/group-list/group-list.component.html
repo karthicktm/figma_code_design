@@ -1,0 +1,73 @@
+<div class="tile sm-12">
+  <div class="header">
+    <div class="left">
+      <div class="title">Groups</div>
+    </div>
+    <div class="right">
+      <div class="action">
+        <button class="btn primary" (click)="groupCreate()">Create new group</button>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="custom-table-wrapper">
+      <div class="loading-table-data" *ngIf="loadingTableData">
+        <div class="text-xl loading large">
+        </div>
+      </div>
+      <div class="table-top">
+        <div class="table-top-left">
+          <div class="table-info"></div>
+        </div>
+        <div class="table-top-right">
+          <div class="table-buttons">
+            <button class="btn table-filter">
+              <i class="icon icon-filter-off"></i>
+              Show column filter
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="table-middle">
+        <ng-container [ngTemplateOutlet]="filters"></ng-container>
+      </div>
+      <table id="group" class="table sortable" #group>
+      </table>
+      <div class="pagination-group">
+        <ul class="pagination"></ul>
+        <div class="actions">
+          <label class="left">Go to</label>
+          <input type="number" min="1">
+          <label class="left">Show</label>
+          <div class="select" data-type="single">
+            <button class="btn current-options">10</button>
+            <div class="options-list">
+              <div class="item active">10</div>
+              <div class="item">25</div>
+              <div class="item">50</div>
+              <div class="item">75</div>
+              <div class="item">100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #filters>
+  <p class="filter-criteria-pills" >
+    <span *ngIf="filterSortColumns.groupName.searchText" (click)="clearSelectedFilter('groupName')"
+      class="pill removable">Group name: {{ filterSortColumns.groupName.searchText }}</span>
+    <span *ngIf="filterSortColumns.projectAdmins.searchText" (click)="clearSelectedFilter('projectAdmins')"
+      class="pill removable">Group admin(s): {{ filterSortColumns.projectAdmins.searchText }}</span>
+    <span *ngIf="filterSortColumns.lastModifiedDate.searchText" (click)="clearSelectedFilter('lastModifiedDate')"
+      class="pill removable">Last modified date: {{ filterSortColumns.lastModifiedDate.searchText }}</span>
+    <span *ngIf="filterSortColumns.lastModifiedBy.searchText" (click)="clearSelectedFilter('lastModifiedBy')"
+      class="pill removable">Last modified by: {{ filterSortColumns.lastModifiedBy.searchText }}</span>
+    <span *ngIf="filterSortColumns.roleType.searchText" (click)="clearSelectedFilter('roleType')"
+      class="pill removable">Role type: {{ filterSortColumns.roleType.searchText }}</span>
+    <span *ngIf="filterSortColumns.isSoftDeleted.searchText" (click)="clearSelectedFilter('isSoftDeleted')"
+      class="pill removable">Status: {{ filterSortColumns.isSoftDeleted.searchText }}</span>
+    <a *ngIf="isFilter" (click)="clearAllFilters()"> Remove all</a>
+  </p>
+</ng-template>

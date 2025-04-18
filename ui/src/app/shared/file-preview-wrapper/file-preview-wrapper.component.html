@@ -1,0 +1,29 @@
+<div class="container"[ngClass]="{'hidden': !isLoaded || !validMimeType}">
+    <ng-container #viewContainer></ng-container>
+
+</div>
+<div *ngIf="!isLoaded"
+    class="loading medium">
+</div>
+
+<ng-container *ngIf="!validMimeType && isLoaded">
+    <div class="empty-state">
+        <div class="message">
+        <i class="icon icon-document"></i>
+        <p>
+            <span class="text-lg">{{fileName || 'File without name'}}</span>
+        </p>
+        <p>
+            <span class="section">
+            Can't preview. Use external app to open it.
+            </span>
+        </p>
+        <button class="btn"
+            [disabled]="!dataURI"
+            (click)="onDownload($event)"
+        >
+            <i class="icon icon-download-save"></i> Download
+        </button>
+        </div>
+    </div>
+</ng-container>

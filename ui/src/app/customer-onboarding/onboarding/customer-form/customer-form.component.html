@@ -1,0 +1,231 @@
+<form class="eds-form form-group" [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+  <div class="row form-body">
+    <div class="column">
+      <div class="form-group">
+        <div class="form-element">
+          <label class="required" for="customer-id">Customer ID</label>
+          <div *ngIf="isSelectableCustomerInput; else customerFreeTextInput">
+            <app-select class="select characters-30" #customerIdSelect name="customerId" data-type="single"
+              [emptySelectionText]="'Select customer'" [optionsWithValue]="customerOptions" [selectId]="'customer-select'"
+              formControlName="customerIDInput" (selectOption)="onSelectCustomer($event)" />
+          </div>
+          <ng-template #customerFreeTextInput>
+            <input type="text"
+            id="customer-id"
+            name="customerIDInput"
+            placeholder="Enter customer id"
+            class="characters-30 validation"
+            required
+            formControlName="customerIDInput"
+            [class.invalid]="customerIDInput.errors"
+          />
+          <span *ngIf="customerIDInput.errors?.duplicate"
+            class="validation-msg">Customer with same id already added.</span>
+          <span *ngIf="customerIDInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + customerIDInput.value?.length + '/' +
+            customerIDInput.errors?.maxlength?.requiredLength}}</span>
+          </ng-template>
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="customer-name">Customer name</label>
+          <input type="text"
+            id="customer-name"
+            name="customerNameInput"
+            placeholder="Enter customer name"
+            class="characters-30"
+            required
+            formControlName="customerNameInput"
+            [class.invalid]="customerNameInput.errors"
+          />
+          <span *ngIf="customerNameInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + customerNameInput.value?.length + '/' +
+            customerNameInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+
+        <div class="form-element">
+          <label for="customer-unit">Global customer unit</label>
+          <input type="text"
+            id="customer-unit"
+            name="globalCustomerUnitInput"
+            placeholder="Enter customer unit"
+            class="characters-30"
+            formControlName="globalCustomerUnitInput"
+            [class.invalid]="globalCustomerUnitInput.errors"
+          />
+          <span *ngIf="globalCustomerUnitInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + globalCustomerUnitInput.value?.length + '/' +
+            globalCustomerUnitInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+
+        <div class="form-element">
+          <label for="customer-description">Customer description</label>
+          <input type="text"
+            id="customer-description"
+            name="customerDescriptionInput"
+            placeholder="Enter description"
+            class="characters-30"
+            formControlName="customerDescriptionInput"
+            [class.invalid]="customerDescriptionInput.errors"
+          />
+          <span *ngIf="customerDescriptionInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + customerDescriptionInput.value?.length + '/' +
+            customerDescriptionInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-group-title">Location</div>
+
+        <div class="form-element">
+          <label class="required" for="country">Country</label>
+          <div *ngIf="countries && countries.length > 0; else countryFreeTextInput">
+            <app-select class="select characters-30"
+              name="countryInput"
+              #countrySelection
+              data-type="single"
+              [emptySelectionText]="'Select country'"
+              [options]="countries"
+              [selectId]="'country'"
+              formControlName="countryInput"
+              [class.invalid]="countryInput.errors"
+            ></app-select>
+          </div>
+          <span *ngIf="customerForm.dirty && countryInput.errors"
+            class="validation-msg invalid">Select a country</span>
+          <ng-template #countryFreeTextInput>
+            <input type="text"
+              name="countryInput"
+              id="country"
+              formControlName="countryInput"
+              placeholder="Enter country"
+              class="characters-30"
+              required
+              [class.invalid]="countryInput.errors"
+            />
+          </ng-template>
+
+        </div>
+
+        <div class="form-element">
+          <label class="required" for="region">Market area</label>
+          <div>
+            <app-select class="select characters-30"
+              name="regionInput"
+              #regionSelection
+              data-type="single"
+              [emptySelectionText]="'Select market area'"
+              [options]="regions"
+              [selectId]="'region'"
+              formControlName="regionInput"
+              [class.invalid]="regionInput.errors"
+            />
+          </div>
+          <span *ngIf="customerForm.dirty && regionInput.errors"
+            class="validation-msg invalid">Select a market area</span>
+        </div>
+
+        <div class="form-element">
+          <label for="subregion">Sub-region</label>
+          <input type="text"
+            id="subregion"
+            name="subRegionInput"
+            placeholder="Enter sub-region"
+            class="characters-30"
+            formControlName="subRegionInput"
+            [class.invalid]="subRegionInput.errors"
+          />
+          <span *ngIf="subRegionInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + subRegionInput.value?.length + '/' +
+            subRegionInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+
+        <div class="form-element">
+          <label for="address">Address</label>
+          <input type="text"
+            id="address"
+            name="addressInput"
+            placeholder="Enter address"
+            class="characters-30"
+            formControlName="addressInput"
+            [class.invalid]="addressInput.errors"
+          />
+          <span *ngIf="addressInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + addressInput.value?.length + '/' +
+            addressInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+
+        <div class="form-element">
+          <label for="city">City</label>
+          <input type="text"
+            id="city"
+            name="cityInput"
+            placeholder="Enter city"
+            class="characters-30"
+            formControlName="cityInput"
+            [class.invalid]="cityInput.errors"
+          />
+          <span *ngIf="cityInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + cityInput.value?.length + '/' +
+            cityInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+
+        <div class="form-element">
+          <label for="state">State</label>
+          <input type="text"
+            id="state"
+            name="stateInput"
+            placeholder="Enter state"
+            class="characters-30"
+            formControlName="stateInput"
+            [class.invalid]="stateInput.errors"
+          />
+          <span *ngIf="stateInput.errors?.maxlength"
+            class="validation-msg invalid">{{ 'Max length of value exceeded ' + stateInput.value?.length + '/' +
+            stateInput.errors?.maxlength?.requiredLength}}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-group-title">Extended attributes</div>
+
+        <div formArrayName="extendedAttributes" class="form-element">
+          <div [formGroupName]="attrIndex"
+            class="form-element"
+            *ngFor="let attr of extendedAttributes.controls; index as attrIndex">
+            <label for="attr-{{ attrIndex }}">{{ attr.value?.attributeName }}</label>
+            <input id="attr-{{ attrIndex }}"
+              type="text"
+              name="{{ attr.value?.attributeName }}"
+              placeholder="Enter {{ attr.value?.attributeName }}"
+              class="characters-30"
+              formControlName="attributeValue"
+              [class.invalid]="attributeValue?.errors"
+            >
+            <span *ngIf="attributeValue?.errors?.maxlength"
+              class="validation-msg invalid">{{ 'Max length of value exceeded ' + attributeValue.value?.length + '/' +
+              attributeValue.errors?.maxlength?.requiredLength}}</span>
+          </div>
+        </div>
+
+        <div class="new-attr">
+          <a (click)="onNewAttributeClicked()">{{ isNew ? '-' : '+' }} New attribute</a>
+        </div>
+        <app-new-attribute *ngIf="isNew"
+          [attributeNames]="extendedAttributeNames"
+          (createdAttribute)="newAttribute($event)"
+        ></app-new-attribute>
+      </div>
+      <div class="form-footer">
+        <button *ngIf="!isEditMode"
+          class="btn ghost"
+          type="reset"
+          (click)="cancelEdit()">Reset</button>
+        <button *ngIf="!isEditMode" class="btn primary" [disabled]="!customerForm?.valid">Add</button>
+        <button *ngIf="isEditMode" class="btn" type="reset" (click)="cancelEdit()">Cancel</button>
+        <button *ngIf="isEditMode" class="btn primary" [disabled]="!customerForm?.valid">Save</button>
+      </div>
+    </div>
+  </div>
+</form>
+

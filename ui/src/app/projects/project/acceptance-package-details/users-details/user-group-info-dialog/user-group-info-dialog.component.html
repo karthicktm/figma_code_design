@@ -1,0 +1,31 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title">
+        {{groupName}}
+      </div>
+    </div>
+
+    <div class="body">
+      <ng-container *ngFor="let user of userList">
+        <div class="row">
+          <div class="column">
+            <div class="user-custom-tag">{{user.name}}
+              @let status = (!user.isSoftDeleted) ? 'Active': 'Inactive';
+              @if(status) {
+                <div class="user-tag">
+                  <kbd class="tag">{{status}}</kbd>
+                </div>
+              }
+            </div>
+            <p class="text-sm color-gray user-email">{{user.email}}</p>
+          </div>          
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="bottom">
+      <button class="btn ghost" data-close="true">Close</button>
+    </div>
+  </div>
+</div>

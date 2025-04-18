@@ -1,0 +1,6 @@
+@if (roleType() === DashboardRoleType.Approver && status()) {
+  <app-approver-packages [roleType]="roleType()" [status]="status()" [slaOverdue]="slaOverdue()" />
+}
+@else if (roleType() === DashboardRoleType.Observer && status()) {
+  <app-observer-packages [roleType]="roleType()" [status]="status()" [slaOverdue]="slaOverdue()" />
+}

@@ -1,0 +1,77 @@
+<div class="icon-wrapper" [class.horizontal]="horizontal">
+    <ng-container *ngIf="activeIcons.includes('zoom')">
+      <div class="tooltip" (click)="onZoom(typeZoomEvents.In)">
+        <i class="custom-icon icon icon-zoom-in"></i>
+        <span [class]="'message ' + tooltipClassName">Zoom the file in.</span>
+      </div>
+      <div class="tooltip" (click)="onZoom(typeZoomEvents.Out)">
+        <i class="custom-icon icon icon-zoom-out"></i>
+        <span [class]="'message ' + tooltipClassName">Zoom the file out.</span>
+      </div>
+    </ng-container>
+    <div *ngIf="activeIcons.includes('download')"
+      class="tooltip"
+      (click)="onDownload($event)"
+    >
+      <i class="custom-icon icon icon-download-save"></i>
+      <span [class]="'message ' + tooltipClassName">Download the file.</span>
+    </div>
+
+    <ng-container *ngIf="activeIcons.includes('edit')">
+      <div *ngIf="(edit | async) === false; else saveIcon"
+        class="tooltip"
+        (click)="onEdit($event)"
+      >
+        <i class="custom-icon icon icon-edit"></i>
+        <span [class]="'message ' + tooltipClassName">Edit markers.</span>
+      </div>
+
+      <ng-template #saveIcon>
+        <div
+          class="tooltip"
+          (click)="onSave($event)"
+        >
+          <i class="custom-icon icon icon-save"></i>
+          <span [class]="'message ' + tooltipClassName">Save markers.</span>
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <div *ngIf="activeIcons.includes('maximize') && !maximized"
+      class="tooltip"
+      (click)="onMaximize($event)"
+    >
+      <i class="custom-icon icon icon-maximize"></i>
+      <span [class]="'message ' + tooltipClassName">Maximize the file.</span>
+    </div>
+    <div *ngIf="maximized"
+      class="tooltip"
+      (click)="onMinimize($event)"
+    >
+      <i class="custom-icon icon icon-minimize"></i>
+      <span [class]="'message ' + tooltipClassName">Minimize the file.</span>
+    </div>
+
+    <div *ngIf="activeIcons.includes('thumbnail')"
+      class="tooltip"
+      (click)="onSwitchThumbnail($event)"
+    >
+      <i class="custom-icon icon icon-view-tiles"></i>
+      <span [class]="'message ' + tooltipClassName">Switch to thumbnail view.</span>
+    </div>
+    <div *ngIf="activeIcons.includes('list')"
+      class="tooltip"
+      (click)="onSwitchList($event)"
+    >
+      <i class="custom-icon icon icon-view-list"></i>
+      <span [class]="'message ' + tooltipClassName">Switch to list view.</span>
+    </div>
+
+    <div *ngIf="activeIcons.includes('delete')"
+      class="tooltip"
+      (click)="onDelete($event)"
+    >
+      <i class="custom-icon icon icon-trashcan"></i>
+      <span [class]="'message ' + tooltipClassName">Delete the file.</span>
+    </div>
+  </div>

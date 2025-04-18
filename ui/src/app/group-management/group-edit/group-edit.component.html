@@ -1,0 +1,44 @@
+<div class="row" id="component-root">
+  <div class="column tile">
+    <div class="title">{{ groupDetails?.groupName }}</div>
+    <div class="header-attributes-display">
+      <div class="attributes">
+        <div class="mr-lg">Role type: <span class="section">{{ groupDetails?.roleType? groupDetails.roleType : "--"
+            }}</span></div>
+        <div class="mr-lg">Created date: <span class="section">{{ (groupDetails?.createdDate | nullStringDate) || "--"
+            }}</span></div>
+        <div class="mr-lg">Created by: <span class="section">{{ groupDetails?.createdBy || "--" }}</span></div>
+        <div class="mr-lg">Last modified date: <span class="section">{{ (groupDetails?.lastModifiedDate |
+            nullStringDate)
+            || "--" }}</span></div>
+        <div class="mr-lg">Last modified by: <span class="section">{{ groupDetails?.lastModifiedBy || "--" }}</span>
+        </div>
+      </div>
+      <div class="label-status operation-status-label mt-bs">Status</div>
+      <div class="action switch-action operation-status">
+        <label class="switch mt-bs">
+          <input type="checkbox" (click)="openStatusChangeConfirmationDialog($event)"
+            [checked]="!groupDetails?.isSoftDeleted && !isSoftDeletedGroup"
+            [disabled]="!isEditable || groupDetails?.isSoftDeleted" />
+          <i class="ball"></i>
+          <span data-enabled="Active" data-disabled="Inactive"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="row full-height">
+      <div class="column sm-12 xl-5" *ngIf="groupDetails && adminListOption">
+        <app-group-details [selectedGroup]="groupDetails" [isEditable]="isEditable" [userList]="userList"
+          [adminListOption]="adminListOption" [isSoftDeletedGroup]="isSoftDeletedGroup"
+          (updateUsers)="updateUsers($event)">
+        </app-group-details>
+      </div>
+      <div class="column sm-12 xl-7" *ngIf="groupDetails && userListOption">
+        <app-group-user [selectedGroup]="groupDetails" [isEditable]="isEditable" [isInitEditing]="isInitEditing"
+          [isSoftDeletedGroup]="isSoftDeletedGroup" [userList]="userList" [userListOption]="userListOption"
+          (updateUsers)="updateUsers($event)"></app-group-user>
+      </div>
+    </div>
+  </div>
+</div>

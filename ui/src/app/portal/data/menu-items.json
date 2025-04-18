@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Home",
+    "uri": "home"
+  },
+  {
+    "title": "Configuration management",
+    "uri": "configuration-management",
+    "canViewPermission": "view-configuration-management-menu"
+  },
+  {
+    "title": "User management",
+    "uri": "user-management",
+    "canViewPermission": "user-management"
+  },
+  {
+    "title": "Customer onboarding",
+    "uri": "customer-onboarding",
+    "canViewPermission": "customer-onboarding"
+  },
+  {
+    "title": "Project onboarding",
+    "uri": "project-onboarding",
+    "canViewPermission": "view-project-onboarding-menu-item"
+  },
+  {
+    "title": "Reports",
+    "uri": "reports",
+    "requiredPermission": "reports",
+    "canViewPermission": "view-reports-menu-item"
+  },
+  {
+    "title": "My dashboard",
+    "uri": "dashboard",
+    "canViewPermission": "view-dashboard-menu-item"
+  },
+  {
+    "title": "My tasks",
+    "uri": "task-summary",
+    "requiredPermission": "disabled",
+    "canViewPermission": "view-task-summary-menu-item"
+  },  
+  {
+    "title": "Define projects",
+    "uri": "projects",
+    "requiredPermission": "disabled projects",
+    "canViewPermission": "view-define-project"
+  },
+  {
+    "title": "Group management",
+    "uri": "group-management",
+    "canViewPermission": "group-management"
+  },
+  {
+    "title": "My projects",
+    "uri": "projects",
+    "canViewPermission": "view-projects-menu-item"
+  },
+  {
+    "title": "Audit",
+    "uri": "audit",
+    "canViewPermission": "view-audit-report-menu-item"
+  },
+  {
+    "title": "Health check",
+    "uri": "health-check",
+    "canViewPermission": "view-health-check-menu-item"
+  },
+  {
+    "title": "Workflows",
+    "uri": "workflows",
+    "canViewPermission": "view-workflows-menu-item"
+  }
+]

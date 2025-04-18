@@ -1,0 +1,45 @@
+<div class="tile h-100">
+<div class="table-top">
+  <div class="table-top-left">
+    <div class="table-info">1-10</div>
+  </div>
+  <div class="table-top-right">
+    <div class="table-info">
+      <div class="custom-switch">
+      <label>Link rejected evidences with new one</label>
+      <label class="switch">
+        <input
+          type="checkbox"
+          [formControl]="packageForm.controls.linkWithRejectedComponentEvidence"
+        >
+        <i class="ball"></i>
+      </label>
+      </div>
+    </div>
+  </div>
+</div>
+<table id="expandable-example" class="table" #packageComponentTable></table>
+<div class="table-bottom">
+  <div class="pagination-group">
+    <ul class="pagination"></ul>
+
+    <div class="actions">
+      <label class="left">Go to</label>
+      <input type="number" min="1">
+
+      <label class="left">Show</label>
+      <div class="select" data-type="single">
+        <button class="btn current-options">10</button>
+
+        <div class="options-list">
+          <div class="item active">10</div>
+          <div class="item">25</div>
+          <div class="item">50</div>
+          <div class="item">75</div>
+          <div class="item">100</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

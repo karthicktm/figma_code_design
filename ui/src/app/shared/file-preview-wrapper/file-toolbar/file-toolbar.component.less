@@ -1,0 +1,30 @@
+@import "@eds/vanilla/variables/global";
+
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  .icon-wrapper {
+    background-color: @gray-31;
+  }
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  .icon-wrapper {
+    background-color: @gray-92;
+  }
+}
+
+.icon-wrapper{
+  margin-right: @space-xxl;
+  height: fit-content;
+  &.horizontal {
+    display: flex;
+  }
+  .custom-icon{
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+  }
+}

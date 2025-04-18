@@ -1,0 +1,55 @@
+@import "@eds/vanilla/variables/global";
+:host-context(.dark) {
+  @import (reference, multiple) "@eds/vanilla/variables/dark";
+
+  @border-color: @multi-panel-tile-border;
+  .mixin();
+}
+
+:host-context(.light) {
+  @import (reference, multiple) "@eds/vanilla/variables/light";
+
+  @border-color: @multi-panel-tile-border;
+  .mixin();
+}
+
+.full-height {
+  height: calc(100vh - 200px);
+}
+
+.label-status {
+  display: inline-block;
+  font-size: 14px;
+}
+
+.switch-action {
+  width: 80px;
+  text-align: left;
+}
+
+.mixin() {
+  .action {
+    .separator {
+      margin: 0 @space-base;
+      border-right: solid 1px @border-color;
+    }
+  }
+}
+
+.header-attributes-display {
+  display: flex;
+  align-items: center;
+}
+
+.attributes {
+  display: flex;
+  flex: 0.9
+}
+
+.operation-status-label {
+  flex: 0.025
+}
+
+.operation-status {
+  flex: 0.075
+}

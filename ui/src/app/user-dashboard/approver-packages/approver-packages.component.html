@@ -1,0 +1,11 @@
+@if (fetchPageHandler) {
+  <app-table-server-side-pagination
+    [limit]="limit"
+    [filterSortColumns]="filterSortColumns"
+    [tableHeightStyleProp]="tableHeightStyleProp"
+    [columnsProperties]="columnsProperties"
+    [tableRowNumSelectOptions]="tableRowNumSelectOptions"
+    [fetchPageHandler]="fetchPageHandler"
+    [tableType]="tableType"
+  />
+}

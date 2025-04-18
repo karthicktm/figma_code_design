@@ -1,0 +1,124 @@
+<div #dialog
+  class="dialog"
+  data-type="simple">
+  <div class="content">
+
+    <form class="eds-form"
+      (ngSubmit)="onSubmit()"
+      [formGroup]="form">
+      <div class="form-header">
+        <div class="title">
+          Onboard user(s)/group(s)
+        </div>
+        <button class="btn-icon"
+          data-close="true">
+          <i class="icon icon-cross"></i>
+        </button>
+      </div>
+
+      <div class="form-body">
+
+        <div class="form-group">
+          <div class="form-group-title"></div>
+          <p>You can add multiple users for a specific role.</p>
+
+          <div class="form-element">
+            <label class="required"
+              for="role-select">Role type</label>
+            <app-select class="select"
+              name="role"
+              data-type="single"
+              [emptySelectionText]="'Select role'"
+              [options]="roles"
+              [selectId]="'role-select'"
+              formControlName="role"></app-select>
+          </div>
+
+          <div class="empty-state"
+            *ngIf="errorOnLoadingUsers || errorOnLoadingGroups">
+            <div class="message">
+              <p *ngIf="errorOnLoadingUsers">Failed to load the enrolled users.</p>
+              <p *ngIf="errorOnLoadingGroups">Failed to load the enrolled groups.</p>
+              <button class="btn"
+                type="retryLoading"
+                (click)="retryLoading()">Reload</button>
+            </div>
+          </div>
+
+          <div class="form-element">
+            <label for="users">Select user(s)</label>
+            @let userOptions = users | async;
+            @if (form.controls.role.value && userOptions) {
+              @if (userOptions.length > 0) {
+                <app-select-multi-input class="select fullwidth"
+                  name="users"
+                  data-type="input-multi"
+                  [placeholder]="'Select users'"
+                  [optionsWithValue]="userOptions"
+                  [selectId]="'users'"
+                  formControlName="users"
+                  (selectOption)="onSelectUser($event)"/>
+              } @else {
+                <ng-container [ngTemplateOutlet]="noDataInput" [ngTemplateOutletContext]="{$implicit: 'user'}"></ng-container>
+              }
+            } @else {
+              <ng-container [ngTemplateOutlet]="freeTextInput"></ng-container>
+            }
+          </div>
+
+          <div class="form-element">
+            <label for="groups">Select group(s)</label>
+            @let groupOptions = groups | async;
+            @if (form.controls.role.value && groupOptions) {
+              @if (groupOptions.length > 0) {
+                <app-select-multi-input class="select fullwidth"
+                  name="groups"
+                  data-type="input-multi"
+                  [placeholder]="'Select groups'"
+                  [optionsWithValue]="groupOptions"
+                  [selectId]="'groups'"
+                  formControlName="groups"
+                  (selectOption)="onSelectGroup($event)"/>
+              } @else {
+                <ng-container [ngTemplateOutlet]="noDataInput" [ngTemplateOutletContext]="{$implicit: 'group'}"></ng-container>
+              }
+            } @else {
+              <ng-container [ngTemplateOutlet]="freeTextInput"></ng-container>
+            }
+          </div>
+
+          <ng-template #freeTextInput>
+            <input type="text"
+              id="users"
+              [placeholder]="loadingUsers || loadingGroups ? 'loading...' : 'No option available... Select a role first.'"
+              class="fullwidth"
+              disabled />
+          </ng-template>
+
+          <ng-template #noDataInput let-type>
+            <input type="text"
+              id="users"
+              [placeholder]="'No ' + type + ' available.'"
+              class="fullwidth"
+              disabled />
+          </ng-template>
+
+          <span *ngIf="form.errors?.users || form.errors?.groups"
+            class="validation-msg invalid">Select at least one user or group.</span>
+
+        </div>
+
+      </div>
+
+      <div class="form-footer">
+        <button class="btn ghost"
+          data-close="true">Cancel</button>
+        <button class="btn primary"
+          type="submit"
+          [disabled]="!form?.dirty || form?.errors || form?.controls.role.errors">Onboard</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

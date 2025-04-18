@@ -1,0 +1,275 @@
+diff --git a/node_modules/@eds/vanilla/breadcrumb/Breadcrumb.js b/node_modules/@eds/vanilla/breadcrumb/Breadcrumb.js
+index d930b50..cd9964c 100644
+--- a/node_modules/@eds/vanilla/breadcrumb/Breadcrumb.js
++++ b/node_modules/@eds/vanilla/breadcrumb/Breadcrumb.js
+@@ -1,4 +1,4 @@
+-import { Menu } from '../../vanilla-components/dropdown/Menu';
++import { Menu } from '../dropdown/Menu';
+ 
+ /**
+  * Class representing breadcrumbs.
+diff --git a/node_modules/@eds/vanilla/notification-log/NotificationLog.js b/node_modules/@eds/vanilla/notification-log/NotificationLog.js
+index 5b9d41d..45b65a7 100644
+--- a/node_modules/@eds/vanilla/notification-log/NotificationLog.js
++++ b/node_modules/@eds/vanilla/notification-log/NotificationLog.js
+@@ -41,7 +41,8 @@ export const NotificationLog = {
+     };
+     this.events = {
+       toggleSyspanel: new CustomEvent('toggleSyspanel', { detail: this.dom.notificationLog }),
+-      NotificationLogCounterUpdate: new CustomEvent('NotificationLogCounterUpdate')
++      NotificationLogCounterUpdate: new CustomEvent('NotificationLogCounterUpdate'),
++      NotificationLogCounterUpdated: new CustomEvent('NotificationLogCounterUpdated'),
+     };
+     this.notificationTimeout = 10000;
+     this._addEventListeners();
+@@ -119,13 +120,26 @@ export const NotificationLog = {
+    * @param {boolean} notifications[].isNew
+    */
+   loadNotificationLog(notifications) {
+-    notifications.forEach((notification) => {
+-      if (notification.isNew) {
+-        this.state.isNew += 1;
+-        this._showLiveNotification(notification);
++    notifications.forEach((notification, index, notificationsArray) => {
++      const loadedNotificationIndex = this.state.notifications.findIndex(loadedNotification => {
++        return loadedNotification.id === notification.id;
++      });
++      if (loadedNotificationIndex > -1) {
++        if (notification.isNew === false && this.state.notifications[loadedNotificationIndex].isNew) {
++          this.state.isNew -= 1;
++          index === notificationsArray.length + 1
++          ? this._markAsSeen(this.state.notificationsDOM[loadedNotificationIndex])
++          : this._markAsSeen(this.state.notificationsDOM[loadedNotificationIndex], false);
++        }
++      }
++      else {
++        if (notification.isNew) {
++          this.state.isNew += 1;
++          this._showLiveNotification(notification);
++        }
++        this.state.notifications.push(notification);
++        this._prependToLog(notification);
+       }
+-      this.state.notifications.push(notification);
+-      this._prependToLog(notification);
+     });
+ 
+     this._updateCounter();
+@@ -312,7 +326,7 @@ export const NotificationLog = {
+    * @private
+    * @param {HTMLElement} item Notification DOM element.
+    */
+-  _markAsSeen(item) {
++  _markAsSeen(item, promoteCounterUpdated = true) {
+     if (!item.classList.contains('new')) {
+       return;
+     }
+@@ -321,6 +335,8 @@ export const NotificationLog = {
+ 
+     // Update state of related notification object
+     this.state.notifications[item.dataset.index].isNew = false;
++    if (promoteCounterUpdated)
++    window.dispatchEvent(this.events.NotificationLogCounterUpdated);
+   },
+ 
+   /**
+@@ -329,7 +345,9 @@ export const NotificationLog = {
+    */
+   _markAllAsSeen() {
+     for (let i = 0; i < this.state.notificationsDOM.length; i += 1) {
+-      this._markAsSeen(this.state.notificationsDOM[i]);
++      i === this.state.notificationsDOM.length -1
++      ? this._markAsSeen(this.state.notificationsDOM[i])
++      : this._markAsSeen(this.state.notificationsDOM[i], false);
+     }
+   },
+ 
+diff --git a/node_modules/@eds/vanilla/notification/notification.less b/node_modules/@eds/vanilla/notification/notification.less
+index 6950f68..9605fbd 100644
+--- a/node_modules/@eds/vanilla/notification/notification.less
++++ b/node_modules/@eds/vanilla/notification/notification.less
+@@ -8,7 +8,7 @@
+   position: absolute;
+   top: 64px;
+   right: 16px;
+-  z-index: 10;
++  z-index: 1010;
+   width: 380px;
+ }
+ 
+diff --git a/node_modules/@eds/vanilla/pagination/Pagination.js b/node_modules/@eds/vanilla/pagination/Pagination.js
+index feedd03..b2e3356 100644
+--- a/node_modules/@eds/vanilla/pagination/Pagination.js
++++ b/node_modules/@eds/vanilla/pagination/Pagination.js
+@@ -203,7 +203,8 @@ export class Pagination {
+ 
+   _calcNumPages() {
+     // Pagination should have at least 1 page
+-    return Math.ceil(this.state.numEntries / this.state.numPerPage) || 1;
++    const numPerPage = (this.state.numPerPage === 0) ? 1 : this.state.numPerPage;
++    return Math.ceil(this.state.numEntries / numPerPage) || 1;
+   }
+ 
+   /**
+diff --git a/node_modules/@eds/vanilla/select/Select.js b/node_modules/@eds/vanilla/select/Select.js
+index 4222d43..5a14f9e 100644
+--- a/node_modules/@eds/vanilla/select/Select.js
++++ b/node_modules/@eds/vanilla/select/Select.js
+@@ -585,7 +585,14 @@ export class Select {
+       eventTarget = evt.target;
+     }
+ 
+-    this._selectOption(eventTarget);
++    /* <-- Patch to allow disabled options for type multi */
++    let allowSelectOption = true;
++    if (this.type === 'multi') {
++      const input = eventTarget.querySelector('input');
++      if (input) allowSelectOption = input.disabled !== true;
++    }
++    if (allowSelectOption) this._selectOption(eventTarget);
++    /* Patch to allow disabled options for type multi --> */
+   }
+ 
+   /**
+@@ -959,6 +966,10 @@ export class Select {
+         if (item.classList.contains('active')) {
+           this._selectOption(item);
+         }
++        else {
++          const inputElement = item.querySelector('input')
++          if (inputElement) inputElement.checked = false;
++        }
+       }
+     }
+   }
+@@ -981,7 +992,7 @@ export class Select {
+     // Remove displayed value
+     switch (this.type) {
+       case 'single':
+-        this.dom.current.innerText = this.defaultText;
++        // this.dom.current.innerText = this.defaultText;
+         break;
+       case 'input-single':
+         this.dom.input.value = null;
+diff --git a/node_modules/@eds/vanilla/table/Table.d.ts b/node_modules/@eds/vanilla/table/Table.d.ts
+index 9b92e9e..e0c379c 100644
+--- a/node_modules/@eds/vanilla/table/Table.d.ts
++++ b/node_modules/@eds/vanilla/table/Table.d.ts
+@@ -26,7 +26,7 @@ interface CurrentSort {
+ }
+ 
+ export declare class Table {
+-  private dom: {
++  dom: {
+     table: HTMLElement;
+   };
+   private listeners: {
+@@ -46,7 +46,9 @@ export declare class Table {
+   private currentSort: Array<CurrentSort>;
+ 
+   data: [];
++  features: TableAbstractFeature[];
+   selected: [];
++  onChangedFilter: (a: any, b: any) => void;
+ 
+   constructor(element: HTMLElement, options: Object);
+ 
+diff --git a/node_modules/@eds/vanilla/table/Table.js b/node_modules/@eds/vanilla/table/Table.js
+index fc48602..69780a2 100644
+--- a/node_modules/@eds/vanilla/table/Table.js
++++ b/node_modules/@eds/vanilla/table/Table.js
+@@ -437,18 +437,15 @@ export class Table {
+       return;
+     }
+ 
+-    if (!this.dom.tfilter) {
+-      this.dom.tfilter = document.createElement('tbody');
+-      this.dom.tfilter.classList.add('filters');
+-      this.dom.table.append(this.dom.tfilter);
+-    }
++    this.dom.tfilter = document.createElement('tr');
++    this.dom.tfilter.classList.add('filters');
++    this.dom.thead.append(this.dom.tfilter);
+ 
+     while (this.dom.tfilter.firstChild) {
+       this.dom.tfilter.removeChild(this.dom.tfilter.lastChild);
+     }
+ 
+-    const tr = document.createElement('tr');
+-    this.dom.tfilter.append(tr);
++    const tr = this.dom.tfilter;
+ 
+     if (this.settings.selectable === 'multi') {
+       const td = document.createElement('td');
+diff --git a/node_modules/@eds/vanilla/table/common.less b/node_modules/@eds/vanilla/table/common.less
+index c8d3b2d..6048300 100644
+--- a/node_modules/@eds/vanilla/table/common.less
++++ b/node_modules/@eds/vanilla/table/common.less
+@@ -123,10 +123,11 @@
+   overflow-y: auto;
+   border-bottom: 1px solid @table-outer-gray; // always show bottom border
+ 
+-  .table {
+-    th {
+-      position: sticky;
+-      top: 0;
++  .table thead {
++    position: sticky;
++    top: 0;
++    z-index: 1;
++    th, td {
+       border-bottom: none;
+       box-shadow: inset 0 -1px @table-outer-gray;
+       background: @layer2; // same as tile color
+diff --git a/node_modules/@eds/vanilla/table/filters.less b/node_modules/@eds/vanilla/table/filters.less
+index 983143f..2d774a8 100644
+--- a/node_modules/@eds/vanilla/table/filters.less
++++ b/node_modules/@eds/vanilla/table/filters.less
+@@ -3,17 +3,16 @@
+     border-bottom: none;
+   }
+ 
+-  tbody.filters > tr:hover {
++  thead > tr.filters:hover {
+     background-color: transparent;
+   }
+ 
+-  tbody.filters tr:last-child td {
+-    border-bottom: 1px solid @table-outer-gray;
++  thead tr.filters:last-child td {
+     padding-top: 8px;
+     padding-bottom: 8px;
+   }
+ }
+ 
+-.table tbody.filters.hidden {
++.table thead tr.filters.hidden {
+   display: none;
+ }
+\ No newline at end of file
+diff --git a/node_modules/@eds/vanilla/wizard/Wizard.d.ts b/node_modules/@eds/vanilla/wizard/Wizard.d.ts
+index a4dde8d..20e77d7 100644
+--- a/node_modules/@eds/vanilla/wizard/Wizard.d.ts
++++ b/node_modules/@eds/vanilla/wizard/Wizard.d.ts
+@@ -10,7 +10,7 @@ export declare class Wizard {
+     footer: HTMLElement;
+   };
+ 
+-  private steps: WizardSteps;
++  steps: WizardSteps;
+   private content: WizardContent;
+   private footer: WizardFooter;
+ 
+diff --git a/node_modules/@eds/vanilla/wizard/scripts/WizardSteps.d.ts b/node_modules/@eds/vanilla/wizard/scripts/WizardSteps.d.ts
+index bbcac97..321fb8e 100644
+--- a/node_modules/@eds/vanilla/wizard/scripts/WizardSteps.d.ts
++++ b/node_modules/@eds/vanilla/wizard/scripts/WizardSteps.d.ts
+@@ -24,7 +24,7 @@ export declare class WizardSteps {
+     updateScenario: () => void;
+     steps: (() => void)[];
+   };
+-  private state: WizardStepState;
++  state: WizardStepState;
+   private scenario: number;
+   private type: string;
+   private events: {

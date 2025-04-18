@@ -1,0 +1,20 @@
+@import "@eds/vanilla/variables/global";
+
+.container {
+  display: grid;
+  align-content: space-evenly;
+  height: calc(100% - @space-large);
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: auto 10%;
+  }
+}
+
+.custom-row::ng-deep{
+  padding-top: @space-large;
+  display: flex;
+  justify-content: flex-start;
+}

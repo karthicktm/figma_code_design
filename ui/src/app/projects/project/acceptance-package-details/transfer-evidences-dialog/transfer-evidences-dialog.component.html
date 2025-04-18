@@ -1,0 +1,51 @@
+<div #dialog class="dialog" data-type="simple">
+  <div class="content custom-content">
+    <div class="top">
+      <div class="title"> Transfer evidence </div>
+      <div class="right">
+        <i class="icon icon-cross" (click)="onCancel()"></i>
+      </div>
+    </div>
+
+    <div class="body">
+      <p class="section pt-0">Once the transfer process is initiated, 
+        an Acceptance Summary Report will be generated in the backend and 
+        included in the collated zip file for transfer.</p>
+      <div class="tabs" #tabs>
+        <div class="custom-tab-header">
+          <div class="titles">
+            @for (tab of tabConfigs; track $index) {
+              <div
+                class="title"
+                [class.selected]="targetTab === tab.name"
+                (click)="openTab(tab.name)"
+                tabindex="0"
+              >
+                {{ tab.name }}
+              </div>
+            }
+          </div>
+          <div class="counter pr-bs">Selected evidences/reports: {{selectedCount}}</div>
+        </div>
+
+        <div class="contents">
+          @for (tab of tabConfigs; track $index) {
+            <div class="content" [class.selected]="targetTab===tab.name">
+              @if (tab.type.includes('PackageReport')) {
+                <app-transfer-reports-table [name]="tab.name" [type]="tab.type" (onSelect)="onSelect($event, tab.name)" />
+              }
+              @else {
+                <app-transfer-evidences-table [packageId]="inputData.packageId" [name]="tab.name" [type]="tab.type" (onSelect)="onSelect($event, tab.name)" />
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <button class="btn" (click)="onCancel()">Cancel</button>
+      <button class="btn primary" [disabled]="selectedCount<=0 || submitting()" [class.loading]="submitting()" (click)="onSubmit()">Transfer</button>
+    </div>
+  </div>
+</div>
