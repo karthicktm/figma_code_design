@@ -32,7 +32,7 @@ export class CodeGenerationAgent {
   ): Promise<CodeGenerationResult> {
     try {
       this.updateProgress(5);
-      
+      console.log("Inside progress 5")
       // Get the specific node details if a node ID is selected
       let targetComponents = componentRecognition.components;
       if (this.selectedNodeId) {

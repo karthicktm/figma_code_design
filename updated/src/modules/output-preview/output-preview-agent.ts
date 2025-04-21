@@ -14,6 +14,45 @@ export class OutputPreviewAgent {
     this.onProgress = onProgress;
   }
   
+  private createIndexHtml(): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>${this.projectName || "EDS Angular App"}</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>`;
+  }
+
+  private generateMainTs(): string {
+    return `import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+`;
+  }
+
+  private getKebabCase(str: string): string {
+    return str
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+  }
   async execute(codeGeneration: CodeGenerationResult): Promise<OutputResult> {
     try {
       this.updateProgress(5);
@@ -65,7 +104,7 @@ export class OutputPreviewAgent {
     
     // Add main application files
     projectStructure.push(
-      { path: 'src/index.html', content: this.generateIndexHtml() },
+      { path: 'src/index.html', content: this.createIndexHtml() },
       { path: 'src/main.ts', content: this.generateMainTs() },
       { path: 'src/app/app.module.ts', content: project.appModule || 'export {}' },
       { path: 'src/app/app.component.ts', content: project.appComponent || 'export {}' },
@@ -115,7 +154,7 @@ export class OutputPreviewAgent {
     
     // Add all files to the ZIP
     projectStructure.forEach(file => {
-      rootFolder.file(file.path, file.content);
+        rootFolder?.file(file.path, file.content);
     });
     
     // Generate ZIP file as a Blob
@@ -130,10 +169,11 @@ export class OutputPreviewAgent {
     // For now, we'll just return a mock URL or data URI with a simple preview
     
     // Generate a basic HTML preview
-    const previewHtml = this.generatePreviewHtml(codeGeneration);
+   // const previewHtml = this.generatePreviewHtml(codeGeneration);
     
     // Create a data URI from the HTML
-    return `data:text/html;charset=utf-8,${encodeURIComponent(previewHtml)}`;
+    //return `data:text/html;charset=utf-8,${encodeURIComponent(previewHtml)}`;
+    return "todo"
   }
   
   private generatePackageJson(): string {
