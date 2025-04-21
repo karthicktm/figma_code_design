@@ -580,17 +580,86 @@ runAssetManagerAgent: async (designInputResult: any) => {
     }
   })),
   runCodeGenerationAgent: async (componentResult: any, styleResult: any) => {
-    // We'll implement this when we build the Code Generation module
-    set(state => ({
-      codeGeneration: {
-        ...state.codeGeneration,
-        status: AgentStatus.Running,
-        progress: 0,
-        error: null
-      }
-    }));
-    // Placeholder for actual implementation
-    console.log("Code Generation Agent would run here");
+    const { codeGeneration, designInput } = get();
+    const { azureEndpoint, apiKey, deploymentName } = codeGeneration;
+    const { fileId } = designInput;
+    
+    // Validate inputs
+    if (!componentResult || !styleResult) {
+      set(state => ({
+        codeGeneration: {
+          ...state.codeGeneration,
+          status: AgentStatus.Error,
+          error: 'Component recognition and style extraction results are required'
+        }
+      }));
+      return;
+    }
+    
+    if (!azureEndpoint || !apiKey) {
+      set(state => ({
+        codeGeneration: {
+          ...state.codeGeneration,
+          status: AgentStatus.Error,
+          error: 'Azure OpenAI endpoint and API key are required'
+        }
+      }));
+      return;
+    }
+    
+    try {
+      // Set state to running
+      set(state => ({
+        codeGeneration: {
+          ...state.codeGeneration,
+          status: AgentStatus.Running,
+          progress: 0,
+          error: null,
+          result: null
+        }
+      }));
+      
+      // Import dynamically to avoid server-side errors
+      const { CodeGenerationAgent } = await import('@/modules/code-generation/code-generation-agent');
+      
+      // Create agent with progress tracking
+      const agent = new CodeGenerationAgent(
+        apiKey,
+        azureEndpoint,
+        deploymentName,
+        fileId,
+        (progress) => {
+          set(state => ({
+            codeGeneration: {
+              ...state.codeGeneration,
+              progress
+            }
+          }));
+        }
+      );
+      
+      // Execute agent
+      const result = await agent.execute(componentResult, styleResult);
+      
+      // Update state with result
+      set(state => ({
+        codeGeneration: {
+          ...state.codeGeneration,
+          status: AgentStatus.Complete,
+          progress: 100,
+          result
+        }
+      }));
+    } catch (error) {
+      // Handle errors
+      set(state => ({
+        codeGeneration: {
+          ...state.codeGeneration,
+          status: AgentStatus.Error,
+          error: error instanceof Error ? error.message : 'An unknown error occurred'
+        }
+      }));
+    }
   },
   setCodeGenerationProgress: (progress: number) => set(state => ({
     codeGeneration: {
@@ -604,17 +673,74 @@ runAssetManagerAgent: async (designInputResult: any) => {
   
   // Output Preview actions
   runOutputPreviewAgent: async (codeResult: any) => {
-    // We'll implement this when we build the Output Preview module
-    set(state => ({
-      outputPreview: {
-        ...state.outputPreview,
-        status: AgentStatus.Running,
-        progress: 0,
-        error: null
-      }
-    }));
-    // Placeholder for actual implementation
-    console.log("Output Preview Agent would run here");
+    const { outputPreview, projectName } = get();
+    
+    // Validate inputs
+    if (!codeResult) {
+      set(state => ({
+        outputPreview: {
+          ...state.outputPreview,
+          status: AgentStatus.Error,
+          error: 'Code generation result is required'
+        }
+      }));
+      return;
+    }
+    
+    try {
+      // Set state to running
+      set(state => ({
+        outputPreview: {
+          ...state.outputPreview,
+          status: AgentStatus.Running,
+          progress: 0,
+          error: null,
+          result: null,
+          downloadUrl: null
+        }
+      }));
+      
+      // Import dynamically to avoid server-side errors
+      const { OutputPreviewAgent } = await import('@/modules/output-preview/output-preview-agent');
+      
+      // Create agent with progress tracking
+      const agent = new OutputPreviewAgent(
+        projectName,
+        (progress) => {
+          set(state => ({
+            outputPreview: {
+              ...state.outputPreview,
+              progress
+            }
+          }));
+        }
+      );
+      
+      // Execute agent
+      const result = await agent.execute(codeResult);
+      
+      // Update state with result
+      set(state => ({
+        outputPreview: {
+          ...state.outputPreview,
+          status: AgentStatus.Complete,
+          progress: 100,
+          result: {
+            structure: result.projectStructure.map(f => f.path).join('\n')
+          },
+          downloadUrl: result.downloadUrl
+        }
+      }));
+    } catch (error) {
+      // Handle errors
+      set(state => ({
+        outputPreview: {
+          ...state.outputPreview,
+          status: AgentStatus.Error,
+          error: error instanceof Error ? error.message : 'An unknown error occurred'
+        }
+      }));
+    }
   },
   setOutputPreviewProgress: (progress: number) => set(state => ({
     outputPreview: {

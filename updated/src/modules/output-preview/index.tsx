@@ -87,7 +87,11 @@ export function OutputPreviewModule() {
                 placeholder="eds-angular-app"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
+                disabled={isRunning || status === AgentStatus.Complete}
               />
+              <p className="text-xs text-gray-500">
+                This name will be used for the generated Angular project
+              </p>
             </div>
           </div>
           
@@ -142,10 +146,23 @@ export function OutputPreviewModule() {
               </Button>
               {downloadUrl && (
                 <Button 
-                  asChild
                   className="bg-green-600 hover:bg-green-700"
                 >
-                  <a href={downloadUrl} download>
+                  <a href={downloadUrl} download={`${projectName || 'eds-angular-app'}.zip`} className="flex items-center">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-4 w-4 mr-2" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" 
+                      />
+                    </svg>
                     Download Project
                   </a>
                 </Button>
@@ -163,7 +180,7 @@ export function OutputPreviewModule() {
       </Card>
       
       {/* Project Structure Preview */}
-      {result && result.structure && (
+      {result && (
         <Card>
           <CardHeader>
             <CardTitle>Project Structure</CardTitle>
@@ -172,7 +189,7 @@ export function OutputPreviewModule() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="font-mono text-sm whitespace-pre-wrap bg-gray-50 p-4 rounded-md">
+            <div className="font-mono text-sm whitespace-pre-wrap bg-gray-50 p-4 rounded-md overflow-auto max-h-96">
               {result.structure}
             </div>
           </CardContent>

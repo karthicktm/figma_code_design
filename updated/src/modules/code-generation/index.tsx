@@ -8,6 +8,7 @@ import { AgentStatus, useAppStore } from '@/store';
 import { ProgressIndicator } from '@/components/progress-indicator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ComponentSelector } from './component-selector';
 
 export function CodeGenerationModule() {
   const { 
@@ -23,6 +24,8 @@ export function CodeGenerationModule() {
   } = useAppStore();
   
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('configuration');
   
   const { status, progress, error, result, azureEndpoint, apiKey, deploymentName } = codeGeneration;
   const componentResult = componentRecognition.result;
@@ -32,10 +35,20 @@ export function CodeGenerationModule() {
     try {
       setIsProcessing(true);
       if (componentResult && styleResult) {
+        // Check if Azure OpenAI credentials are provided
+        if (!azureEndpoint || !apiKey) {
+          throw new Error('Azure OpenAI endpoint and API key are required');
+        }
+        
         await runCodeGenerationAgent(componentResult, styleResult);
       }
     } catch (error) {
       console.error('Code generation failed:', error);
+      // Set error display for immediate feedback
+      if (error instanceof Error) {
+        // We don't directly modify the store state here since we're handling errors in the store action
+        // This is just for UI feedback
+      }
     } finally {
       setIsProcessing(false);
     }
@@ -89,46 +102,73 @@ export function CodeGenerationModule() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Azure OpenAI Configuration */}
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="azure-endpoint">Azure OpenAI Endpoint</Label>
-              <Input
-                id="azure-endpoint"
-                placeholder="https://your-resource.openai.azure.com"
-                value={azureEndpoint}
-                onChange={(e) => setCodeGenAzureEndpoint(e.target.value)}
-              />
-            </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="configuration">Configuration</TabsTrigger>
+              <TabsTrigger value="component">Component Selection</TabsTrigger>
+            </TabsList>
             
-            <div className="grid gap-2">
-              <Label htmlFor="api-key">API Key</Label>
-              <Input
-                id="api-key"
-                type="password"
-                placeholder="Your Azure OpenAI API key"
-                value={apiKey}
-                onChange={(e) => setCodeGenApiKey(e.target.value)}
-              />
-            </div>
+            <TabsContent value="configuration">
+              {/* Azure OpenAI Configuration */}
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="azure-endpoint">Azure OpenAI Endpoint</Label>
+                  <Input
+                    id="azure-endpoint"
+                    placeholder="https://your-resource.openai.azure.com"
+                    value={azureEndpoint}
+                    onChange={(e) => setCodeGenAzureEndpoint(e.target.value)}
+                    disabled={isRunning || status === AgentStatus.Complete}
+                  />
+                  <p className="text-xs text-gray-500">
+                    Example: https://myopenai.openai.azure.com
+                  </p>
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor="api-key">API Key</Label>
+                  <Input
+                    id="api-key"
+                    type="password"
+                    placeholder="Your Azure OpenAI API key"
+                    value={apiKey}
+                    onChange={(e) => setCodeGenApiKey(e.target.value)}
+                    disabled={isRunning || status === AgentStatus.Complete}
+                  />
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor="deployment">Deployment Name</Label>
+                  <Input
+                    id="deployment"
+                    placeholder="gpt-4"
+                    value={deploymentName}
+                    onChange={(e) => setCodeGenDeploymentName(e.target.value)}
+                    disabled={isRunning || status === AgentStatus.Complete}
+                  />
+                  <p className="text-xs text-gray-500">
+                    The model deployment name in your Azure OpenAI resource (e.g., gpt-4, gpt-35-turbo)
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
             
-            <div className="grid gap-2">
-              <Label htmlFor="deployment">Deployment Name</Label>
-              <Input
-                id="deployment"
-                placeholder="gpt-4"
-                value={deploymentName}
-                onChange={(e) => setCodeGenDeploymentName(e.target.value)}
+            <TabsContent value="component">
+              <ComponentSelector 
+                componentsList={componentResult?.components || []}
+                onSelectNode={setSelectedNodeId}
               />
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
           
           {/* Status */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <div className="bg-gray-50 p-4 rounded-md">
               <h3 className="font-medium mb-2">Components</h3>
               <p className="text-sm text-gray-600">
-                {componentResult.components?.length || 0} components to generate
+                {selectedNodeId 
+                  ? '1 component selected for generation'
+                  : `${componentResult.components?.length || 0} components to generate`}
               </p>
             </div>
             
@@ -197,16 +237,108 @@ export function CodeGenerationModule() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {result.components.map((component: any, index: number) => (
-                <div key={index} className="border rounded-md p-4">
-                  <h4 className="font-medium">{component.name}</h4>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {component.files.length} files generated
-                  </p>
+            <Tabs defaultValue="components">
+              <TabsList>
+                <TabsTrigger value="components">Components</TabsTrigger>
+                <TabsTrigger value="styles">Styles</TabsTrigger>
+                <TabsTrigger value="project">Project Files</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="components" className="mt-4 space-y-4">
+                {result.components.map((component: any, index: number) => (
+                  <div key={index} className="border rounded-md p-4">
+                    <h4 className="font-medium">{component.name}</h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Type: {component.edsComponentType || 'Component'}
+                    </p>
+                    
+                    <div className="mt-2">
+                      <Label className="text-xs text-gray-500">Files:</Label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                        <div className="text-xs bg-gray-100 p-2 rounded">
+                          component.ts
+                        </div>
+                        <div className="text-xs bg-gray-100 p-2 rounded">
+                          component.html
+                        </div>
+                        <div className="text-xs bg-gray-100 p-2 rounded">
+                          component.less
+                        </div>
+                        {component.files.moduleTs && (
+                          <div className="text-xs bg-gray-100 p-2 rounded">
+                            module.ts
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="mt-2">
+                      <Label className="text-xs text-gray-500">Dependencies:</Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {component.dependencies?.map((dep: string, i: number) => (
+                          <span key={i} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                            {dep}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </TabsContent>
+              
+              <TabsContent value="styles" className="mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="border rounded-md p-4">
+                    <h4 className="font-medium mb-2">CSS Variables</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm font-mono h-40 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap">
+                        {result.styles?.variables ? result.styles.variables.substring(0, 500) + '...' : 'No variables generated'}
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4">
+                    <h4 className="font-medium mb-2">Global Styles</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm font-mono h-40 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap">
+                        {result.styles?.global ? result.styles.global.substring(0, 500) + '...' : 'No global styles generated'}
+                      </pre>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </TabsContent>
+              
+              <TabsContent value="project" className="mt-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="border rounded-md p-4">
+                    <h4 className="font-medium mb-2">App Module</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm font-mono h-40 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap">
+                        {result.project?.appModule || 'No module file generated'}
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4">
+                    <h4 className="font-medium mb-2">App Component</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm font-mono h-40 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap">
+                        {result.project?.appComponent || 'No component file generated'}
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4">
+                    <h4 className="font-medium mb-2">Routing</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm font-mono h-40 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap">
+                        {result.project?.routing || 'No routing file generated'}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       )}
