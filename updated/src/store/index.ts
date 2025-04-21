@@ -411,7 +411,7 @@ runAssetManagerAgent: async (designInputResult: any) => {
     assetManager: initialAssetManagerState
   }),
   
-// Component Recognition actions
+
 // Component Recognition actions
   runComponentRecognitionAgent: async (params: { designInput: any; assetManager: any }) => {
   // Validate inputs
@@ -488,27 +488,77 @@ runAssetManagerAgent: async (designInputResult: any) => {
   
   // Style Extraction actions
   runStyleExtractionAgent: async (designInputResult: any, componentResult: any) => {
-    // We'll implement this when we build the Style Extraction module
-    set(state => ({
-      styleExtraction: {
-        ...state.styleExtraction,
-        status: AgentStatus.Running,
-        progress: 0,
-        error: null
-      }
-    }));
-    // Placeholder for actual implementation
-    console.log("Style Extraction Agent would run here");
+    // Validate inputs
+    if (!designInputResult || !componentResult) {
+      set(state => ({
+        styleExtraction: {
+          ...state.styleExtraction,
+          status: AgentStatus.Error,
+          error: 'Design input and component recognition data are required'
+        }
+      }));
+      return;
+    }
+    
+    try {
+      // Set state to running
+      set(state => ({
+        styleExtraction: {
+          ...state.styleExtraction,
+          status: AgentStatus.Running,
+          progress: 0,
+          error: null,
+          result: null
+        }
+      }));
+      
+      // Import dynamically to avoid server-side errors
+      const { StyleExtractionAgent } = await import('@/modules/style-extraction/style-extraction-agent');
+      
+      // Create agent with progress tracking
+      const agent = new StyleExtractionAgent(
+        (progress) => {
+          set(state => ({
+            styleExtraction: {
+              ...state.styleExtraction,
+              progress
+            }
+          }));
+        }
+      );
+      
+      // Execute agent
+      const result = await agent.execute(designInputResult, componentResult);
+      
+      // Update state with result
+      set(state => ({
+        styleExtraction: {
+          ...state.styleExtraction,
+          status: AgentStatus.Complete,
+          progress: 100,
+          result
+        }
+      }));
+    } catch (error) {
+      // Handle errors
+      set(state => ({
+        styleExtraction: {
+          ...state.styleExtraction,
+          status: AgentStatus.Error,
+          error: error instanceof Error ? error.message : 'An unknown error occurred'
+        }
+      }));
+    }
   },
+  resetStyleExtraction: () => set({
+    styleExtraction: initialStyleExtractionState
+  }),
   setStyleExtractionProgress: (progress: number) => set(state => ({
     styleExtraction: {
       ...state.styleExtraction,
       progress
     }
   })),
-  resetStyleExtraction: () => set({
-    styleExtraction: initialStyleExtractionState
-  }),
   
   // Code Generation actions
   setCodeGenAzureEndpoint: (endpoint: string) => set(state => ({
