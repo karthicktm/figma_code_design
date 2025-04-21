@@ -2,7 +2,7 @@
 import React from 'react';
 import { useAppStore } from '@/store';
 
-// Import module components (we'll create these later)
+// Import module components
 import { DesignInputModule } from '@/modules/design-input';
 import { AssetManagerModule } from '@/modules/asset-manager';
 import { ComponentRecognitionModule } from '@/modules/component-recognition';

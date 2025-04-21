@@ -98,7 +98,7 @@ interface AppState {
   resetAssetManager: () => void;
   
   // Component Recognition actions
-  runComponentRecognitionAgent: (designInputResult: any) => Promise<void>;
+  runComponentRecognitionAgent: (params: { designInput: any; assetManager: any }) => Promise<void>;
   setComponentRecognitionProgress: (progress: number) => void;
   resetComponentRecognition: () => void;
   
@@ -411,29 +411,80 @@ runAssetManagerAgent: async (designInputResult: any) => {
     assetManager: initialAssetManagerState
   }),
   
-  // Component Recognition actions
-  runComponentRecognitionAgent: async (designInputResult: any) => {
-    // We'll implement this when we build the Component Recognition module
+// Component Recognition actions
+// Component Recognition actions
+  runComponentRecognitionAgent: async (params: { designInput: any; assetManager: any }) => {
+  // Validate inputs
+  if (!params.designInput) {
+    set(state => ({
+      componentRecognition: {
+        ...state.componentRecognition,
+        status: AgentStatus.Error,
+        error: 'Design input data is required'
+      }
+    }));
+    return;
+  }
+  
+  try {
+    // Set state to running
     set(state => ({
       componentRecognition: {
         ...state.componentRecognition,
         status: AgentStatus.Running,
         progress: 0,
-        error: null
+        error: null,
+        result: null
       }
     }));
-    // Placeholder for actual implementation
-    console.log("Component Recognition Agent would run here");
+    
+    // Import dynamically to avoid server-side errors
+    const { ComponentRecognitionAgent } = await import('@/modules/component-recognition/component-recognition-agent');
+    
+    // Create agent with progress tracking
+    const agent = new ComponentRecognitionAgent(
+      (progress) => {
+        set(state => ({
+          componentRecognition: {
+            ...state.componentRecognition,
+            progress
+          }
+        }));
+      }
+    );
+    
+    // Execute agent
+    const result = await agent.execute(params.designInput, params.assetManager);
+    
+    // Update state with result
+    set(state => ({
+      componentRecognition: {
+        ...state.componentRecognition,
+        status: AgentStatus.Complete,
+        progress: 100,
+        result
+      }
+    }));
+  } catch (error) {
+    // Handle errors
+    set(state => ({
+      componentRecognition: {
+        ...state.componentRecognition,
+        status: AgentStatus.Error,
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
+      }
+    }));
+  }
   },
+  resetComponentRecognition: () => set({
+    componentRecognition: initialComponentRecognitionState
+  }),
   setComponentRecognitionProgress: (progress: number) => set(state => ({
     componentRecognition: {
       ...state.componentRecognition,
       progress
     }
   })),
-  resetComponentRecognition: () => set({
-    componentRecognition: initialComponentRecognitionState
-  }),
   
   // Style Extraction actions
   runStyleExtractionAgent: async (designInputResult: any, componentResult: any) => {

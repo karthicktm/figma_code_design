@@ -60,11 +60,27 @@ export interface IAgent {
       padding?: string;
       margin?: string;
       position?: string;
+      display?: string;
+      flexDirection?: string;
+      gap?: string;
+      top?: string;
+      left?: string;
+      right?: string;
+      bottom?: string;
     };
     styles?: {
       colors?: string[];
-      typography?: any;
+      typography?: {
+        fontFamily?: string;
+        fontSize?: string;
+        fontWeight?: string | number;
+        lineHeight?: string;
+        letterSpacing?: string;
+        textAlign?: string;
+        textCase?: string;
+      };
     };
+    pattern?: string;
   }
   
   export interface ComponentRecognitionResult {
