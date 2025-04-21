@@ -49,7 +49,7 @@ export class AzureOpenAIService {
       return this.parseGeneratedCode(content);
     } catch (error) {
       console.error("Error generating Angular component:", error);
-      throw new Error(`Failed to generate Angular component: ${error.message}`);
+      throw new Error(`Failed to generate Angular component: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

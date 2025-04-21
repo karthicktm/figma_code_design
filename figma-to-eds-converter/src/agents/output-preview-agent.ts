@@ -44,7 +44,7 @@ export class OutputPreviewAgent implements IAgent {
       };
     } catch (error) {
       console.error('Output Preview Agent error:', error);
-      throw new Error(`Failed to prepare output: ${error.message}`);
+      throw new Error(`Failed to prepare output: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

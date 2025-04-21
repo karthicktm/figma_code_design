@@ -68,7 +68,7 @@ export class ComponentRecognitionAgent implements IAgent {
       };
     } catch (error) {
       console.error('Component Recognition Agent error:', error);
-      throw new Error(`Failed to recognize components: ${error.message}`);
+      throw new Error(`Failed to recognize components: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -217,6 +217,9 @@ export class ComponentRecognitionAgent implements IAgent {
         node.children.forEach((child: any) => {
           const childComponent = processNode(child, component);
           if (childComponent) {
+            if (!component.children) {
+              component.children = [];
+            }
             component.children.push(childComponent);
           }
         });
@@ -246,7 +249,7 @@ export class ComponentRecognitionAgent implements IAgent {
   
   private mapToEDSComponent(node: any): string {
     // Check if we have mappings for this node type
-    const mappings = EDS_COMPONENT_MAPPING[node.type];
+    const mappings = EDS_COMPONENT_MAPPING[node.type as keyof typeof EDS_COMPONENT_MAPPING];
     if (!mappings) {
       return 'unknown';
     }
@@ -494,115 +497,4 @@ export class ComponentRecognitionAgent implements IAgent {
     
     return false;
   }
-};
-          properties.iconPosition = 'left'; // Default
-        }
-      }
-    }
-    
-    // Input properties
-    if (componentType === 'input') {
-      // Check if it has a label
-      if (node.children) {
-        const labelChild = node.children.find((child: any) => 
-          child.type === 'TEXT' && 
-          (child.name.toLowerCase().includes('label') || 
-          child.characters?.length < 20)
-        );
-        if (labelChild) {
-          properties.label = labelChild.characters || '';
-        }
-        
-        // Check for placeholder
-        const placeholderChild = node.children.find((child: any) => 
-          child.type === 'TEXT' && 
-          (child.name.toLowerCase().includes('placeholder') || 
-          child.style?.opacity < 1)
-        );
-        if (placeholderChild) {
-          properties.placeholder = placeholderChild.characters || '';
-        }
-      }
-      
-      // Check for input type hints
-      if (node.name.toLowerCase().includes('password')) {
-        properties.type = 'password';
-      } else if (node.name.toLowerCase().includes('email')) {
-        properties.type = 'email';
-      } else if (node.name.toLowerCase().includes('number')) {
-        properties.type = 'number';
-      } else {
-        properties.type = 'text';
-      }
-    }
-    
-    // Card properties
-    if (componentType === 'card' || componentType === 'tile') {
-      // Check for header/content structure
-      if (node.children) {
-        const headerChild = node.children.find((child: any) => 
-          child.name.toLowerCase().includes('header') ||
-          (child.children && child.children.some((c: any) => 
-            c.type === 'TEXT' && c.style && c.style.fontSize >= 16
-          ))
-        );
-        
-        if (headerChild) {
-          properties.hasHeader = true;
-          
-          // Look for title in header
-          if (headerChild.children) {
-            const titleChild = headerChild.children.find((child: any) => 
-              child.type === 'TEXT' && child.style && child.style.fontSize >= 16
-            );
-            if (titleChild) {
-              properties.title = titleChild.characters || '';
-            }
-          }
-        }
-        
-        // Check for content section
-        const contentChild = node.children.find((child: any) => 
-          child.name.toLowerCase().includes('content') ||
-          child.name.toLowerCase().includes('body')
-        );
-        
-        if (contentChild) {
-          properties.hasContent = true;
-        }
-        
-        // Check for footer
-        const footerChild = node.children.find((child: any) => 
-          child.name.toLowerCase().includes('footer')
-        );
-        
-        if (footerChild) {
-          properties.hasFooter = true;
-        }
-      }
-    }
-    
-    return properties;
-  }
-  
-  private extractStyles(node: any): { colors?: string[], typography?: any } {
-    const styles: { colors?: string[], typography?: any } = {};
-    
-    // Extract colors from fills
-    if (node.fills && node.fills.length > 0) {
-      styles.colors = node.fills
-        .filter((fill: any) => fill.type === 'SOLID')
-        .map((fill: any) => {
-          const { r, g, b, a = 1 } = fill.color;
-          return `rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${a})`;
-        });
-    }
-    
-    // Extract typography styles
-    if (node.style) {
-      styles.typography = {
-        fontFamily: node.style.fontFamily,
-        fontSize: node.style.fontSize,
-        fontWeight: node.style.fontWeight,
-        lineHeight: node.style.lineHeightPercent ? 
-          `${node.style.lineHeightPercent}%` :
+}

@@ -388,28 +388,3 @@ export default function Home() {
     </main>
   );
 }
-import { FigmaPreview } from '@/components/figma-preview';
-import { CodePreview } from '@/components/code-preview';
-import { useAppStore, AppStatus, MissingAsset } from '@/store';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-export default function Home() {
-  const [activeTab, setActiveTab] = useState('input');
-  
-  // Get state from the store
-  const {
-    figmaApiKey,
-    figmaFileId,
-    azureEndpoint,
-    azureApiKey,
-    azureDeploymentName,
-    projectName,
-    status,
-    workflowSteps,
-    error,
-    figmaPreviewUrl,
-    missingAssets,
-    generatedCode,
-    downloadUrl,
-    setFigmaApiKey,
-    setFigmaFileId,

@@ -66,7 +66,7 @@ export class AssetManagerAgent implements IAgent {
       };
     } catch (error) {
       console.error('Asset Manager Agent error:', error);
-      throw new Error(`Failed to manage assets: ${error.message}`);
+      throw new Error(`Failed to manage assets: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

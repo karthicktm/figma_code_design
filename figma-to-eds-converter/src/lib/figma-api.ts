@@ -37,7 +37,7 @@ export class FigmaClient {
       return response.data;
     } catch (error) {
       console.error('Error fetching Figma file:', error);
-      throw new Error(`Failed to fetch Figma file: ${error.message}`);
+      throw new Error(`Failed to fetch Figma file: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -50,7 +50,7 @@ export class FigmaClient {
       return response.data.nodes[nodeId];
     } catch (error) {
       console.error('Error fetching Figma node:', error);
-      throw new Error(`Failed to fetch Figma node: ${error.message}`);
+      throw new Error(`Failed to fetch Figma node: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -64,7 +64,7 @@ export class FigmaClient {
       return response.data.nodes;
     } catch (error) {
       console.error('Error fetching Figma nodes:', error);
-      throw new Error(`Failed to fetch Figma nodes: ${error.message}`);
+      throw new Error(`Failed to fetch Figma nodes: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -78,7 +78,7 @@ export class FigmaClient {
       return response.data;
     } catch (error) {
       console.error('Error fetching Figma image fills:', error);
-      throw new Error(`Failed to fetch Figma image fills: ${error.message}`);
+      throw new Error(`Failed to fetch Figma image fills: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -90,7 +90,7 @@ export class FigmaClient {
       return response.data;
     } catch (error) {
       console.error('Error downloading image asset:', error);
-      throw new Error(`Failed to download image asset: ${error.message}`);
+      throw new Error(`Failed to download image asset: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -103,7 +103,7 @@ export class FigmaClient {
       return response.data;
     } catch (error) {
       console.error('Error fetching Figma styles:', error);
-      throw new Error(`Failed to fetch Figma styles: ${error.message}`);
+      throw new Error(`Failed to fetch Figma styles: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

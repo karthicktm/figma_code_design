@@ -243,7 +243,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('designInput', 'failed');
         set({ 
-          error: `Design input error: ${error.message}`,
+          error: `Design input error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -283,7 +283,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('assetManager', 'failed');
         set({ 
-          error: `Asset processing error: ${error.message}`,
+          error: `Asset processing error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -298,7 +298,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('componentRecognition', 'failed');
         set({ 
-          error: `Component recognition error: ${error.message}`,
+          error: `Component recognition error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -316,7 +316,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('styleExtraction', 'failed');
         set({ 
-          error: `Style extraction error: ${error.message}`,
+          error: `Style extraction error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -337,7 +337,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('codeGeneration', 'failed');
         set({ 
-          error: `Code generation error: ${error.message}`,
+          error: `Code generation error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -358,7 +358,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       } catch (error) {
         updateStepStatus('outputPreview', 'failed');
         set({ 
-          error: `Output preparation error: ${error.message}`,
+          error: `Output preparation error: ${error instanceof Error ? error.message : 'Unknown error'}`,
           status: AppStatus.Error 
         });
         return;
@@ -366,7 +366,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       
     } catch (error) {
       set({ 
-        error: `Workflow error: ${error.message}`,
+        error: `Workflow error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         status: AppStatus.Error 
       });
     }
@@ -386,7 +386,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       return Promise.resolve();
     } catch (error) {
       set({ 
-        error: `Asset upload error: ${error.message}`,
+        error: `Asset upload error: ${error instanceof Error ? error.message : 'Unknown error'  }`,
         status: AppStatus.Error 
       });
       return Promise.reject(error);

@@ -58,7 +58,7 @@ export class DesignInputAgent implements IAgent {
       };
     } catch (error) {
       console.error('Design Input Agent error:', error);
-      throw new Error(`Failed to process Figma design: ${error.message}`);
+      throw new Error(`Failed to process Figma design: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

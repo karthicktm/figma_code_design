@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { FigmaClient } from '@/lib/figma-api';
 
 interface FigmaPreviewProps {
@@ -26,7 +26,6 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
         setLoading(true);
         setError(null);
         
-        // Extract fileId from URL if needed
         const parsedFileId = fileId.includes('figma.com') 
           ? fileId.split('/').pop()?.split('?')[0] 
           : fileId;
@@ -37,18 +36,15 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
         
         const figmaClient = new FigmaClient(apiKey);
         
-        // First get the file info
         const file = await figmaClient.getFile(parsedFileId);
         setFileName(file.name);
         
-        // Get the nodeId to render - use the first frame if not specified
         const targetNodeId = nodeId || findFirstFrameId(file.document);
         
         if (!targetNodeId) {
           throw new Error('No frames found in the Figma file');
         }
         
-        // Generate image
         const imageResponse = await figmaClient.getImageFills(
           parsedFileId, 
           [targetNodeId],
@@ -65,7 +61,7 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
         
       } catch (err) {
         console.error('Error fetching Figma preview:', err);
-        setError(err.message || 'Failed to load Figma preview');
+        setError(err instanceof Error ? err.message : 'Failed to load Figma preview');
       } finally {
         setLoading(false);
       }
@@ -74,7 +70,6 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
     fetchFigmaPreview();
   }, [fileId, apiKey, nodeId]);
   
-  // Helper function to find the first frame in the document
   const findFirstFrameId = (node: any): string | null => {
     if (node.type === 'FRAME' || node.type === 'COMPONENT') {
       return node.id;
@@ -91,25 +86,28 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
   };
   
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-3">
-        <CardTitle>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="text-xl font-semibold">
           {fileName || 'Figma Preview'}
         </CardTitle>
+        <CardDescription>
+          Preview of your Figma design
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {loading && (
           <div className="flex justify-center items-center min-h-[300px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
           </div>
         )}
         
         {error && !loading && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded text-center min-h-[200px] flex items-center justify-center">
-            <div>
+          <div className="p-4 rounded-lg bg-destructive/10 text-destructive">
+            <div className="flex flex-col items-center space-y-2">
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                className="h-6 w-6 text-red-500 mx-auto mb-2" 
+                className="h-6 w-6" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
@@ -121,19 +119,20 @@ export function FigmaPreview({ fileId, apiKey, nodeId }: FigmaPreviewProps) {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
                 />
               </svg>
-              <p className="text-red-700 text-sm font-medium">{error}</p>
+              <p className="text-sm font-medium text-center">{error}</p>
             </div>
           </div>
         )}
         
         {imageUrl && !loading && !error && (
-          <div className="flex justify-center border rounded overflow-hidden">
-            <img 
-              src={imageUrl}
-              alt={`Figma preview for ${fileName}`}
-              className="max-w-full object-contain"
-              style={{ maxHeight: '500px' }}
-            />
+          <div className="overflow-hidden rounded-lg border bg-card">
+            <div className="relative aspect-[16/9] overflow-hidden">
+              <img 
+                src={imageUrl}
+                alt={`Figma preview for ${fileName}`}
+                className="object-contain w-full h-full"
+              />
+            </div>
           </div>
         )}
       </CardContent>

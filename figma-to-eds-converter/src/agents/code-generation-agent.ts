@@ -50,7 +50,7 @@ export class CodeGenerationAgent implements IAgent {
       };
     } catch (error) {
       console.error('Code Generation Agent error:', error);
-      throw new Error(`Failed to generate code: ${error.message}`);
+      throw new Error(`Failed to generate code: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   

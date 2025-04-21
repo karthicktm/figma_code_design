@@ -121,7 +121,7 @@ export class StyleExtractionAgent implements IAgent {
       };
     } catch (error) {
       console.error('Style Extraction Agent error:', error);
-      throw new Error(`Failed to extract styles: ${error.message}`);
+      throw new Error(`Failed to extract styles: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
   
@@ -135,21 +135,21 @@ export class StyleExtractionAgent implements IAgent {
     designInput: DesignInputResult,
     componentResult: ComponentRecognitionResult
   ): Array<{ name: string; value: string; edsVariable: string }> {
-    const colorStyles = designInput.styles ? Object.values(designInput.styles).filter(style => style.styleType === 'FILL') : [];
+    const colorStyles = designInput.styles ? Object.values(designInput.styles).filter(style => (style as any).styleType === 'FILL') : [];
     const colorSet = new Set<string>();
     const resultColors: Array<{ name: string; value: string; edsVariable: string }> = [];
     
     // Extract colors from style definitions
     colorStyles.forEach(style => {
-      if (style.style && style.style.fills && style.style.fills.length > 0) {
-        const fill = style.style.fills[0];
+      if ((style as any).style && (style as any).style.fills && (style as any).style.fills.length > 0) {
+        const fill = (style as any).style.fills[0];
         if (fill.type === 'SOLID') {
           const { r, g, b, a = 1 } = fill.color;
           const hex = this.rgbaToHex(r, g, b, a);
           if (!colorSet.has(hex)) {
             colorSet.add(hex);
             resultColors.push({
-              name: style.name || `color_${resultColors.length + 1}`,
+              name: (style as any).name || `color_${resultColors.length + 1}`,
               value: hex,
               edsVariable: this.mapToEDSColorVariable(hex)
             });
@@ -196,7 +196,7 @@ export class StyleExtractionAgent implements IAgent {
     lineHeight: string;
     edsVariable: string;
   }> {
-    const textStyles = designInput.styles ? Object.values(designInput.styles).filter(style => style.styleType === 'TEXT') : [];
+    const textStyles = designInput.styles ? Object.values(designInput.styles).filter(style => (style as any).styleType === 'TEXT') : [];
     const resultTypography: Array<{ 
       name: string; 
       fontFamily: string; 
@@ -208,8 +208,8 @@ export class StyleExtractionAgent implements IAgent {
     
     // Extract typography from style definitions
     textStyles.forEach(style => {
-      if (style.style) {
-        const { fontFamily, fontSize, fontWeight, lineHeightPercent, lineHeightPx } = style.style;
+      if ((style as any).style) {
+        const { fontFamily, fontSize, fontWeight, lineHeightPercent, lineHeightPx } = (style as any).style;
         const lineHeight = lineHeightPercent 
           ? `${lineHeightPercent}%` 
           : lineHeightPx 
@@ -217,7 +217,7 @@ export class StyleExtractionAgent implements IAgent {
           : 'normal';
         
         resultTypography.push({
-          name: style.name || `typography_${resultTypography.length + 1}`,
+          name: (style as any).name || `typography_${resultTypography.length + 1}`,
           fontFamily: fontFamily || 'Ericsson Hilda',
           fontSize: `${fontSize}px`,
           fontWeight: fontWeight || 'normal',
@@ -283,8 +283,8 @@ export class StyleExtractionAgent implements IAgent {
         
         // Extract padding if specified
         if (layout.properties.padding && typeof layout.properties.padding === 'string') {
-          const paddingValues = layout.properties.padding.split(' ').map(v => parseInt(v));
-          paddingValues.forEach(padding => {
+          const paddingValues = layout.properties.padding.split(' ').map((v: string) => parseInt(v));
+          paddingValues.forEach((padding: number) => {
             if (!spacingSet.has(padding)) {
               spacingSet.add(padding);
               resultSpacing.push({

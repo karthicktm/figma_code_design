@@ -101,7 +101,7 @@ export type WorkflowStep = {
         } catch (error) {
           console.error(`Step "${step.name}" failed:`, error);
           step.status = 'failed';
-          step.error = error.message;
+          step.error = error instanceof Error ? error.message : 'Unknown error';
           step.progress = 0;
         }
         
